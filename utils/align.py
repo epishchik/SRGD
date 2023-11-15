@@ -30,5 +30,5 @@ def clean_all_folders(root: str) -> None:
 
 
 if __name__ == '__main__':
-    root = 'path'
+    root = ''
     clean_all_folders(root)

@@ -2,7 +2,7 @@ import cv2
 import os
 
 
-def main(video, folder):
+def main(video: str, folder: str, prefix: str, save_every: int = 1) -> None:
     os.makedirs(folder, exist_ok=True)
 
     cap = cv2.VideoCapture(video)
@@ -12,12 +12,16 @@ def main(video, folder):
         success, image = cap.read()
         if not success:
             break
-        save_path = os.path.join(folder, f'{cnt}.png')
-        cv2.imwrite(save_path, image)
-        print(f'{cnt + 1} / {total}')
         cnt += 1
+        if cnt % save_every == 0:
+            save_path = os.path.join(folder, f'{prefix}_{cnt}.png')
+            cv2.imwrite(save_path, image)
+        print(f'{cnt} / {total}')
 
 
 if __name__ == '__main__':
-    video, folder = 'name.mp4', 'folder'
-    main(video, folder)
+    video = ''
+    folder = ''
+    prefix, save_every = '', 5
+
+    main(video, folder, prefix, save_every)
