@@ -1,0 +1,133 @@
+resolution: [1080, 1920]
+compress1:
+  name: 270p
+  resolution: [270, 480]
+  max_kernel_size: 21
+  final_sinc_prob: 0.8
+  resize_list: ['bicubic', 'bilinear', 'area']
+  stage1:
+    kernel_list: [
+      'iso',
+      'aniso',
+      'generalized_iso',
+      'generalized_aniso',
+      'plateau_iso',
+      'plateau_aniso'
+    ]
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    blur_sigma: [0.2, 3]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+    sinc_prob: 0.1
+    gaussian_noise_prob: 0.5
+    gaussian_sigma_range: [12, 20]
+    gray_noise_prob: 0.4
+    poisson_scale_range: [1.0, 1.3]
+    jpeg_quality: 60
+  stage2:
+    kernel_list: [
+      'iso',
+      'aniso',
+      'generalized_iso',
+      'generalized_aniso',
+      'plateau_iso',
+      'plateau_aniso'
+    ]
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    blur_sigma: [0.2, 1.5]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+    sinc_prob: 0.1
+    gaussian_noise_prob: 0.5
+    gaussian_sigma_range: [12, 17]
+    gray_noise_prob: 0.4
+    poisson_scale_range: [1.0, 1.2]
+    jpeg_quality: 60
+compress2:
+  name: 360p
+  resolution: [360, 640]
+  max_kernel_size: 15
+  final_sinc_prob: 0.7
+  resize_list: ['bicubic', 'bilinear', 'area']
+  stage1:
+    kernel_list: [
+      'iso',
+      'aniso',
+      'generalized_iso',
+      'generalized_aniso',
+      'plateau_iso',
+      'plateau_aniso'
+    ]
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    blur_sigma: [0.2, 3]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+    sinc_prob: 0.1
+    gaussian_noise_prob: 0.5
+    gaussian_sigma_range: [5, 11]
+    gray_noise_prob: 0.4
+    poisson_scale_range: [0.6, 1.0]
+    jpeg_quality: 75
+  stage2:
+    kernel_list: [
+      'iso',
+      'aniso',
+      'generalized_iso',
+      'generalized_aniso',
+      'plateau_iso',
+      'plateau_aniso'
+    ]
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    blur_sigma: [0.2, 1.5]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+    sinc_prob: 0.1
+    gaussian_noise_prob: 0.5
+    gaussian_sigma_range: [5, 9]
+    gray_noise_prob: 0.4
+    poisson_scale_range: [0.6, 0.9]
+    jpeg_quality: 75
+compress3:
+  name: 540p
+  resolution: [540, 960]
+  max_kernel_size: 7
+  final_sinc_prob: 0.6
+  resize_list: ['bicubic', 'bilinear', 'area']
+  stage1:
+    kernel_list: [
+      'iso',
+      'aniso',
+      'generalized_iso',
+      'generalized_aniso',
+      'plateau_iso',
+      'plateau_aniso'
+    ]
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    blur_sigma: [0.2, 3]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+    sinc_prob: 0.1
+    gaussian_noise_prob: 0.5
+    gaussian_sigma_range: [1, 5]
+    gray_noise_prob: 0.4
+    poisson_scale_range: [0.1, 0.4]
+    jpeg_quality: 85
+  stage2:
+    kernel_list: [
+      'iso',
+      'aniso',
+      'generalized_iso',
+      'generalized_aniso',
+      'plateau_iso',
+      'plateau_aniso'
+    ]
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    blur_sigma: [0.2, 1.5]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+    sinc_prob: 0.1
+    gaussian_noise_prob: 0.5
+    gaussian_sigma_range: [1, 3]
+    gray_noise_prob: 0.4
+    poisson_scale_range: [0.1, 0.3]
+    jpeg_quality: 85
