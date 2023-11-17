@@ -134,13 +134,7 @@ def resize(
 ) -> np.ndarray:
     resize_type = np.random.choice(config['resize_list'])
 
-    if resize_type == 'bicubic':
-        img = cv2.resize(
-            img,
-            dsize=resolution[::-1],
-            interpolation=cv2.INTER_CUBIC
-        )
-    elif resize_type == 'bilinear':
+    if resize_type == 'bilinear':
         img = cv2.resize(
             img,
             dsize=resolution[::-1],
