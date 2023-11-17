@@ -11,7 +11,7 @@
 - [EDA](/docs/EDA.md).
 
 ## Ссылки
-- [Датасет Yandex.Disk]().
+- [Датасет Yandex.Disk](https://disk.yandex.ru/d/FUX_JQ-jGEbGPQ).
 
 ## Команда
 - Пищик Евгений (разработчик, [@Evgenii_Pishchik](https://t.me/Evgenii_Pishchik)).
