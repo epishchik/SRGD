@@ -2,7 +2,25 @@ import cv2
 import os
 
 
-def main(video: str, folder: str, prefix: str, save_every: int = 1) -> None:
+def split(video: str, folder: str, prefix: str, save_every: int = 1) -> None:
+    '''
+        Разделение видео на кадры.
+
+        Parameters
+        ----------
+        video : str
+            Путь к файлы видео.
+        folder : str
+            Путь к папке, куда будут сохраняться кадры.
+        prefix : str
+            Префикс имени файла для каждого кадра.
+        save_every : int
+            Раз в сколько шагов сохранять кадр.
+
+        Returns
+        -------
+        None
+    '''
     os.makedirs(folder, exist_ok=True)
 
     cap = cv2.VideoCapture(video)
@@ -24,4 +42,4 @@ if __name__ == '__main__':
     folder = ''
     prefix, save_every = '', 5
 
-    main(video, folder, prefix, save_every)
+    split(video, folder, prefix, save_every)
