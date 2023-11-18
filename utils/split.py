@@ -9,7 +9,7 @@ def split(video: str, folder: str, prefix: str, save_every: int = 1) -> None:
         Parameters
         ----------
         video : str
-            Путь к файлы видео.
+            Путь к файлу видео.
         folder : str
             Путь к папке, куда будут сохраняться кадры.
         prefix : str
