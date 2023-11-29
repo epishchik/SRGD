@@ -9,7 +9,8 @@ def rename(root: str) -> None:
         Parameters
         ----------
         root : str
-            Путь к корню, содержащий все папки файлы внутри которых нужно переименовать.
+            Путь к корню, содержащий все папки,
+            файлы внутри которых нужно переименовать.
 
         Returns
         -------
@@ -32,7 +33,4 @@ def rename(root: str) -> None:
 
 if __name__ == '__main__':
     root = ''
-    folders = [os.path.join(root, folder) for folder in os.listdir(root)]
-
-    for folder in folders:
-        rename(folder)
+    rename(root)
