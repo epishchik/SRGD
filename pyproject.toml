@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "sr-gaming-bench"
+version = "0.1.0"
+description = ""
+authors = ["pe4eniks <evgeniipishchik@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.26.2"
+torch = "^2.1.1"
+opencv-python = "^4.8.1.78"
+pyyaml = "^6.0.1"
+fastapi = "^0.104.1"
+uvicorn = "^0.24.0.post1"
+setuptools = "^69.0.2"
+pre-commit = "^3.5.0"
+basicsr = "^1.4.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

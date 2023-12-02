@@ -8,10 +8,10 @@ def clean_from_single_folder(root: str, target_folder: str) -> None:
         Parameters
         ----------
         root : str
-            Путь к корню, все папки из root будут сравниваться 
+            Путь к корню, все папки из root будут сравниваться
             с target_folder по файлам.
         target_folder : str
-            Путь к папке, все файлы из папок из root будут удалены, 
+            Путь к папке, все файлы из папок из root будут удалены,
             если их нет в target_folder.
 
         Returns
@@ -39,7 +39,7 @@ def clean_from_single_folder(root: str, target_folder: str) -> None:
 
 def clean_all_folders(root: str) -> None:
     '''
-        Функция попарной очистки всех файлов из всех 
+        Функция попарной очистки всех файлов из всех
         папок из root от файлов без пары.
 
         Parameters

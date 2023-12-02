@@ -50,7 +50,7 @@
 - Выделить все камеры на сцене (поиск по слову camera в Outliner) и найти параметр Motion Blur в Details, ДАЖЕ ЕСЛИ ГАЛОЧКИ НЕ ВКЛЮЧЕНЫ их нужно включить и поставить Amount, Max в 0, а также найти параметр Constrain Ratio и выключить.
 - Повторить предыдущий шаг для всех объектов Post Process на сцене.
 - Записать / взять Level Sequence, открыть и проделать два предыдущих шага (это может и не понадобиться, если проект настроен определенным образом).
-- Положить в любую папку конфиги для UE из [папки](/unreal).
+- Положить в любую папку конфиги для UE из [папки](/unreal-engine).
 - Открыть MRQ (Window -> Cinematics -> Movie Render Queue) и загрузить queue из папки с предыдущего шага.
 - Запустить рендер и верить в успех.
 
@@ -91,4 +91,4 @@
 
 Ниже приведена схема из оригинальной статьи [Real-ESRGAN](https://arxiv.org/abs/2107.10833).
 
-![degradation](/pictures/real-esrgan-degradation.png)
+![degradation](/images/real-esrgan-degradation.png)

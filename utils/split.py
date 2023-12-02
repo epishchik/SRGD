@@ -1,5 +1,6 @@
-import cv2
 import os
+
+import cv2
 
 
 def split(video: str, folder: str, prefix: str, save_every: int = 1) -> None:

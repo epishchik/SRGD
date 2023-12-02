@@ -1,14 +1,16 @@
-import random
-import numpy as np
 import math
 import os
-import cv2
+import random
 from typing import Any
-import yaml
 
-from basicsr.data.degradations import circular_lowpass_kernel, \
-    random_mixed_kernels, random_add_gaussian_noise, \
-    random_add_poisson_noise, add_jpg_compression
+import cv2
+import numpy as np
+import yaml
+from basicsr.data.degradations import (add_jpg_compression,
+                                       circular_lowpass_kernel,
+                                       random_add_gaussian_noise,
+                                       random_add_poisson_noise,
+                                       random_mixed_kernels)
 
 
 def set_seed(seed: int) -> None:

@@ -1,6 +1,6 @@
+import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-import uvicorn
 
 app = FastAPI()
 
@@ -8,7 +8,7 @@ app = FastAPI()
 @app.get('/info')
 def info() -> FileResponse:
     info_file = FileResponse(
-        path='./info.txt',
+        path='./extra/info.txt',
         filename='info.txt',
         media_type='text'
     )
