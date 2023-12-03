@@ -61,7 +61,7 @@ def inter_resolution(
 
 def blur_kernels(
     config: dict[str, Any]
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     '''
         Генерация ядер из статьи https://arxiv.org/abs/2107.10833.
 
@@ -72,14 +72,13 @@ def blur_kernels(
 
         Returns
         -------
-        tuple[np.ndarray, np.ndarray, np.ndarray]
-            Ядра сверток.
+        tuple[np.ndarray, np.ndarray]
+            Ядра сверток. Без sync_kernel, потому что оно выдает артефакты.
     '''
     max_kernel_size = config['max_kernel_size']
 
     kernel_size1 = config['max_kernel_size']
     kernel_size2 = config['max_kernel_size']
-    final_kernel_size = config['max_kernel_size']
 
     kernel_list1 = config['stage1']['kernel_list']
     kernel_list2 = config['stage2']['kernel_list']
@@ -98,7 +97,6 @@ def blur_kernels(
 
     sinc_prob1 = config['stage1']['sinc_prob']
     sinc_prob2 = config['stage2']['sinc_prob']
-    final_sinc_prob = config['final_sinc_prob']
 
     if np.random.uniform() < sinc_prob1:
         if kernel_size1 < 13:
@@ -150,23 +148,7 @@ def blur_kernels(
         ((pad_size2, pad_size2), (pad_size2, pad_size2))
     )
 
-    if np.random.uniform() < final_sinc_prob:
-        final_omega_c = np.random.uniform(np.pi / 3, np.pi)
-        final_sinc_kernel = circular_lowpass_kernel(
-            final_omega_c,
-            final_kernel_size,
-            pad_to=max_kernel_size
-        )
-    else:
-        final_sinc_kernel = np.zeros((
-            max_kernel_size,
-            max_kernel_size
-        )).astype(np.float32)
-
-        central_pixel = max_kernel_size // 2
-        final_sinc_kernel[central_pixel, central_pixel] = 1
-
-    return kernel1, kernel2, final_sinc_kernel
+    return kernel1, kernel2
 
 
 def resize(
@@ -297,7 +279,7 @@ def compress(src_folder: str, dst_folder: str, config_path: str) -> None:
         os.makedirs(stage_path, exist_ok=True)
         lr_resolution = compress_config['resolution']
 
-        kernel1, kernel2, final_sinc_kernel = blur_kernels(compress_config)
+        kernel1, kernel2 = blur_kernels(compress_config)
         resolution = inter_resolution(
             lr_resolution,
             hr_resolution
@@ -336,13 +318,7 @@ def compress(src_folder: str, dst_folder: str, config_path: str) -> None:
             noisy_img2 = noise(resized_img2, compress_config['stage2'])
             jpg_img2 = jpg(noisy_img2, compress_config['stage2'])
 
-            final_img = cv2.filter2D(
-                jpg_img2,
-                ddepth=-1,
-                kernel=final_sinc_kernel
-            )
-
-            final_img = (final_img * 255.0).astype(np.uint8)
+            final_img = (jpg_img2 * 255.0).astype(np.uint8)
             cv2.imwrite(
                 save_path,
                 final_img,

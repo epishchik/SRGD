@@ -3,7 +3,6 @@ compress1:
   name: 270p
   resolution: [270, 480]
   max_kernel_size: 21
-  final_sinc_prob: 0.8
   resize_list: ['bilinear', 'area']
   stage1:
     kernel_list: [
@@ -47,7 +46,6 @@ compress2:
   name: 360p
   resolution: [360, 640]
   max_kernel_size: 15
-  final_sinc_prob: 0.7
   resize_list: ['bilinear', 'area']
   stage1:
     kernel_list: [
@@ -91,7 +89,6 @@ compress3:
   name: 540p
   resolution: [540, 960]
   max_kernel_size: 9
-  final_sinc_prob: 0.6
   resize_list: ['bilinear', 'area']
   stage1:
     kernel_list: [
