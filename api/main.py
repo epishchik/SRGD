@@ -17,6 +17,27 @@ def info() -> FileResponse:
     return info_file
 
 
+@app.post('/predict_example')
+def predict_example(model: str, upscale: float) -> None:
+    if upscale <= 1.0:
+        raise HTTPException(
+            status_code=480,
+            detail='upscale parameter should be > 1.0'
+        )
+
+    img_np = cv2.imread('./extra/example.png')
+    h, w = img_np.shape[0], img_np.shape[1]
+
+    if int(h * upscale) > 4320 or int(w * upscale) > 7680:
+        raise HTTPException(
+            status_code=481,
+            detail='potential output resolution is too large, max '
+            'possible resolution is (4320, 7680) pixels in (h, w) format.'
+        )
+
+    print(img_np.shape, model, upscale)
+
+
 @app.post('/predict_single')
 def predict_single(image: UploadFile, model: str, upscale: float) -> None:
     if upscale <= 1.0:
