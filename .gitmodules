@@ -1,0 +1,3 @@
+[submodule "real-esrgan"]
+	path = real-esrgan
+	url = git@github.com:Pe4enIks/Real-ESRGAN.git
