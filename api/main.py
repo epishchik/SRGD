@@ -73,7 +73,6 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
     app.config_path = None
     app.config = yaml.safe_load(config_file.file.read())
     app.config['filename'] = Path(config_file.filename).stem
-    print(app.config['filename'])
     app.upsampler = configure_real_esrgan(app.config)
 
     logger.debug('used /configure_model/file')

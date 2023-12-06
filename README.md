@@ -12,6 +12,7 @@
 
 ## Ссылки
 - [Датасет Yandex.Disk](https://disk.yandex.ru/d/FUX_JQ-jGEbGPQ).
+- [Веса моделей](https://disk.yandex.ru/d/P1w6Tis0cjoclQ).
 
 ## Команда
 - Пищик Евгений (разработчик, [@Evgenii_Pishchik](https://t.me/Evgenii_Pishchik)).
