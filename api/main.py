@@ -2,9 +2,17 @@ import cv2
 import numpy as np
 import uvicorn
 from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
+from real_esrgan import configure as configure_real_esrgan
+from real_esrgan import predict as predict_real_esrgan
+
+from utils.parse import parse_yaml
+
+config_path = './configs/real_esrgan.yaml'
+config = parse_yaml(config_path)
 
 app = FastAPI()
+upsampler = configure_real_esrgan(config)
 
 
 @app.get('/info')
@@ -17,60 +25,49 @@ def info() -> FileResponse:
     return info_file
 
 
-@app.post('/predict_example')
-def predict_example(model: str, upscale: float) -> None:
-    if upscale <= 1.0:
-        raise HTTPException(
-            status_code=480,
-            detail='upscale parameter should be > 1.0'
-        )
+@app.post('/upscale_example')
+def upscale_example() -> Response:
+    img = cv2.imread('./extra/example.png', cv2.IMREAD_UNCHANGED)
 
-    img_np = cv2.imread('./extra/example.png')
-    h, w = img_np.shape[0], img_np.shape[1]
+    h, w = img.shape[0], img.shape[1]
+    outscale = config['outscale']
 
-    if int(h * upscale) > 4320 or int(w * upscale) > 7680:
+    h_up, w_up = int(h * outscale), int(w * outscale)
+    if h_up > 4320 or w_up > 7680:
         raise HTTPException(
             status_code=481,
-            detail='potential output resolution is too large, max '
-            'possible resolution is (4320, 7680) pixels in (h, w) format.'
+            detail=f'potential output resolution ({h_up, w_up}) is too large, '
+            'max possible resolution is (4320, 7680) pixels in (h, w) format.'
         )
 
-    print(img_np.shape, model, upscale)
+    out_img = predict_real_esrgan(img, upsampler, config)
+    _, enc_img = cv2.imencode('.png', out_img)
+    bytes_img = enc_img.tobytes()
+
+    return Response(bytes_img, media_type='image/png')
 
 
-@app.post('/predict_single')
-def predict_single(image: UploadFile, model: str, upscale: float) -> None:
-    if upscale <= 1.0:
-        raise HTTPException(
-            status_code=480,
-            detail='upscale parameter should be > 1.0'
-        )
+@app.post('/upscale')
+def upscale(image_file: UploadFile) -> Response:
+    raw = np.fromstring(image_file.file.read(), np.uint8)
+    img = cv2.imdecode(raw, cv2.IMREAD_COLOR)
 
-    raw = np.fromstring(image.file.read(), np.uint8)
-    img_np = cv2.imdecode(raw, cv2.IMREAD_COLOR)
+    h, w = img.shape[0], img.shape[1]
+    outscale = config['outscale']
 
-    h, w = img_np.shape[0], img_np.shape[1]
-
-    if int(h * upscale) > 4320 or int(w * upscale) > 7680:
+    h_up, w_up = int(h * outscale), int(w * outscale)
+    if h_up > 4320 or w_up > 7680:
         raise HTTPException(
             status_code=481,
-            detail='potential output resolution is too large, max '
-            'possible resolution is (4320, 7680) pixels in (h, w) format.'
+            detail=f'potential output resolution ({h_up, w_up}) is too large, '
+            'max possible resolution is (4320, 7680) pixels in (h, w) format.'
         )
 
-    print(img_np.shape, model, upscale)
+    out_img = predict_real_esrgan(img, upsampler, config)
+    _, enc_img = cv2.imencode('.png', out_img)
+    bytes_img = enc_img.tobytes()
 
-
-@app.post('/predict_multiple')
-def predict_multiple(
-    images: list[UploadFile],
-    model: str,
-    upscale: float
-) -> list[None]:
-    output = []
-    for image in images:
-        output += [predict_single(image, model, upscale)]
-    return output
+    return Response(bytes_img, media_type='image/png')
 
 
 if __name__ == '__main__':

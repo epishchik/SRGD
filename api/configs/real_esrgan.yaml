@@ -1,0 +1,9 @@
+model_name: RealESRGAN_x4plus
+outscale: 4.0
+denoise_strength: 0.5
+use_face_enhancer: no
+tile: 0
+tile_pad: 10
+pre_pad: 0
+fp32: yes
+gpu_id: 0
