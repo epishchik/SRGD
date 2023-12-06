@@ -1,0 +1,12 @@
+weights: ../weights/real-esrgan/RealESRNet_x4plus.pth
+GFPGAN_weights:
+  model: ../weights/real-esrgan/GFPGANv1.3.pth
+  additional: ../weights/gfpgan
+outscale: 4.0
+denoise_strength: 0.5
+use_face_enhancer: no
+tile: 0
+tile_pad: 10
+pre_pad: 0
+fp32: yes
+gpu_id: 0

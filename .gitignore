@@ -167,3 +167,4 @@ BasicSR/
 
 # model weights
 weights/
+api/gfpgan/
