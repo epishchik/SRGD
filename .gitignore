@@ -166,5 +166,4 @@ cython_debug/
 BasicSR/
 
 # model weights
-weights/
 api/gfpgan/
