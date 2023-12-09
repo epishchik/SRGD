@@ -1,6 +1,6 @@
 output_path: dvc_data
 repository: epishchik/super-resolution-games
-project_name: GameEngine_ActionRPG
+project_name: GameEngine_ASCTeuthisan
 split: val
 lr: r270p
 hr: r1080p

@@ -1,4 +1,5 @@
 import csv
+import logging
 import os
 import sys
 from datetime import datetime
@@ -6,14 +7,53 @@ from datetime import datetime
 import cv2
 import datasets
 import numpy as np
-import piq
 import torch
 
 
 def main(root: str):
     sys.path.insert(0, root)
+    from metric.metric import MetricSR
     from model.real_esrgan import configure, predict
     from utils.parse import parse_yaml
+
+    metric_file_header = [
+        'time',
+        'sr_model',
+        'project_type',
+        'project_name',
+        'lr',
+        'hr',
+        'split'
+    ]
+
+    map_metric_names = {
+        'psnr': 'psnr',
+        'ssim': 'ssim',
+        'ms_ssim': 'multi_scale_ssim',
+        'iw_ssim': 'information_weighted_ssim',
+        'vifp': 'vif_p',
+        'fsim': 'fsim',
+        'srsim': 'srsim',
+        'gmsd': 'gmsd',
+        'ms_gmsd': 'multi_scale_gmsd',
+        'vsi': 'vsi',
+        'dss': 'dss',
+        'haarpsi': 'haarpsi',
+        'mdsi': 'mdsi',
+        'lpips': 'lpips',
+        'dists': 'dists'
+    }
+
+    map_no_ref_metric_names = {
+        'brisque': 'brisque',
+        'tv': 'total_variation'
+    }
+
+    for metric_name, map_metric_name in map_no_ref_metric_names.items():
+        map_metric_names[metric_name] = map_metric_name
+    metric_names = [k for k in map_metric_names.keys()]
+    no_ref_metric_names = [k for k in map_no_ref_metric_names.keys()]
+    metric_file_header += metric_names
 
     real_esrgan_config_name = 'RealESRGAN_x4plus'
     model_config_path = os.path.join(
@@ -23,7 +63,7 @@ def main(root: str):
 
     metric_config_path = os.path.join(
         root,
-        'configs/metric/game_engine/ActionRPG.yaml'
+        'configs/metric/game_engine/ElectricDreamsEnv.yaml'
     )
 
     model_config = parse_yaml(model_config_path)
@@ -37,17 +77,7 @@ def main(root: str):
     if not os.path.exists(save_path):
         with open(save_path, 'w') as csv_file:
             csv_writer = csv.writer(csv_file)
-            csv_writer.writerow([
-                'time',
-                'sr_model',
-                'project_type',
-                'project_name',
-                'lr',
-                'hr',
-                'split',
-                'psnr',
-                'ssim'
-            ])
+            csv_writer.writerow(metric_file_header)
 
     upsampler = configure(root, model_config)
 
@@ -67,7 +97,35 @@ def main(root: str):
     )
 
     lr, hr = metric_config['lr'], metric_config['hr']
-    psnr, ssim = [], []
+    metric_calculator = MetricSR(
+        metric_names,
+        no_ref_metric_names,
+        map_metric_names
+    )
+
+    logger = logging.getLogger()
+    formatter = logging.Formatter(
+        '%(asctime)s [%(levelname)-5.5s] %(message)s')
+
+    logs_path = os.path.join(root, 'logs')
+    os.makedirs(logs_path, exist_ok=True)
+
+    file_handler = logging.FileHandler(f'{logs_path}/metric_real_esrgan.log')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    stream_file_handler = logging.StreamHandler(stream=sys.stdout)
+    stream_file_handler.setFormatter(formatter)
+    logger.addHandler(stream_file_handler)
+
+    logger.setLevel('INFO')
+
+    logger.info(f'model = {real_esrgan_config_name}')
+    logger.info(f'project type = {project_type}')
+    logger.info(f'project name = {project_name}')
+    logger.info(f'low resolution = {lr}')
+    logger.info(f'high resolution = {hr}')
+    logger.info(f'split = {split_config}')
 
     for idx, el in enumerate(dataset):
         rgb_lr = np.asarray(el[lr].convert('RGB'), dtype=np.float32)
@@ -85,27 +143,26 @@ def main(root: str):
         )
 
         res_hr, bgr_hr = torch.from_numpy(res_hr), torch.from_numpy(bgr_hr)
-        res_hr = res_hr.unsqueeze(0).permute(0, 3, 1, 2)
-        bgr_hr = bgr_hr.unsqueeze(0).permute(0, 3, 1, 2)
+        res_hr = res_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0
+        bgr_hr = bgr_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0
 
         if torch.cuda.is_available():
             res_hr = res_hr.cuda()
             bgr_hr = bgr_hr.cuda()
 
-        it_psnr = piq.psnr(res_hr, bgr_hr, data_range=255.0).item()
-        it_ssim = piq.ssim(res_hr, bgr_hr, data_range=255.0).item()
+        metric_calculator.calculate(res_hr, bgr_hr)
 
-        psnr += [it_psnr]
-        ssim += [it_ssim]
+        metric_str = f'image = {idx+1}, '
+        for metric_name in metric_names:
+            metric_val = metric_calculator.metric_history[metric_name][-1]
+            metric_str += f'{metric_name} = {metric_val:.3f}, '
 
-        print(
-            f'image = {idx+1}, '
-            f'PSNR = {it_psnr:.3f}, '
-            f'SSIM = {it_ssim:.3f}'
-        )
+        logger.info(metric_str[:-2])
 
-    psnr_total = sum(psnr) / len(psnr)
-    ssim_total = sum(ssim) / len(ssim)
+    metrics_total = []
+    for metric_name in metric_names:
+        metric_val = metric_calculator.calculate_epoch(metric_name)
+        metrics_total += [f'{metric_val:.3f}']
 
     with open(save_path, 'a') as csv_file:
         csv_writer = csv.writer(csv_file)
@@ -118,8 +175,7 @@ def main(root: str):
             lr[1:],
             hr[1:],
             split_config,
-            f'{psnr_total:.3f}',
-            f'{ssim_total:.3f}'
+            *metrics_total
         ])
 
 
