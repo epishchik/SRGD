@@ -77,7 +77,7 @@ def main(root: str) -> None:
 
     metric_config_path = os.path.join(
         root,
-        'configs/metric/game_engine/ElementalDemo.yaml'
+        'configs/metric/game_engine/HillsideSample.yaml'
     )
 
     model_config = parse_yaml(model_config_path)
