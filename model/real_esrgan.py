@@ -10,6 +10,21 @@ from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 
 def configure(root: str, config: dict[str, Any]) -> Any:
+    """
+        Функция создания модели Real-ESRGAN из конфигурационного словаря.
+
+        Parameters
+        ----------
+        root : str
+            Путь к корню проекта.
+        config : dict[str, Any]
+            Словарь с конфигурационными параметрами.
+
+        Returns
+        -------
+        Any
+            Объект модели Real-ESRGAN.
+    """
     model, model_path, netscale, dni_weight = None, None, None, None
 
     model_path = os.path.join(root, config['weights'])
@@ -83,6 +98,8 @@ def configure(root: str, config: dict[str, Any]) -> Any:
             act_type='prelu'
         )
         netscale = 4
+    else:
+        raise ValueError(f'model {model_name} does not exist.')
 
     if model_name == 'realesr-general-x4v3' and denoise_strength < 1.0:
         wdn_model_path = os.path.join(root, config['wdn_weights'])
@@ -125,6 +142,27 @@ def predict(
     outscale: float = 4.0,
     use_face_enhancer: bool = False
 ) -> np.ndarray:
+    """
+        Перевод LR изображения в HR изображение с использованием Real-ESRGAN.
+
+        Parameters
+        ----------
+        img : np.ndarray
+            Изображение в формате (h, w, c).
+        upsampler : Any
+            Объект модели Real-ESRGAN.
+        outscale : float, optional
+            Величина upscale, обычно 2.0 или 4.0.
+            Можно использовать другие значения, но в таком случае
+            делается простой resize сгенерированного HR к нужному размеру.
+        use_face_enhancer : bool, optional
+            Использовать ли модель для улучшения качества лиц GFPGAN.
+
+        Returns
+        -------
+        np.ndarray
+            HR изображение в формате (h*outscale, w*outscale, c).
+    """
     if use_face_enhancer:
         _, _, out_img = upsampler.enhance(
             img,

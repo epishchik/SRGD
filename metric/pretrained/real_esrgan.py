@@ -10,7 +10,21 @@ import numpy as np
 import torch
 
 
-def main(root: str):
+def main(root: str) -> None:
+    """
+        Вычисление и запись в файл метрик для модели Real-ESRGAN.
+        В качестве датасета используется один из проектов из
+        epishchik/super-resolution-games с HuggingFace.
+
+        Parameters
+        ----------
+        root : str
+            Путь к корню проекта.
+
+        Returns
+        -------
+        None
+    """
     sys.path.insert(0, root)
     from metric.metric import MetricSR
     from model.real_esrgan import configure, predict
@@ -63,7 +77,7 @@ def main(root: str):
 
     metric_config_path = os.path.join(
         root,
-        'configs/metric/game_engine/ElectricDreamsEnv.yaml'
+        'configs/metric/game_engine/ElementalDemo.yaml'
     )
 
     model_config = parse_yaml(model_config_path)
@@ -161,7 +175,7 @@ def main(root: str):
 
     metrics_total = []
     for metric_name in metric_names:
-        metric_val = metric_calculator.calculate_epoch(metric_name)
+        metric_val = metric_calculator.calculate_total(metric_name)
         metrics_total += [f'{metric_val:.3f}']
 
     with open(save_path, 'a') as csv_file:

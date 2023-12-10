@@ -10,9 +10,9 @@ import uvicorn
 import yaml
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
+
 from model.real_esrgan import configure as configure_real_esrgan
 from model.real_esrgan import predict as predict_real_esrgan
-
 from utils.parse import parse_yaml
 
 app = FastAPI()
@@ -46,6 +46,14 @@ logger.debug(f'set config dict = {app.config}')
 
 @app.get('/info')
 def info() -> FileResponse:
+    """
+        Получение файла с краткой информацией о проекте.
+
+        Returns
+        -------
+        FileResponse
+            Текстовый файл.
+    """
     info_file = FileResponse(
         path='./extra/info.txt',
         filename='info.txt',
@@ -57,6 +65,19 @@ def info() -> FileResponse:
 
 @app.post('/configure_model/name')
 def configure_model(config_name: str) -> dict[str, Any]:
+    """
+        Конфигурация super-resolution модели по названию.
+
+        Parameters
+        ----------
+        config_name : str
+            Название модели.
+
+        Returns
+        -------
+        dict[str, Any]
+            Словарь конфигурационных параметров.
+    """
     app.config_path = f'./configs/{config_name}.yaml'
     app.config = parse_yaml(app.config_path)
     app.upsampler = configure_real_esrgan(app.config)
@@ -70,6 +91,19 @@ def configure_model(config_name: str) -> dict[str, Any]:
 
 @app.post('/configure_model/file')
 def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
+    """
+        Конфигурация super-resolution модели конфигурационным yaml файлом.
+
+        Parameters
+        ----------
+        config_file : UploadFile
+            Конфигурационный .yaml файл.
+
+        Returns
+        -------
+        dict[str, Any]
+            Словарь конфигурационных параметров.
+    """
     app.config_path = None
     app.config = yaml.safe_load(config_file.file.read())
     app.config['filename'] = Path(config_file.filename).stem
@@ -84,6 +118,14 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
 
 @app.post('/upscale/example')
 def upscale_example() -> Response:
+    """
+        Пример работы super-resolution модели на заготовленном LR изображении.
+
+        Returns
+        -------
+        Response
+            Сгенерированное HR изображение.
+    """
     img = cv2.imread('./extra/example.png', cv2.IMREAD_UNCHANGED)
 
     h, w = img.shape[0], img.shape[1]
@@ -108,6 +150,19 @@ def upscale_example() -> Response:
 
 @app.post('/upscale/file')
 def upscale(image_file: UploadFile) -> Response:
+    """
+        Обработка super-resolution моделью изображения из файла.
+
+        Parameters
+        ----------
+        image_file : UploadFile
+            Файл с LR изображением.
+
+        Returns
+        -------
+        Response
+            Сгенерированное HR изображение.
+    """
     raw = np.fromstring(image_file.file.read(), np.uint8)
     img = cv2.imdecode(raw, cv2.IMREAD_COLOR)
 

@@ -8,6 +8,19 @@ from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 
 def configure(config: dict[str, Any]) -> Any:
+    """
+        Функция создания модели Real-ESRGAN из конфигурационного словаря.
+
+        Parameters
+        ----------
+        config : dict[str, Any]
+            Словарь с конфигурационными параметрами.
+
+        Returns
+        -------
+        Any
+            Объект модели Real-ESRGAN.
+    """
     model, model_path, netscale, dni_weight = None, None, None, None
 
     model_path = config['weights']
@@ -116,6 +129,25 @@ def predict(
     upsampler: Any,
     config: dict[str, Any]
 ) -> np.ndarray:
+    """
+        Перевод LR изображения в HR изображение с использованием Real-ESRGAN.
+
+        Parameters
+        ----------
+        img : np.ndarray
+            Изображение в формате (h, w, c).
+        upsampler : Any
+            Объект модели Real-ESRGAN.
+        config : dict[str, Any]
+            Словарь с конфигурационными параметрами.
+
+        Returns
+        -------
+        np.ndarray
+            HR изображение в формате (h*, w*, c).
+            h* = h * config['outscale'].
+            w* = w * config['outscale'].
+    """
     use_face_enhancer = config['use_face_enhancer']
     outscale = config['outscale']
 

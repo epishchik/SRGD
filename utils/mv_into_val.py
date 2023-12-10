@@ -5,13 +5,13 @@ import numpy as np
 
 
 def main() -> None:
-    '''
+    """
         Отделяет тестовую часть заданного размера в отдельную директорию.
 
         Returns
         -------
         None
-    '''
+    """
     parser = ArgumentParser()
     parser.add_argument('--folder', type=str)
     parser.add_argument('--test-size', type=float, default=0.2)

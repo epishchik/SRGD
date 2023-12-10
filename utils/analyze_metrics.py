@@ -2,6 +2,13 @@ import pandas as pd
 
 
 def main() -> None:
+    """
+        Функция для визуализации посчитанных метрик.
+
+        Returns
+        -------
+        None
+    """
     metrics = pd.read_csv('../dvc_data/metrics.csv')
 
     show_columns = [

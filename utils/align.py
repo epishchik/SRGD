@@ -2,7 +2,7 @@ import os
 
 
 def clean_from_single_folder(root: str, target_folder: str) -> None:
-    '''
+    """
         Очистка всех папок из root от файлов без пары в папке target_folder.
 
         Parameters
@@ -17,7 +17,7 @@ def clean_from_single_folder(root: str, target_folder: str) -> None:
         Returns
         -------
         None
-    '''
+    """
     folders = [
         os.path.join(root, resolution) for resolution in os.listdir(root)
     ]
@@ -38,7 +38,7 @@ def clean_from_single_folder(root: str, target_folder: str) -> None:
 
 
 def clean_all_folders(root: str) -> None:
-    '''
+    """
         Функция попарной очистки всех файлов из всех
         папок из root от файлов без пары.
 
@@ -50,7 +50,7 @@ def clean_all_folders(root: str) -> None:
         Returns
         -------
         None
-    '''
+    """
     folders = os.listdir(root)
     target_folders = [os.path.join(root, folder) for folder in folders]
 

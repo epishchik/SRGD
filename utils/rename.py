@@ -2,7 +2,7 @@ import os
 
 
 def rename(root: str) -> None:
-    '''
+    """
         Переименование файлов со всех папок внутри root,
         файлы с одинаковым названием получат новое одинаковое название.
 
@@ -15,7 +15,7 @@ def rename(root: str) -> None:
         Returns
         -------
         None
-    '''
+    """
     folders = [os.path.join(root, folder) for folder in os.listdir(root)]
 
     files = os.listdir(folders[0])

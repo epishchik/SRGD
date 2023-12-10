@@ -5,16 +5,16 @@ from typing import Any
 
 import cv2
 import numpy as np
-import yaml
 from basicsr.data.degradations import (add_jpg_compression,
                                        circular_lowpass_kernel,
                                        random_add_gaussian_noise,
                                        random_add_poisson_noise,
                                        random_mixed_kernels)
+from parse import parse_yaml
 
 
 def set_seed(seed: int) -> None:
-    '''
+    """
         Фиксацию последовательности псевдослучайных чисел.
 
         Parameters
@@ -25,7 +25,7 @@ def set_seed(seed: int) -> None:
         Returns
         -------
         None
-    '''
+    """
     random.seed(seed)
     np.random.seed(seed)
 
@@ -34,7 +34,7 @@ def inter_resolution(
     res_lr: tuple[int, int],
     res_hr: tuple[int, int]
 ) -> tuple[int, int]:
-    '''
+    """
         Получение промежуточного разрешения между низким и высоким разрешением.
 
         Parameters
@@ -48,7 +48,7 @@ def inter_resolution(
         -------
         tuple[int, int]
             Высота, ширина промежуточного разрешения в формате (h, w).
-    '''
+    """
     h_lr, w_lr = res_lr
     h_hr, w_hr = res_hr
 
@@ -62,7 +62,7 @@ def inter_resolution(
 def blur_kernels(
     config: dict[str, Any]
 ) -> tuple[np.ndarray, np.ndarray]:
-    '''
+    """
         Генерация ядер из статьи https://arxiv.org/abs/2107.10833.
 
         Parameters
@@ -74,7 +74,7 @@ def blur_kernels(
         -------
         tuple[np.ndarray, np.ndarray]
             Ядра сверток. Без sync_kernel, потому что оно выдает артефакты.
-    '''
+    """
     max_kernel_size = config['max_kernel_size']
 
     kernel_size1 = config['max_kernel_size']
@@ -156,7 +156,7 @@ def resize(
     resolution: tuple[int, int],
     config: dict[str, Any]
 ) -> np.ndarray:
-    '''
+    """
         Ресайз изображения.
 
         Parameters
@@ -172,7 +172,7 @@ def resize(
         -------
         np.ndarray
             Изображение в новом разрешении.
-    '''
+    """
     resize_type = np.random.choice(config['resize_list'])
 
     if resize_type == 'bilinear':
@@ -194,7 +194,7 @@ def resize(
 
 
 def noise(img: np.ndarray, config: dict[str, Any]) -> np.ndarray:
-    '''
+    """
         Добавление шума к изображению.
 
         Parameters
@@ -208,7 +208,7 @@ def noise(img: np.ndarray, config: dict[str, Any]) -> np.ndarray:
         -------
         np.ndarray
             Зашумленное изображение.
-    '''
+    """
     gaussian_noise_prob = config['gaussian_noise_prob']
     gray_noise_prob = config['gray_noise_prob']
 
@@ -228,7 +228,7 @@ def noise(img: np.ndarray, config: dict[str, Any]) -> np.ndarray:
 
 
 def jpg(img: np.ndarray, config: dict[str, Any]) -> np.ndarray:
-    '''
+    """
         JPEG сжатие изображения.
 
         Parameters
@@ -242,14 +242,14 @@ def jpg(img: np.ndarray, config: dict[str, Any]) -> np.ndarray:
         -------
         np.ndarray
             Сжатое изображение.
-    '''
+    """
     jpeg_quality = config['jpeg_quality']
     img = add_jpg_compression(img, jpeg_quality)
     return img
 
 
 def compress(src_folder: str, dst_folder: str, config_path: str) -> None:
-    '''
+    """
         Сжатие изображений и сохранение в новую папку.
 
         Parameters
@@ -264,8 +264,8 @@ def compress(src_folder: str, dst_folder: str, config_path: str) -> None:
         Returns
         -------
         None
-    '''
-    config = parse(config_path)
+    """
+    config = parse_yaml(config_path)
     os.makedirs(dst_folder, exist_ok=True)
     src_files = os.listdir(src_folder)
 
@@ -329,25 +329,6 @@ def compress(src_folder: str, dst_folder: str, config_path: str) -> None:
                 f'{i + 1} / {total_stages} stage,',
                 f'{j + 1} / {total_images} image'
             )
-
-
-def parse(config_path: str) -> dict[str, Any]:
-    '''
-        Парсинг .yaml файла в словарь.
-
-        Parameters
-        ----------
-        config_path : str
-            Путь к конфигурационному .yaml файлу.
-
-        Returns
-        -------
-        dict[str, Any]
-            Словарь с конфигурационными параметрами.
-    '''
-    with open(config_path, 'r') as f:
-        dct = yaml.safe_load(f)
-    return dct
 
 
 if __name__ == '__main__':
