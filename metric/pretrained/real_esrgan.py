@@ -10,21 +10,18 @@ import numpy as np
 import torch
 
 
-def main(root: str) -> None:
+def main() -> None:
     """
         Вычисление и запись в файл метрик для модели Real-ESRGAN.
         В качестве датасета используется один из проектов из
         epishchik/super-resolution-games с HuggingFace.
 
-        Parameters
-        ----------
-        root : str
-            Путь к корню проекта.
-
         Returns
         -------
         None
     """
+    root = ''
+
     sys.path.insert(0, root)
     from metric.metric import MetricSR
     from model.real_esrgan import configure, predict
@@ -77,7 +74,7 @@ def main(root: str) -> None:
 
     metric_config_path = os.path.join(
         root,
-        'configs/metric/downscale/DMXPrevisSample.yaml'
+        'configs/metric/downscale/CitySample.yaml'
     )
 
     model_config = parse_yaml(model_config_path)
@@ -200,5 +197,4 @@ def main(root: str) -> None:
 
 
 if __name__ == '__main__':
-    root = '/home/epishchik/SR-Gaming-Bench'
-    main(root)
+    main()
