@@ -77,7 +77,7 @@ def main(root: str) -> None:
 
     metric_config_path = os.path.join(
         root,
-        'configs/metric/game_engine/HillsideSample.yaml'
+        'configs/metric/downscale/DMXPrevisSample.yaml'
     )
 
     model_config = parse_yaml(model_config_path)
@@ -124,7 +124,13 @@ def main(root: str) -> None:
     logs_path = os.path.join(root, 'logs')
     os.makedirs(logs_path, exist_ok=True)
 
-    file_handler = logging.FileHandler(f'{logs_path}/metric_real_esrgan.log')
+    file_handler = logging.FileHandler(
+        os.path.join(
+            f'{logs_path}',
+            'metric_real_esrgan.log'
+        )
+    )
+
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 
