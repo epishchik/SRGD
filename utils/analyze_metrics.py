@@ -3,29 +3,31 @@ import pandas as pd
 
 def main() -> None:
     """
-        Функция для визуализации посчитанных метрик.
+    Функция для визуализации посчитанных метрик.
 
-        Returns
-        -------
-        None
+    Returns
+    -------
+    None
     """
-    metrics = pd.read_csv('../dvc_data/metrics.csv')
+    metrics = pd.read_csv("../dvc_data/metrics.csv")
 
     show_columns = [
-        'time',
-        'sr_model',
-        'project_type',
-        'project_name',
-        'lr',
-        'hr',
-        'split',
-        'psnr',
-        'ssim',
-        'lpips'
+        "time",
+        "sr_model",
+        "project_type",
+        "project_name",
+        "lr",
+        "hr",
+        "split",
+        "psnr",
+        "ssim",
+        "lpips",
     ]
 
-    query = ('(project_name == "ActionRPG" and split == "train") or '
-             '(project_name == "CitySample" and split == "val")')
+    query = (
+        '(project_name == "ActionRPG" and split == "train") or '
+        '(project_name == "CitySample" and split == "val")'
+    )
 
     if query:
         filtered_metrics = metrics.query(query)[show_columns]
@@ -35,5 +37,5 @@ def main() -> None:
     print(filtered_metrics)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

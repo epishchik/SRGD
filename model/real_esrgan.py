@@ -11,98 +11,93 @@ from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 def configure(root: str, config: dict[str, Any]) -> Any:
     """
-        Функция создания модели Real-ESRGAN из конфигурационного словаря.
+    Функция создания модели Real-ESRGAN из конфигурационного словаря.
 
-        Parameters
-        ----------
-        root : str
-            Путь к корню проекта.
-        config : dict[str, Any]
-            Словарь с конфигурационными параметрами.
+    Parameters
+    ----------
+    root : str
+        Путь к корню проекта.
+    config : dict[str, Any]
+        Словарь с конфигурационными параметрами.
 
-        Returns
-        -------
-        Any
-            Объект модели Real-ESRGAN.
+    Returns
+    -------
+    Any
+        Объект модели Real-ESRGAN.
     """
     model, model_path, netscale, dni_weight = None, None, None, None
 
-    model_path = os.path.join(root, config['weights'])
-    model_name = config['filename']
-    outscale = config['outscale']
-    denoise_strength = config['denoise_strength']
-    use_face_enhancer = config['use_face_enhancer']
-    tile = config['tile']
-    tile_pad = config['tile_pad']
-    pre_pad = config['pre_pad']
-    fp32 = config['fp32']
-    gpu_id = config['gpu_id']
+    model_path = os.path.join(root, config["weights"])
+    model_name = config["filename"]
+    outscale = config["outscale"]
+    denoise_strength = config["denoise_strength"]
+    use_face_enhancer = config["use_face_enhancer"]
+    tile = config["tile"]
+    tile_pad = config["tile_pad"]
+    pre_pad = config["pre_pad"]
+    fp32 = config["fp32"]
+    gpu_id = config["gpu_id"]
 
-    if model_name == 'RealESRGAN_x4plus':
+    if model_name == "RealESRGAN_x4plus":
         model = RRDBNet(
             num_in_ch=3,
             num_out_ch=3,
             num_feat=64,
             num_block=23,
             num_grow_ch=32,
-            scale=4
+            scale=4,
         )
         netscale = 4
-    elif model_name == 'RealESRNet_x4plus':
+    elif model_name == "RealESRNet_x4plus":
         model = RRDBNet(
             num_in_ch=3,
             num_out_ch=3,
             num_feat=64,
             num_block=23,
             num_grow_ch=32,
-            scale=4
+            scale=4,
         )
         netscale = 4
-    elif model_name == 'RealESRGAN_x4plus_anime_6B':
+    elif model_name == "RealESRGAN_x4plus_anime_6B":
         model = RRDBNet(
-            num_in_ch=3,
-            num_out_ch=3,
-            num_feat=64,
-            num_block=6,
-            num_grow_ch=32,
-            scale=4
+            num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4
         )
         netscale = 4
-    elif model_name == 'RealESRGAN_x2plus':
+    elif model_name == "RealESRGAN_x2plus":
         model = RRDBNet(
             num_in_ch=3,
             num_out_ch=3,
             num_feat=64,
             num_block=23,
             num_grow_ch=32,
-            scale=2
+            scale=2,
         )
         netscale = 2
-    elif model_name == 'realesr-animevideov3':
+    elif model_name == "realesr-animevideov3":
         model = SRVGGNetCompact(
             num_in_ch=3,
             num_out_ch=3,
             num_feat=64,
             num_conv=16,
             upscale=4,
-            act_type='prelu'
+            act_type="prelu",
         )
         netscale = 4
-    elif model_name == 'realesr-general-x4v3':
+    elif model_name == "realesr-general-x4v3":
         model = SRVGGNetCompact(
             num_in_ch=3,
             num_out_ch=3,
             num_feat=64,
             num_conv=32,
             upscale=4,
-            act_type='prelu'
+            act_type="prelu",
         )
         netscale = 4
     else:
-        raise ValueError(f'model {model_name} does not exist.')
+        raise ValueError(f"model {model_name} does not exist.")
 
-    if model_name == 'realesr-general-x4v3' and denoise_strength < 1.0:
-        wdn_model_path = os.path.join(root, config['wdn_weights'])
+    if model_name == "realesr-general-x4v3" and denoise_strength < 1.0:
+        wdn_model_path = os.path.join(root, config["wdn_weights"])
         model_path = [model_path, wdn_model_path]
         dni_weight = [denoise_strength, 1.0 - denoise_strength]
 
@@ -115,22 +110,22 @@ def configure(root: str, config: dict[str, Any]) -> Any:
         tile_pad=tile_pad,
         pre_pad=pre_pad,
         half=not fp32,
-        gpu_id=gpu_id
+        gpu_id=gpu_id,
     )
 
     if use_face_enhancer:
         shutil.copytree(
-            os.path.join(root, config['GFPGAN_weights']['additional']),
-            os.path.join(os.getcwd(), 'gfpgan'),
-            dirs_exist_ok=True
+            os.path.join(root, config["GFPGAN_weights"]["additional"]),
+            os.path.join(os.getcwd(), "gfpgan"),
+            dirs_exist_ok=True,
         )
 
         face_enhancer = GFPGANer(
-            model_path=os.path.join(config['GFPGAN_weights']['model']),
+            model_path=os.path.join(config["GFPGAN_weights"]["model"]),
             upscale=outscale,
-            arch='clean',
+            arch="clean",
             channel_multiplier=2,
-            bg_upsampler=upsampler
+            bg_upsampler=upsampler,
         )
         return face_enhancer
     return upsampler
@@ -140,35 +135,32 @@ def predict(
     img: np.ndarray,
     upsampler: Any,
     outscale: float = 4.0,
-    use_face_enhancer: bool = False
+    use_face_enhancer: bool = False,
 ) -> np.ndarray:
     """
-        Перевод LR изображения в HR изображение с использованием Real-ESRGAN.
+    Перевод LR изображения в HR изображение с использованием Real-ESRGAN.
 
-        Parameters
-        ----------
-        img : np.ndarray
-            Изображение в формате (h, w, c).
-        upsampler : Any
-            Объект модели Real-ESRGAN.
-        outscale : float, optional
-            Величина upscale, обычно 2.0 или 4.0.
-            Можно использовать другие значения, но в таком случае
-            делается простой resize сгенерированного HR к нужному размеру.
-        use_face_enhancer : bool, optional
-            Использовать ли модель для улучшения качества лиц GFPGAN.
+    Parameters
+    ----------
+    img : np.ndarray
+        Изображение в формате (h, w, c).
+    upsampler : Any
+        Объект модели Real-ESRGAN.
+    outscale : float, optional
+        Величина upscale, обычно 2.0 или 4.0.
+        Можно использовать другие значения, но в таком случае
+        делается простой resize сгенерированного HR к нужному размеру.
+    use_face_enhancer : bool, optional
+        Использовать ли модель для улучшения качества лиц GFPGAN.
 
-        Returns
-        -------
-        np.ndarray
-            HR изображение в формате (h*outscale, w*outscale, c).
+    Returns
+    -------
+    np.ndarray
+        HR изображение в формате (h*outscale, w*outscale, c).
     """
     if use_face_enhancer:
         _, _, out_img = upsampler.enhance(
-            img,
-            has_aligned=False,
-            only_center_face=False,
-            paste_back=True
+            img, has_aligned=False, only_center_face=False, paste_back=True
         )
     else:
         out_img, _ = upsampler.enhance(img, outscale=outscale)

@@ -17,174 +17,172 @@ from utils.parse import parse_yaml
 
 app = FastAPI()
 
-app.config_path = './configs/RealESRGAN_x4plus.yaml'
+app.config_path = "./configs/RealESRGAN_x4plus.yaml"
 app.config = parse_yaml(app.config_path)
 
 shutil.copytree(
-    app.config['GFPGAN_weights']['additional'],
-    os.path.join(os.getcwd(), 'gfpgan'),
-    dirs_exist_ok=True
+    app.config["GFPGAN_weights"]["additional"],
+    os.path.join(os.getcwd(), "gfpgan"),
+    dirs_exist_ok=True,
 )
 
 app.upsampler = configure_real_esrgan(app.config)
 
-logger = logging.getLogger('uvicorn')
-formatter = logging.Formatter('%(asctime)s [%(levelname)-5.5s] %(message)s')
+logger = logging.getLogger("uvicorn")
+formatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
 
-logs_path = '../logs'
+logs_path = "../logs"
 os.makedirs(logs_path, exist_ok=True)
 
-file_handler = logging.FileHandler(f'{logs_path}/api.log')
+file_handler = logging.FileHandler(f"{logs_path}/api.log")
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
-logger.setLevel('DEBUG')
+logger.setLevel("DEBUG")
 
-logger.debug(f'set config path = {app.config_path}')
-logger.debug(f'set config dict = {app.config}')
+logger.debug(f"set config path = {app.config_path}")
+logger.debug(f"set config dict = {app.config}")
 
 
-@app.get('/info')
+@app.get("/info")
 def info() -> FileResponse:
     """
-        Получение файла с краткой информацией о проекте.
+    Получение файла с краткой информацией о проекте.
 
-        Returns
-        -------
-        FileResponse
-            Текстовый файл.
+    Returns
+    -------
+    FileResponse
+        Текстовый файл.
     """
     info_file = FileResponse(
-        path='./extra/info.txt',
-        filename='info.txt',
-        media_type='text'
+        path="./extra/info.txt", filename="info.txt", media_type="text"
     )
-    logger.debug('used /info')
+    logger.debug("used /info")
     return info_file
 
 
-@app.post('/configure_model/name')
+@app.post("/configure_model/name")
 def configure_model(config_name: str) -> dict[str, Any]:
     """
-        Конфигурация super-resolution модели по названию.
+    Конфигурация super-resolution модели по названию.
 
-        Parameters
-        ----------
-        config_name : str
-            Название модели.
+    Parameters
+    ----------
+    config_name : str
+        Название модели.
 
-        Returns
-        -------
-        dict[str, Any]
-            Словарь конфигурационных параметров.
+    Returns
+    -------
+    dict[str, Any]
+        Словарь конфигурационных параметров.
     """
-    app.config_path = f'./configs/{config_name}.yaml'
+    app.config_path = f"./configs/{config_name}.yaml"
     app.config = parse_yaml(app.config_path)
     app.upsampler = configure_real_esrgan(app.config)
 
-    logger.debug('used /configure_model/name')
-    logger.debug(f'set new config path = {app.config_path}')
-    logger.debug(f'set new config dict = {app.config}')
+    logger.debug("used /configure_model/name")
+    logger.debug(f"set new config path = {app.config_path}")
+    logger.debug(f"set new config dict = {app.config}")
 
     return app.config
 
 
-@app.post('/configure_model/file')
+@app.post("/configure_model/file")
 def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
     """
-        Конфигурация super-resolution модели конфигурационным yaml файлом.
+    Конфигурация super-resolution модели конфигурационным yaml файлом.
 
-        Parameters
-        ----------
-        config_file : UploadFile
-            Конфигурационный .yaml файл.
+    Parameters
+    ----------
+    config_file : UploadFile
+        Конфигурационный .yaml файл.
 
-        Returns
-        -------
-        dict[str, Any]
-            Словарь конфигурационных параметров.
+    Returns
+    -------
+    dict[str, Any]
+        Словарь конфигурационных параметров.
     """
     app.config_path = None
     app.config = yaml.safe_load(config_file.file.read())
-    app.config['filename'] = Path(config_file.filename).stem
+    app.config["filename"] = Path(config_file.filename).stem
     app.upsampler = configure_real_esrgan(app.config)
 
-    logger.debug('used /configure_model/file')
-    logger.debug(f'set new config path = {app.config_path}')
-    logger.debug(f'set new config dict = {app.config}')
+    logger.debug("used /configure_model/file")
+    logger.debug(f"set new config path = {app.config_path}")
+    logger.debug(f"set new config dict = {app.config}")
 
     return app.config
 
 
-@app.post('/upscale/example')
+@app.post("/upscale/example")
 def upscale_example() -> Response:
     """
-        Пример работы super-resolution модели на заготовленном LR изображении.
+    Пример работы super-resolution модели на заготовленном LR изображении.
 
-        Returns
-        -------
-        Response
-            Сгенерированное HR изображение.
+    Returns
+    -------
+    Response
+        Сгенерированное HR изображение.
     """
-    img = cv2.imread('./extra/example.png', cv2.IMREAD_UNCHANGED)
+    img = cv2.imread("./extra/example.png", cv2.IMREAD_UNCHANGED)
 
     h, w = img.shape[0], img.shape[1]
-    outscale = app.config['outscale']
+    outscale = app.config["outscale"]
 
     h_up, w_up = int(h * outscale), int(w * outscale)
     if h_up > 4320 or w_up > 7680:
         raise HTTPException(
             status_code=481,
-            detail=f'potential output resolution ({h_up, w_up}) is too large, '
-            'max possible resolution is (4320, 7680) pixels in (h, w) format.'
+            detail=f"potential output resolution ({h_up, w_up}) is too large, "
+            "max possible resolution is (4320, 7680) pixels in (h, w) format.",
         )
 
     out_img = predict_real_esrgan(img, app.upsampler, app.config)
-    _, enc_img = cv2.imencode('.png', out_img)
+    _, enc_img = cv2.imencode(".png", out_img)
     bytes_img = enc_img.tobytes()
 
-    logger.debug('used /upscale/example')
-    logger.debug(f'low_res shape = ({h},{w}), ups_res shape = ({h_up},{w_up})')
-    return Response(bytes_img, media_type='image/png')
+    logger.debug("used /upscale/example")
+    logger.debug(f"low_res shape = ({h},{w}), ups_res shape = ({h_up},{w_up})")
+    return Response(bytes_img, media_type="image/png")
 
 
-@app.post('/upscale/file')
+@app.post("/upscale/file")
 def upscale(image_file: UploadFile) -> Response:
     """
-        Обработка super-resolution моделью изображения из файла.
+    Обработка super-resolution моделью изображения из файла.
 
-        Parameters
-        ----------
-        image_file : UploadFile
-            Файл с LR изображением.
+    Parameters
+    ----------
+    image_file : UploadFile
+        Файл с LR изображением.
 
-        Returns
-        -------
-        Response
-            Сгенерированное HR изображение.
+    Returns
+    -------
+    Response
+        Сгенерированное HR изображение.
     """
     raw = np.fromstring(image_file.file.read(), np.uint8)
     img = cv2.imdecode(raw, cv2.IMREAD_COLOR)
 
     h, w = img.shape[0], img.shape[1]
-    outscale = app.config['outscale']
+    outscale = app.config["outscale"]
 
     h_up, w_up = int(h * outscale), int(w * outscale)
     if h_up > 4320 or w_up > 7680:
         raise HTTPException(
             status_code=481,
-            detail=f'potential output resolution ({h_up, w_up}) is too large, '
-            'max possible resolution is (4320, 7680) pixels in (h, w) format.'
+            detail=f"potential output resolution ({h_up, w_up}) is too large, "
+            "max possible resolution is (4320, 7680) pixels in (h, w) format.",
         )
 
     out_img = predict_real_esrgan(img, app.upsampler, app.config)
-    _, enc_img = cv2.imencode('.png', out_img)
+    _, enc_img = cv2.imencode(".png", out_img)
     bytes_img = enc_img.tobytes()
 
-    logger.debug('used /upscale/file')
-    logger.debug(f'low_res shape = ({h},{w}), ups_res shape = ({h_up},{w_up})')
-    return Response(bytes_img, media_type='image/png')
+    logger.debug("used /upscale/file")
+    logger.debug(f"low_res shape = ({h},{w}), ups_res shape = ({h_up},{w_up})")
+    return Response(bytes_img, media_type="image/png")
 
 
-if __name__ == '__main__':
-    uvicorn.run('main:app', host='127.0.0.1', port=8000)
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000)

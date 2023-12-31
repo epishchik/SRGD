@@ -25,6 +25,8 @@ dvc = {extras = ["gdrive"], version = "^3.33.3"}
 datasets = "^2.15.0"
 huggingface-hub = {git = "git@github.com:huggingface/huggingface_hub.git"}
 piq = "^0.8.0"
+black = "^23.12.1"
+flake8 = "^6.1.0"
 
 
 [build-system]

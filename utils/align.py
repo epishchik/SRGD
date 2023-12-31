@@ -3,24 +3,22 @@ import os
 
 def clean_from_single_folder(root: str, target_folder: str) -> None:
     """
-        Очистка всех папок из root от файлов без пары в папке target_folder.
+    Очистка всех папок из root от файлов без пары в папке target_folder.
 
-        Parameters
-        ----------
-        root : str
-            Путь к корню, все папки из root будут сравниваться
-            с target_folder по файлам.
-        target_folder : str
-            Путь к папке, все файлы из папок из root будут удалены,
-            если их нет в target_folder.
+    Parameters
+    ----------
+    root : str
+        Путь к корню, все папки из root будут сравниваться
+        с target_folder по файлам.
+    target_folder : str
+        Путь к папке, все файлы из папок из root будут удалены,
+        если их нет в target_folder.
 
-        Returns
-        -------
-        None
+    Returns
+    -------
+    None
     """
-    folders = [
-        os.path.join(root, resolution) for resolution in os.listdir(root)
-    ]
+    folders = [os.path.join(root, resolution) for resolution in os.listdir(root)]
 
     assert target_folder in folders
     target_images, extra_images = os.listdir(target_folder), []
@@ -39,17 +37,17 @@ def clean_from_single_folder(root: str, target_folder: str) -> None:
 
 def clean_all_folders(root: str) -> None:
     """
-        Функция попарной очистки всех файлов из всех
-        папок из root от файлов без пары.
+    Функция попарной очистки всех файлов из всех
+    папок из root от файлов без пары.
 
-        Parameters
-        ----------
-        root : str
-            Путь к корню, все папки из root будут поданы в попарную очистку.
+    Parameters
+    ----------
+    root : str
+        Путь к корню, все папки из root будут поданы в попарную очистку.
 
-        Returns
-        -------
-        None
+    Returns
+    -------
+    None
     """
     folders = os.listdir(root)
     target_folders = [os.path.join(root, folder) for folder in folders]
@@ -58,6 +56,6 @@ def clean_all_folders(root: str) -> None:
         clean_from_single_folder(root, target_folder)
 
 
-if __name__ == '__main__':
-    root = ''
+if __name__ == "__main__":
+    root = ""
     clean_all_folders(root)
