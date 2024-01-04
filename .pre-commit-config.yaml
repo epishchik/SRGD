@@ -30,13 +30,13 @@ repos:
         args: [--profile=black]
       - id: nbqa-black
       - id: nbqa-flake8
-        args: [--max-line-length=88, --extend-ignore=E203]
+        args: [--max-line-length=88, "--extend-ignore=E203,E402"]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
     hooks:
       - id: flake8
-        args: [--max-line-length=88, --extend-ignore=E203]
+        args: [--max-line-length=88, "--extend-ignore=E203,E402"]
 
   - repo: https://github.com/psf/black
     rev: 24.1a1

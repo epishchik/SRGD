@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 from datetime import datetime
+from pathlib import Path
 
 import cv2
 import datasets
@@ -20,9 +21,9 @@ def main() -> None:
     -------
     None
     """
-    root = ""
+    root = Path(__file__).parents[2]
 
-    sys.path.insert(0, root)
+    sys.path.insert(0, str(root))
     from metric.metric import MetricSR
     from model.real_esrgan import configure, predict
     from utils.parse import parse_yaml
@@ -64,19 +65,19 @@ def main() -> None:
     metric_file_header += metric_names
 
     real_esrgan_config_name = "RealESRGAN_x4plus"
-    model_config_path = os.path.join(
-        root, f"configs/model/{real_esrgan_config_name}.yaml"
+    model_config_path = (
+        root / f"configs/model/pretrained/{real_esrgan_config_name}.yaml"
     )
 
-    metric_config_path = os.path.join(root, "configs/metric/downscale/CitySample.yaml")
+    metric_config_path = root / "configs/metric/downscale/CSGO.yaml"
 
-    model_config = parse_yaml(model_config_path)
-    metric_config = parse_yaml(metric_config_path)
+    model_config = parse_yaml(str(model_config_path))
+    metric_config = parse_yaml(str(metric_config_path))
 
-    save_dir = os.path.join(root, metric_config["output_path"])
+    save_dir = root / metric_config["output_path"]
     os.makedirs(save_dir, exist_ok=True)
     project_type, project_name = metric_config["project_name"].split("_")
-    save_path = os.path.join(save_dir, "metrics.csv")
+    save_path = save_dir / "metrics.csv"
 
     if not os.path.exists(save_path):
         with open(save_path, "w") as csv_file:
@@ -84,6 +85,7 @@ def main() -> None:
             csv_writer.writerow(metric_file_header)
 
     upsampler = configure(root, model_config)
+    use_face_enhancer = model_config["use_face_enhancer"]
 
     split_config = metric_config["split"]
     if split_config == "train":
@@ -106,12 +108,10 @@ def main() -> None:
     logger = logging.getLogger()
     formatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
 
-    logs_path = os.path.join(root, "logs")
+    logs_path = root / "logs"
     os.makedirs(logs_path, exist_ok=True)
 
-    file_handler = logging.FileHandler(
-        os.path.join(f"{logs_path}", "metric_real_esrgan.log")
-    )
+    file_handler = logging.FileHandler(logs_path / "metric_real_esrgan.log")
 
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
@@ -137,7 +137,9 @@ def main() -> None:
         bgr_hr = cv2.cvtColor(rgb_hr, cv2.COLOR_RGB2BGR)
 
         outscale = int(bgr_hr.shape[0] / bgr_lr.shape[0])
-        res_hr = predict(bgr_lr, upsampler, outscale=outscale, use_face_enhancer=False)
+        res_hr = predict(
+            bgr_lr, upsampler, outscale=outscale, use_face_enhancer=use_face_enhancer
+        )
 
         res_hr, bgr_hr = torch.from_numpy(res_hr), torch.from_numpy(bgr_hr)
         res_hr = res_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0

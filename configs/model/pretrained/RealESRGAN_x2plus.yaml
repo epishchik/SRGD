@@ -1,8 +1,9 @@
-weights: dvc_data/weights/real-esrgan/RealESRGAN_x4plus_anime_6B.pth
+model: real_esrgan
+weights: dvc_data/weights/real-esrgan/RealESRGAN_x2plus.pth
 GFPGAN_weights:
   model: dvc_data/weights/real-esrgan/GFPGANv1.3.pth
   additional: dvc_data/weights/gfpgan
-outscale: 4.0
+outscale: 2.0
 denoise_strength: 0.5
 use_face_enhancer: no
 tile: 0

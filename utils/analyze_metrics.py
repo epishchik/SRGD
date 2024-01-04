@@ -24,10 +24,7 @@ def main() -> None:
         "lpips",
     ]
 
-    query = (
-        '(project_name == "ActionRPG" and split == "train") or '
-        '(project_name == "CitySample" and split == "val")'
-    )
+    query = 'project_name == "CSGO" and (split == "train" or split == "val")'
 
     if query:
         filtered_metrics = metrics.query(query)[show_columns]

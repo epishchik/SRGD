@@ -1,5 +1,5 @@
-import os
 import shutil
+from pathlib import Path, PurePath
 from typing import Any
 
 import numpy as np
@@ -9,13 +9,13 @@ from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 
-def configure(root: str, config: dict[str, Any]) -> Any:
+def configure(root: PurePath, config: dict[str, Any]) -> Any:
     """
     Функция создания модели Real-ESRGAN из конфигурационного словаря.
 
     Parameters
     ----------
-    root : str
+    root : PurePath
         Путь к корню проекта.
     config : dict[str, Any]
         Словарь с конфигурационными параметрами.
@@ -27,7 +27,7 @@ def configure(root: str, config: dict[str, Any]) -> Any:
     """
     model, model_path, netscale, dni_weight = None, None, None, None
 
-    model_path = os.path.join(root, config["weights"])
+    model_path = str(root / config["weights"])
     model_name = config["filename"]
     outscale = config["outscale"]
     denoise_strength = config["denoise_strength"]
@@ -97,7 +97,7 @@ def configure(root: str, config: dict[str, Any]) -> Any:
         raise ValueError(f"model {model_name} does not exist.")
 
     if model_name == "realesr-general-x4v3" and denoise_strength < 1.0:
-        wdn_model_path = os.path.join(root, config["wdn_weights"])
+        wdn_model_path = str(root / config["wdn_weights"])
         model_path = [model_path, wdn_model_path]
         dni_weight = [denoise_strength, 1.0 - denoise_strength]
 
@@ -115,13 +115,13 @@ def configure(root: str, config: dict[str, Any]) -> Any:
 
     if use_face_enhancer:
         shutil.copytree(
-            os.path.join(root, config["GFPGAN_weights"]["additional"]),
-            os.path.join(os.getcwd(), "gfpgan"),
+            root / config["GFPGAN_weights"]["additional"],
+            Path.cwd() / "gfpgan",
             dirs_exist_ok=True,
         )
 
         face_enhancer = GFPGANer(
-            model_path=os.path.join(config["GFPGAN_weights"]["model"]),
+            model_path=str(root / config["GFPGAN_weights"]["model"]),
             upscale=outscale,
             arch="clean",
             channel_multiplier=2,

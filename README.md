@@ -9,6 +9,7 @@
 
 ## Материалы
 - [EDA](/docs/EDA.md).
+- [Метрики](/docs/METRICS.md).
 
 ## Ссылки
 - [Датасет Yandex.Disk](https://disk.yandex.ru/d/FUX_JQ-jGEbGPQ).

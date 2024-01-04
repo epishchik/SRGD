@@ -1,3 +1,6 @@
 [submodule "real-esrgan"]
-	path = real-esrgan
+	path = submodules/real-esrgan
 	url = git@github.com:Pe4enIks/Real-ESRGAN.git
+[submodule "submodules/resshift"]
+	path = submodules/resshift
+	url = git@github.com:Pe4enIks/ResShift.git

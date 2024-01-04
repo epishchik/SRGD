@@ -1,0 +1,10 @@
+model: resshift
+task: bicsrx4_opencv
+ckpt_dir: dvc_data/weights/resshift
+resshift_location: submodules/resshift
+outscale: 4
+steps: 15
+chop_size: 512
+fp32: no
+seed: 12345
+device: cuda

@@ -1,4 +1,5 @@
-weights: dvc_data/weights/real-esrgan/RealESRGAN_x4plus.pth
+model: real_esrgan
+weights: dvc_data/weights/real-esrgan/RealESRGAN_x4plus_anime_6B.pth
 GFPGAN_weights:
   model: dvc_data/weights/real-esrgan/GFPGANv1.3.pth
   additional: dvc_data/weights/gfpgan

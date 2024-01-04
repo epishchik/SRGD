@@ -4,8 +4,34 @@ FOLDER=$3  # название проекта = название папки
 DST=$4  # папка куда сохранять данные
 TESTSIZE=$5  # размер тестовой части
 EXT=$6  # расширение файлов
+WORKDIR=$7  # текущая рабочая директория
 
-cp -r "$SRC"/"$TYPE"/"$FOLDER"/ .
+mkdir "$FOLDER"
+cd "$SRC"/"$TYPE"/"$FOLDER"
+
+tar -czf 270p.tar.gz 270p/
+tar -czf 360p.tar.gz 360p/
+tar -czf 540p.tar.gz 540p/
+tar -czf 1080p.tar.gz 1080p/
+
+mv 270p.tar.gz "$WORKDIR"/"$FOLDER"
+mv 360p.tar.gz "$WORKDIR"/"$FOLDER"
+mv 540p.tar.gz "$WORKDIR"/"$FOLDER"
+mv 1080p.tar.gz "$WORKDIR"/"$FOLDER"
+
+cd "$WORKDIR"/"$FOLDER"
+
+tar -xzf 270p.tar.gz
+tar -xzf 360p.tar.gz
+tar -xzf 540p.tar.gz
+tar -xzf 1080p.tar.gz
+
+rm 270p.tar.gz
+rm 360p.tar.gz
+rm 540p.tar.gz
+rm 1080p.tar.gz
+
+cd "$WORKDIR"
 python mv_into_val.py --folder "$FOLDER" --test-size "$TESTSIZE"
 
 ls "$FOLDER"/270p | wc -l

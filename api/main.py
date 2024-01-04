@@ -1,6 +1,6 @@
 import logging
 import os
-import shutil
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -11,22 +11,21 @@ import yaml
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
 
+root = Path(__file__).parents[1]
+sys.path.insert(0, str(root))
+
 from model.real_esrgan import configure as configure_real_esrgan
 from model.real_esrgan import predict as predict_real_esrgan
+from model.resshift import configure as configure_resshift
+from model.resshift import predict as predict_resshift
 from utils.parse import parse_yaml
 
 app = FastAPI()
 
-app.config_path = "./configs/RealESRGAN_x4plus.yaml"
+app.config_path = str(root / "configs/model/pretrained/RealESRGAN_x4plus.yaml")
 app.config = parse_yaml(app.config_path)
 
-shutil.copytree(
-    app.config["GFPGAN_weights"]["additional"],
-    os.path.join(os.getcwd(), "gfpgan"),
-    dirs_exist_ok=True,
-)
-
-app.upsampler = configure_real_esrgan(app.config)
+app.upsampler = configure_real_esrgan(root, app.config)
 
 logger = logging.getLogger("uvicorn")
 formatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
@@ -69,16 +68,22 @@ def configure_model(config_name: str) -> dict[str, Any]:
     Parameters
     ----------
     config_name : str
-        Название модели.
+        Название модели в формате pretrained/model или trained/model.
 
     Returns
     -------
     dict[str, Any]
         Словарь конфигурационных параметров.
     """
-    app.config_path = f"./configs/{config_name}.yaml"
+    app.config_path = str(root / f"configs/model/{config_name}.yaml")
     app.config = parse_yaml(app.config_path)
-    app.upsampler = configure_real_esrgan(app.config)
+
+    if app.config["model"] == "real_esrgan":
+        app.upsampler = configure_real_esrgan(root, app.config)
+    elif app.config["model"] == "resshift":
+        app.upsampler = configure_resshift(root, app.config)
+    else:
+        raise ValueError(f"{app.config['model']} incorrect method name.")
 
     logger.debug("used /configure_model/name")
     logger.debug(f"set new config path = {app.config_path}")
@@ -105,7 +110,13 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
     app.config_path = None
     app.config = yaml.safe_load(config_file.file.read())
     app.config["filename"] = Path(config_file.filename).stem
-    app.upsampler = configure_real_esrgan(app.config)
+
+    if app.config["model"] == "real_esrgan":
+        app.upsampler = configure_real_esrgan(root, app.config)
+    elif app.config["model"] == "resshift":
+        app.upsampler = configure_resshift(root, app.config)
+    else:
+        raise ValueError(f"{app.config['model']} incorrect method name.")
 
     logger.debug("used /configure_model/file")
     logger.debug(f"set new config path = {app.config_path}")
@@ -137,7 +148,15 @@ def upscale_example() -> Response:
             "max possible resolution is (4320, 7680) pixels in (h, w) format.",
         )
 
-    out_img = predict_real_esrgan(img, app.upsampler, app.config)
+    if app.config["model"] == "real_esrgan":
+        out_img = predict_real_esrgan(
+            img, app.upsampler, outscale, app.config["use_face_enhancer"]
+        )
+    elif app.config["model"] == "resshift":
+        out_img = predict_resshift(img, app.upsampler)
+    else:
+        raise ValueError(f"{app.config['model']} incorrect method name.")
+
     _, enc_img = cv2.imencode(".png", out_img)
     bytes_img = enc_img.tobytes()
 
@@ -175,7 +194,15 @@ def upscale(image_file: UploadFile) -> Response:
             "max possible resolution is (4320, 7680) pixels in (h, w) format.",
         )
 
-    out_img = predict_real_esrgan(img, app.upsampler, app.config)
+    if app.config["model"] == "real_esrgan":
+        out_img = predict_real_esrgan(
+            img, app.upsampler, outscale, app.config["use_face_enhancer"]
+        )
+    elif app.config["model"] == "resshift":
+        out_img = predict_resshift(img, app.upsampler)
+    else:
+        raise ValueError(f"{app.config['model']} incorrect method name.")
+
     _, enc_img = cv2.imencode(".png", out_img)
     bytes_img = enc_img.tobytes()
 
