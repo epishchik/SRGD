@@ -1,8 +1,8 @@
 # Service
 
-![UI](/images/ui.png)
-
-![API](/images/api.png)
+|UI                         | API                       |
+|:-------------------------:|:-------------------------:|
+|![UI](/images/ui.png)      |  ![API](/images/api.png)  |
 
 ## Deploy API
 ```bash
