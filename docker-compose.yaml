@@ -10,6 +10,11 @@ services:
       resources:
         limits:
           memory: 16GB
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
     ports:
       - 8000:8000
     networks:

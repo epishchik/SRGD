@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED=1 \
     PATH="${PATH}:/root/.local/bin"
 
 COPY ui /frontend/ui
-COPY pyproject.toml /frontend/
+COPY pyproject.toml poetry.lock /frontend/
 
 WORKDIR /frontend
 

@@ -15,7 +15,7 @@ COPY dvc_data /backend/dvc_data
 COPY model /backend/model
 COPY submodules /backend/submodules
 COPY utils /backend/utils
-COPY pyproject.toml /backend/
+COPY pyproject.toml poetry.lock /backend/
 
 WORKDIR /backend
 
