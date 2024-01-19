@@ -17,6 +17,23 @@ sudo docker run -d \
   super-resolution-benchmark/api:0.0.0
 ```
 
+## Deploy UI
+```bash
+sudo docker build \
+  -t super-resolution-benchmark/ui:0.0.0 \
+  -f ui/Dockerfile .
+```
+```bash
+sudo docker run -d \
+  -p 8501:8501 \
+  --cpus 1 \
+  --memory 2GB \
+  --memory-swap 2GB \
+  --restart=always \
+  --name super-resolution-benchmark-ui \
+  super-resolution-benchmark/ui:0.0.0
+```
+
 ## Deploy Full
 ```bash
 sudo docker compose build

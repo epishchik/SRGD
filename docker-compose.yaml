@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: ./api/Dockerfile
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 16GB
+    ports:
+      - 8000:8000
+    networks:
+      - deploy_network
+    container_name: super-resolution-benchmark-api
+
+  ui:
+    build:
+      context: ./
+      dockerfile: ./ui/Dockerfile
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 2GB
+    depends_on:
+      - api
+    ports:
+      - 8501:8501
+    networks:
+      - deploy_network
+    container_name: super-resolution-benchmark-ui
+
+networks:
+  deploy_network:
+    driver: bridge
