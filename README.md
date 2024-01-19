@@ -16,6 +16,7 @@ https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8
 ## Материалы
 - [EDA](/docs/EDA.md).
 - [Метрики](/docs/METRICS.md).
+- [Deploy](/docs/DEPLOY.md).
 
 ## Ссылки
 - [Датасет Yandex.Disk](https://disk.yandex.ru/d/FUX_JQ-jGEbGPQ).
@@ -23,4 +24,4 @@ https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8
 
 ## Команда
 - Пищик Евгений (разработчик, [@Evgenii_Pishchik](https://t.me/Evgenii_Pishchik)).
-- Рогачев Александр (куратор).
+- Рогачев Александр (куратор, [@airogachev](https://t.me/airogachev)).

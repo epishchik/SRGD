@@ -6,7 +6,6 @@ from typing import Any
 
 import cv2
 import numpy as np
-import uvicorn
 import yaml
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
@@ -30,7 +29,7 @@ app.upsampler = configure_real_esrgan(root, app.config)
 logger = logging.getLogger("uvicorn")
 formatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
 
-logs_path = "../logs"
+logs_path = str(root / "logs")
 os.makedirs(logs_path, exist_ok=True)
 
 file_handler = logging.FileHandler(f"{logs_path}/api.log")
@@ -209,7 +208,3 @@ def upscale(image_file: UploadFile) -> Response:
     logger.debug("used /upscale/file")
     logger.debug(f"low_res shape = ({h},{w}), ups_res shape = ({h_up},{w_up})")
     return Response(bytes_img, media_type="image/png")
-
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000)
