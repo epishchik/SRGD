@@ -1,4 +1,8 @@
-# Deploy
+# Service
+
+![UI](/images/ui.png)
+
+![API](/images/api.png)
 
 ## Deploy API
 ```bash
@@ -37,5 +41,5 @@ sudo docker run -d \
 ## Deploy Full
 ```bash
 sudo docker compose build
-sudo docker compose up
+sudo docker compose up -d
 ```

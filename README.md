@@ -1,10 +1,6 @@
 # SR-Gaming-Bench
 
-
 https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8b8f-63b75d139e61
-
-
-
 
 ## Описание проекта
 Данный проект представляет из себя бенчмарк для задачи Super Resolution в домене игр, существуют технологии которые этим занимаются, такие как AMD FSR или Nvidia DLSS, но сейчас в интернете почти нет открытых датасетов для SR в играх, хочется сделать такой датасет, чтобы была возможность обучать на нем модели и тестировать насколько такая модель будет работать в реальных играх.
@@ -16,7 +12,7 @@ https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8
 ## Материалы
 - [EDA](/docs/EDA.md).
 - [Метрики](/docs/METRICS.md).
-- [Deploy](/docs/DEPLOY.md).
+- [Сервис](/docs/SERVICE.md).
 
 ## Ссылки
 - [Датасет Yandex.Disk](https://disk.yandex.ru/d/FUX_JQ-jGEbGPQ).
