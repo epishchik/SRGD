@@ -14,9 +14,13 @@ COPY pyproject.toml poetry.lock /frontend/
 
 WORKDIR /frontend
 
-RUN apt update && apt install -y curl
-RUN curl -sSL https://install.python-poetry.org | python3 -
-RUN poetry install --with ui
+RUN apt update && \
+    apt install -y curl && \
+    curl -sSL https://install.python-poetry.org | python3 - && \
+    poetry config virtualenvs.create false && \
+    poetry install --with ui --no-root && \
+    rm -rf ~/.cache/pypoetry/artifacts && \
+    rm -rf ~/.cache/pypoetry/cache
 
 WORKDIR /frontend/ui
 EXPOSE 8501

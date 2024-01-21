@@ -10,8 +10,8 @@ ENV PYTHONUNBUFFERED=1 \
     PATH="${PATH}:/root/.local/bin"
 
 COPY api /backend/api
-COPY configs /backend/configs
 COPY dvc_data /backend/dvc_data
+COPY configs /backend/configs
 COPY model /backend/model
 COPY submodules /backend/submodules
 COPY utils /backend/utils
@@ -19,9 +19,14 @@ COPY pyproject.toml poetry.lock /backend/
 
 WORKDIR /backend
 
-RUN apt update && apt install -y curl
-RUN curl -sSL https://install.python-poetry.org | python3 -
-RUN poetry install --with api,ml
+RUN apt update && \
+    apt install -y curl && \
+    curl -sSL https://install.python-poetry.org | python3 - && \
+    poetry config virtualenvs.create false && \
+    poetry install --with api,ml --no-root && \
+    rm -rf ~/.cache/pypoetry/artifacts && \
+    rm -rf ~/.cache/pypoetry/cache && \
+    conda clean -y --all
 
 WORKDIR /backend/api
 EXPOSE 8000

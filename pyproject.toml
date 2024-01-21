@@ -24,7 +24,7 @@ albumentations = "^1.3.1"
 einops = "^0.7.0"
 timm = "^0.9.12"
 basicsr = "^1.4.2"
-realesrgan = {path = './submodules/real-esrgan', develop = true}
+realesrgan = {path = './submodules/real-esrgan'}
 xformers = "^0.0.23.post1"
 facexlib = "^0.3.0"
 gfpgan = "^1.3.8"
@@ -37,10 +37,10 @@ fastapi = "^0.104.1"
 uvicorn = "^0.24.0.post1"
 python-multipart = "^0.0.6"
 
-[tool.poetry.group.dev]
+[tool.poetry.group.exp]
 optional = true
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.group.exp.dependencies]
 black = "^23.12.1"
 flake8 = "^6.1.0"
 pre-commit = "^3.5.0"
