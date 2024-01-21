@@ -13,15 +13,9 @@ LICENSE
 configs/metric
 configs/compress.yaml
 
-docs
-
 dvc_data/metrics.csv.dvc
 dvc_data/metrics.csv
 dvc_data/weights.dvc
-
-images
-logs
-metric
 
 submodules/real-esrgan/.git
 submodules/real-esrgan/.eggs
@@ -34,4 +28,8 @@ submodules/resshift/assets
 submodules/resshift/basicsr
 submodules/resshift/testdata
 
+docs
+images
+logs
+metric
 unreal-engine
