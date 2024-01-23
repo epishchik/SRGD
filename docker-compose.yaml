@@ -20,7 +20,7 @@ services:
     networks:
       - deploy_network
     container_name: super-resolution-benchmark-api
-    image: super-resolution-benchmark/api:0.0.1
+    image: super-resolution-benchmark/api:0.0.2
 
   ui:
     build:
@@ -38,7 +38,7 @@ services:
     networks:
       - deploy_network
     container_name: super-resolution-benchmark-ui
-    image: super-resolution-benchmark/ui:0.0.1
+    image: super-resolution-benchmark/ui:0.0.2
 
 networks:
   deploy_network:
