@@ -9,6 +9,9 @@ import cv2
 import datasets
 import numpy as np
 import torch
+from options import get_options
+
+from metric import MetricSR
 
 
 def main() -> None:
@@ -21,10 +24,9 @@ def main() -> None:
     -------
     None
     """
-    root = Path(__file__).parents[2]
+    root = Path(__file__).parents[1]
 
     sys.path.insert(0, str(root))
-    from metric.metric import MetricSR
     from model.real_esrgan import configure, predict
     from utils.parse import parse_yaml
 
@@ -64,12 +66,16 @@ def main() -> None:
     no_ref_metric_names = [k for k in map_no_ref_metric_names.keys()]
     metric_file_header += metric_names
 
-    real_esrgan_config_name = "RealESRGAN_x4plus"
+    args = get_options().parse_args()
+    real_esrgan_model_name = args.model_config
+
     model_config_path = (
-        root / f"configs/model/pretrained/{real_esrgan_config_name}.yaml"
+        root / f"configs/model/{args.model_type}/{real_esrgan_model_name}.yaml"
     )
 
-    metric_config_path = root / "configs/metric/downscale/CSGO.yaml"
+    metric_config_path = (
+        root / f"configs/metric/{args.dataset_type}/{args.dataset}.yaml"
+    )
 
     model_config = parse_yaml(str(model_config_path))
     metric_config = parse_yaml(str(metric_config_path))
@@ -87,7 +93,7 @@ def main() -> None:
     upsampler = configure(root, model_config)
     use_face_enhancer = model_config["use_face_enhancer"]
 
-    split_config = metric_config["split"]
+    split_config = args.split
     if split_config == "train":
         split = datasets.Split.TRAIN
     elif split_config == "val":
@@ -102,7 +108,7 @@ def main() -> None:
         streaming=True,
     )
 
-    lr, hr = metric_config["lr"], metric_config["hr"]
+    lr, hr = args.lr, args.hr
     metric_calculator = MetricSR(metric_names, no_ref_metric_names, map_metric_names)
 
     logger = logging.getLogger()
@@ -122,7 +128,7 @@ def main() -> None:
 
     logger.setLevel("INFO")
 
-    logger.info(f"model = {real_esrgan_config_name}")
+    logger.info(f"model = {real_esrgan_model_name}")
     logger.info(f"project type = {project_type}")
     logger.info(f"project name = {project_name}")
     logger.info(f"low resolution = {lr}")
@@ -169,7 +175,7 @@ def main() -> None:
         csv_writer.writerow(
             [
                 time.strftime("%Y-%m-%d %H:%M:%S"),
-                real_esrgan_config_name,
+                real_esrgan_model_name,
                 project_type,
                 project_name,
                 lr[1:],

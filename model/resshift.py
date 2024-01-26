@@ -25,7 +25,7 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
     Returns
     -------
     Any
-        Объект модели Real-ESRGAN.
+        Объект модели ResShift.
     """
     chop_size = config["chop_size"]
     seed = config["seed"]
@@ -56,7 +56,7 @@ def predict(
     upsampler: Any,
 ) -> np.ndarray:
     """
-    Перевод LR изображения в HR изображение с использованием Real-ESRGAN.
+    Перевод LR изображения в HR изображение с использованием ResShift.
 
     Parameters
     ----------

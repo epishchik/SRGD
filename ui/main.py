@@ -19,6 +19,21 @@ MODELNAME2API = {
 
 
 def upscale_file(image: Any, server_url: str) -> Response:
+    """
+    Повышение качества изображения при помощи запроса к API.
+
+    Parameters
+    ----------
+    image : Any
+        Изображение низкого разрешения в формате (h, w, c).
+    server_url : str
+        IP-адрес API backend сервиса.
+
+    Returns
+    -------
+    Response
+        Ответ API сервиса на запрос.
+    """
     files = [
         (
             "image_file",
@@ -34,12 +49,38 @@ def upscale_file(image: Any, server_url: str) -> Response:
     return response
 
 
-def configure_model(config_name: str, server_url: str) -> None:
+def configure_model(config_name: str, server_url: str) -> Response:
+    """
+    Конфигурация модели при помощи запроса к API.
+
+    Parameters
+    ----------
+    config_name : str
+        Название конфигурационного файла модели.
+    server_url : str
+        IP-адрес API backend сервиса.
+
+    Returns
+    -------
+    Response
+        Ответ API сервиса на запрос.
+    """
     params = {"config_name": config_name}
-    _ = requests.request("POST", server_url + "/configure_model/name", params=params)
+    response = requests.request(
+        "POST", server_url + "/configure_model/name", params=params
+    )
+    return response
 
 
-def main():
+def main() -> None:
+    """
+    Отображение frontend части.
+
+    Returns
+    -------
+    None
+    """
+
     base_url = "http://api:8000"
     title = "Super Resolution in Games"
 
@@ -53,8 +94,11 @@ def main():
 
     if st.button("Configure model"):
         if configure_model_name:
-            configure_model(configure_model_name, base_url)
-            st.write("Configuration has been applied.")
+            response = configure_model(configure_model_name, base_url)
+            if response.status_code == 200:
+                st.write("Configuration has been applied.")
+            else:
+                st.write("Something went wrong with the configuration process.")
         else:
             st.write("This configuration isn't available.")
 
