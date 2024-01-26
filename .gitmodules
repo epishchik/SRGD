@@ -4,3 +4,6 @@
 [submodule "submodules/resshift"]
 	path = submodules/resshift
 	url = git@github.com:Pe4enIks/ResShift.git
+[submodule "submodules/basicsr"]
+	path = submodules/basicsr
+	url = git@github.com:Pe4enIks/BasicSR.git
