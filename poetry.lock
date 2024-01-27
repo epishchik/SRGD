@@ -3045,10 +3045,10 @@ files = [
 
 [package.dependencies]
 numpy = [
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
+    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
     {version = ">=1.21.4", markers = "python_version >= \"3.10\" and platform_system == \"Darwin\" and python_version < \"3.11\""},
     {version = ">=1.21.2", markers = "platform_system != \"Darwin\" and python_version >= \"3.10\" and python_version < \"3.11\""},
-    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
-    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 
 [[package]]
@@ -3069,10 +3069,10 @@ files = [
 
 [package.dependencies]
 numpy = [
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
+    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
     {version = ">=1.21.4", markers = "python_version >= \"3.10\" and platform_system == \"Darwin\" and python_version < \"3.11\""},
     {version = ">=1.21.2", markers = "platform_system != \"Darwin\" and python_version >= \"3.10\" and python_version < \"3.11\""},
-    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
-    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 
 [[package]]
@@ -3185,9 +3185,9 @@ files = [
 
 [package.dependencies]
 numpy = [
-    {version = ">=1.22.4,<2", markers = "python_version < \"3.11\""},
-    {version = ">=1.23.2,<2", markers = "python_version == \"3.11\""},
     {version = ">=1.26.0,<2", markers = "python_version >= \"3.12\""},
+    {version = ">=1.23.2,<2", markers = "python_version == \"3.11\""},
+    {version = ">=1.22.4,<2", markers = "python_version < \"3.11\""},
 ]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
@@ -4752,12 +4752,12 @@ widechars = ["wcwidth"]
 
 [[package]]
 name = "tb-nightly"
-version = "2.16.0a20240126"
+version = "2.16.0a20240127"
 description = "TensorBoard lets you watch Tensors Flow"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "tb_nightly-2.16.0a20240126-py3-none-any.whl", hash = "sha256:2aa32e07ecbadf91682a2fa0f7f5ffa9d28ee87921fd5b828e6a50b3aaad9183"},
+    {file = "tb_nightly-2.16.0a20240127-py3-none-any.whl", hash = "sha256:f8ef7e2a2fe4c889cf3e5a326f8bd20a4f8b3c863c0d34f157dca59ed389caaf"},
 ]
 
 [package.dependencies]
@@ -4800,13 +4800,13 @@ files = [
 
 [[package]]
 name = "tf-keras-nightly"
-version = "2.16.0.dev2024012610"
+version = "2.16.0.dev2024012710"
 description = "Deep learning for humans."
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "tf_keras-nightly-2.16.0.dev2024012610.tar.gz", hash = "sha256:9960be3706dafeb2b6e6aa1fec998caf8fa453a074a8285497b6b22e59381ee0"},
-    {file = "tf_keras_nightly-2.16.0.dev2024012610-py3-none-any.whl", hash = "sha256:f1cc95e4d311f9c8de620959cc2f477ddc9fa2fb811b8f75d587a1283642b62a"},
+    {file = "tf_keras-nightly-2.16.0.dev2024012710.tar.gz", hash = "sha256:dc7a521bac408352dc28ba344021e7b54ef9f8d16b8125c27c49debfdfe527a5"},
+    {file = "tf_keras_nightly-2.16.0.dev2024012710-py3-none-any.whl", hash = "sha256:8870a0593f55a50fc916b04203fabe80a1ffeabd9c390a2709a970085e2ec5f0"},
 ]
 
 [[package]]

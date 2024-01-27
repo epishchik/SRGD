@@ -2,7 +2,7 @@
 name: finetune_RealESRGANx4plus_400k_pairdata
 model_type: RealESRGANModel
 scale: 4
-num_gpu: auto
+num_gpu: 1
 manual_seed: 0
 
 # USM the ground-truth
@@ -10,38 +10,63 @@ l1_gt_usm: True
 percep_gt_usm: True
 gan_gt_usm: False
 
-high_order_degradation: False # do not use the high-order degradation generation process
+# do not use the high-order degradation generation process
+high_order_degradation: False
 
 # dataset and data loader settings
 datasets:
-  train:
-    name: DIV2K
-    type: RealESRGANPairedDataset
-    dataroot_gt: datasets/DF2K
-    dataroot_lq: datasets/DF2K
-    meta_info: datasets/DF2K/meta_info/meta_info_DIV2K_sub_pair.txt
-    io_backend:
-      type: disk
+  type: files
 
-    gt_size: 256
-    use_hflip: True
-    use_rot: False
+  huggingface:
+    huggingface_dir: epishchik/super-resolution-games
+    train:
+      name: GameEngine_train
+      project: GameEngine_All
 
-    # data loader
-    use_shuffle: true
-    num_worker_per_gpu: 5
-    batch_size_per_gpu: 12
-    dataset_enlarge_ratio: 1
-    prefetch_mode: ~
+      # transform
+      gt_size: 1080
+      use_hflip: True
+      use_rot: True
 
-  # Uncomment these for validation
-  # val:
-  #   name: validation
-  #   type: PairedImageDataset
-  #   dataroot_gt: path_to_gt
-  #   dataroot_lq: path_to_lq
-  #   io_backend:
-  #     type: disk
+      # data loader
+      use_shuffle: true
+      num_worker_per_gpu: 4
+      batch_size_per_gpu: 12
+      dataset_enlarge_ratio: 1
+      prefetch_mode: ~
+
+    val:
+      name: GameEngine_val
+      project: GameEngine_All
+
+  files:
+    train:
+      name: GameEngine_train
+      type: RealESRGANPairedDataset
+      dataroot_gt: ../datasets/GameEngine/train/1080p
+      dataroot_lq: ../datasets/GameEngine/train/270p
+      io_backend:
+        type: disk
+
+      # transform
+      gt_size: 1080
+      use_hflip: True
+      use_rot: True
+
+      # data loader
+      use_shuffle: true
+      num_worker_per_gpu: 4
+      batch_size_per_gpu: 12
+      dataset_enlarge_ratio: 1
+      prefetch_mode: ~
+
+    val:
+       name: GameEngine_val
+       type: PairedImageDataset
+       dataroot_gt: ../datasets/GameEngine/val/1080p
+       dataroot_lq: ../datasets/GameEngine/val/270p
+       io_backend:
+         type: disk
 
 # network structures
 network_g:
@@ -61,10 +86,10 @@ network_d:
 # path
 path:
   # use the pre-trained Real-ESRNet model
-  pretrain_network_g: experiments/pretrained_models/RealESRNet_x4plus.pth
+  pretrain_network_g: ../dvc_data/weights/real-esrgan/RealESRNet_x4plus.pth
   param_key_g: params_ema
   strict_load_g: true
-  pretrain_network_d: experiments/pretrained_models/RealESRGAN_x4plus_netD.pth
+  pretrain_network_d: ../dvc_data/weights/real-esrgan/RealESRGAN_x4plus_netD.pth
   param_key_d: params
   strict_load_d: true
   resume_state: ~
@@ -123,17 +148,16 @@ train:
   net_d_iters: 1
   net_d_init_iters: 0
 
-# Uncomment these for validation
 # validation settings
-# val:
-#   val_freq: !!float 5e3
-#   save_img: True
+val:
+ val_freq: !!float 5e3
+ save_img: False
 
-#   metrics:
-#     psnr: # metric name
-#       type: calculate_psnr
-#       crop_border: 4
-#       test_y_channel: false
+ metrics:
+   psnr: # metric name
+     type: calculate_psnr
+     crop_border: 4
+     test_y_channel: false
 
 # logging settings
 logger:

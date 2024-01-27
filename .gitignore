@@ -162,8 +162,8 @@ cython_debug/
 # VSCode
 .vscode/
 
-# BasicSR open-source project for SR
 BasicSR/
-
-# model weights
 api/gfpgan/
+experiments/
+datasets/
+tb_logger/

@@ -13,6 +13,7 @@ https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8
 - [EDA](/docs/EDA.md).
 - [Метрики](/docs/METRICS.md).
 - [Сервис](/docs/SERVICE.md).
+- [Обучение](/docs/TRAINING.md).
 
 ## Ссылки
 - [Датасет Yandex.Disk](https://disk.yandex.ru/d/FUX_JQ-jGEbGPQ).
