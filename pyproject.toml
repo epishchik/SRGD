@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "sr-gaming-bench"
 version = "0.1.0"
-description = ""
+description = "super resolution gaming benchmark"
 authors = ["pe4eniks <evgeniipishchik@mail.ru>"]
 readme = "README.md"
+license = "Apache-2.0"
 
 [tool.poetry.dependencies]
 python = "^3.10"

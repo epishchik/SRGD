@@ -2,15 +2,19 @@ LOCALDIR=$1  # путь сохранения датасета
 DATASET_TYPE=$2  # тип датасета, GameEngineData или DownscaleData
 LR=$3  # значение низкого разрешения
 HR=$4  # значение высокого разрешения
+DOWNLOAD=$5  # скачать датасет
 
 set -e
-mkdir -p "$LOCALDIR/tmp"
 
-huggingface-cli download epishchik/super-resolution-games \
-  --local-dir "$LOCALDIR/tmp" \
-  --local-dir-use-symlinks True \
-  --repo-type dataset \
-  --include "data/$DATASET_TYPE/*$LR.tar.gz" "data/$DATASET_TYPE/*$HR.tar.gz"
+if [[ "$DOWNLOAD" = "true" ]]; then
+  mkdir -p "$LOCALDIR/tmp"
+
+  huggingface-cli download epishchik/super-resolution-games \
+    --local-dir "$LOCALDIR/tmp" \
+    --local-dir-use-symlinks True \
+    --repo-type dataset \
+    --include "data/$DATASET_TYPE/*$LR.tar.gz" "data/$DATASET_TYPE/*$HR.tar.gz"
+fi
 
 mkdir -p "$LOCALDIR/$DATASET_TYPE/$LR/train"
 mkdir -p "$LOCALDIR/$DATASET_TYPE/$LR/val"
