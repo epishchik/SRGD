@@ -24,14 +24,14 @@ datasets:
       project: GameEngine_All
 
       # transform
-      gt_size: 1080
+      gt_size: 256
       use_hflip: True
       use_rot: True
 
       # data loader
       use_shuffle: true
       num_worker_per_gpu: 4
-      batch_size_per_gpu: 12
+      batch_size_per_gpu: 8
       dataset_enlarge_ratio: 1
       prefetch_mode: ~
 
@@ -49,14 +49,14 @@ datasets:
         type: disk
 
       # transform
-      gt_size: 1080
+      gt_size: 256
       use_hflip: True
       use_rot: True
 
       # data loader
       use_shuffle: true
       num_worker_per_gpu: 4
-      batch_size_per_gpu: 12
+      batch_size_per_gpu: 8
       dataset_enlarge_ratio: 1
       prefetch_mode: ~
 
