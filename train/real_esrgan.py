@@ -1,11 +1,16 @@
+import datetime
 import logging
 import os
+import time
 from pathlib import Path
 
 import torch
+from basicsr.data.prefetch_dataloader import CPUPrefetcher, CUDAPrefetcher
 from basicsr.models import build_model
 from basicsr.train import (
+    AvgTimer,
     MessageLogger,
+    create_train_val_dataloader,
     init_tb_loggers,
     load_resume_state,
     make_exp_dirs,
@@ -15,7 +20,7 @@ from basicsr.utils import get_env_info, get_root_logger, get_time_str
 from basicsr.utils.options import copy_opt_file, dict2str, parse_options
 
 
-def train_from_hf() -> None:
+def train() -> None:
     root = Path(__file__).parents[1]
     exp_folder = root / "experiments"
     os.makedirs(exp_folder, exist_ok=True)
@@ -52,11 +57,12 @@ def train_from_hf() -> None:
     tb_logger = init_tb_loggers(opt)
 
     # TODO: создать даталоадер для datasets.type == "huggingface"
-    # if opt["datasets"]["type"] == "files":
-    #     result = create_train_val_dataloader(opt, logger)
-    #     train_loader, train_sampler, val_loaders, total_epochs, total_iters = result
+    datasets_type = opt["datasets"]["type"]
+    if datasets_type == "files":
+        result = create_train_val_dataloader(opt, logger, datasets_type, root=root)
+        train_loader, train_sampler, val_loaders, total_epochs, total_iters = result
 
-    model = build_model(opt)
+    model = build_model(opt, root=root)
     if resume_state:
         model.resume_training(resume_state)
         logger.info(
@@ -71,8 +77,89 @@ def train_from_hf() -> None:
 
     msg_logger = MessageLogger(opt, current_iter, tb_logger)
 
-    print(msg_logger, start_epoch)
+    prefetch_mode = opt["datasets"][datasets_type]["train"].get("prefetch_mode")
+    if prefetch_mode is None or prefetch_mode == "cpu":
+        prefetcher = CPUPrefetcher(train_loader)
+    elif prefetch_mode == "cuda":
+        prefetcher = CUDAPrefetcher(train_loader, opt)
+        logger.info(f"Use {prefetch_mode} prefetch dataloader")
+        if opt["datasets"][datasets_type]["train"].get("pin_memory") is not True:
+            raise ValueError("Please set pin_memory=True for CUDAPrefetcher.")
+    else:
+        raise ValueError(
+            f"Wrong prefetch_mode {prefetch_mode}. "
+            f"Supported ones are: None, 'cuda', 'cpu'."
+        )
+
+    logger.info(f"Start training from epoch: {start_epoch}, iter: {current_iter}")
+    data_timer, iter_timer = AvgTimer(), AvgTimer()
+    start_time = time.time()
+
+    for epoch in range(start_epoch, total_epochs + 1):
+        train_sampler.set_epoch(epoch)
+        prefetcher.reset()
+        train_data = prefetcher.next()
+
+        while train_data is not None:
+            data_timer.record()
+
+            current_iter += 1
+            if current_iter > total_iters:
+                break
+
+            model.update_learning_rate(
+                current_iter, warmup_iter=opt["train"].get("warmup_iter", -1)
+            )
+
+            model.feed_data(train_data)
+            model.optimize_parameters(current_iter)
+            iter_timer.record()
+            if current_iter == 1:
+                msg_logger.reset_start_time()
+            if current_iter % opt["logger"]["print_freq"] == 0:
+                log_vars = {"epoch": epoch, "iter": current_iter}
+                log_vars.update({"lrs": model.get_current_learning_rate()})
+                log_vars.update(
+                    {
+                        "time": iter_timer.get_avg_time(),
+                        "data_time": data_timer.get_avg_time(),
+                    }
+                )
+                log_vars.update(model.get_current_log())
+                msg_logger(log_vars)
+
+            if current_iter % opt["logger"]["save_checkpoint_freq"] == 0:
+                logger.info("Saving models and training states.")
+                model.save(epoch, current_iter)
+
+            if opt.get("val") is not None and (
+                current_iter % opt["val"]["val_freq"] == 0
+            ):
+                if len(val_loaders) > 1:
+                    logger.warning(
+                        "Multiple validation datasets are *only* supported by SRModel."
+                    )
+                for val_loader in val_loaders:
+                    model.validation(
+                        val_loader, current_iter, tb_logger, opt["val"]["save_img"]
+                    )
+
+            data_timer.start()
+            iter_timer.start()
+            train_data = prefetcher.next()
+
+    consumed_time = str(datetime.timedelta(seconds=int(time.time() - start_time)))
+    logger.info(f"End of training. Time consumed: {consumed_time}")
+    logger.info("Save the latest model.")
+    model.save(epoch=-1, current_iter=-1)  # -1 stands for the latest
+    if opt.get("val") is not None:
+        for val_loader in val_loaders:
+            model.validation(
+                val_loader, current_iter, tb_logger, opt["val"]["save_img"]
+            )
+    if tb_logger:
+        tb_logger.close()
 
 
 if __name__ == "__main__":
-    train_from_hf()
+    train()

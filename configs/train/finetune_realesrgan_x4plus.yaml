@@ -43,8 +43,8 @@ datasets:
     train:
       name: GameEngine_train
       type: RealESRGANPairedDataset
-      dataroot_gt: ../datasets/GameEngine/train/1080p
-      dataroot_lq: ../datasets/GameEngine/train/270p
+      dataroot_gt: datasets/GameEngineData/1080p/train
+      dataroot_lq: datasets/GameEngineData/270p/train
       io_backend:
         type: disk
 
@@ -63,8 +63,8 @@ datasets:
     val:
        name: GameEngine_val
        type: PairedImageDataset
-       dataroot_gt: ../datasets/GameEngine/val/1080p
-       dataroot_lq: ../datasets/GameEngine/val/270p
+       dataroot_gt: datasets/GameEngineData/1080p/val
+       dataroot_lq: datasets/GameEngineData/270p/val
        io_backend:
          type: disk
 
@@ -86,10 +86,10 @@ network_d:
 # path
 path:
   # use the pre-trained Real-ESRNet model
-  pretrain_network_g: ../dvc_data/weights/real-esrgan/RealESRNet_x4plus.pth
+  pretrain_network_g: dvc_data/weights/real-esrgan/RealESRNet_x4plus.pth
   param_key_g: params_ema
   strict_load_g: true
-  pretrain_network_d: ../dvc_data/weights/real-esrgan/RealESRGAN_x4plus_netD.pth
+  pretrain_network_d: dvc_data/weights/real-esrgan/RealESRGAN_x4plus_netD.pth
   param_key_d: params
   strict_load_d: true
   resume_state: ~
