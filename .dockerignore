@@ -9,23 +9,37 @@ __pycache__
 README.md
 LICENSE
 .pre-commit-config.yaml
+requirements.txt
 
+configs/train
 configs/metric
 configs/compress.yaml
 
 dvc_data/metrics.csv.dvc
 dvc_data/metrics.csv
 dvc_data/weights.dvc
-
 dvc_data/weights/gfpgan
 dvc_data/weights/real-esrgan/GFPGANv1.3.pth
 dvc_data/weights/real-esrgan/realesr-animevideov3.pth
 dvc_data/weights/real-esrgan/realesr-general-wdn-x4v3.pth
 dvc_data/weights/real-esrgan/realesr-general-x4v3.pth
+dvc_data/weights/real-esrgan/RealESRGAN_x2plus_netD.pth
 dvc_data/weights/real-esrgan/RealESRGAN_x4plus_anime_6B.pth
+dvc_data/weights/real-esrgan/RealESRGAN_x4plus_netD.pth
 dvc_data/weights/real-esrgan/RealESRNet_x4plus.pth
 dvc_data/weights/resshift/resshift_bicsrx4_matlab_s15.pth
 dvc_data/weights/resshift/resshift_bicsrx4_opencv_s15.pth
+
+submodules/basicsr/.git
+submodules/basicsr/.vscode
+submodules/basicsr/.github
+submodules/basicsr/assets
+submodules/basicsr/colab
+submodules/basicsr/datasets
+submodules/basicsr/docs
+submodules/basicsr/experiments
+submodules/basicsr/LICENSE
+
 
 submodules/real-esrgan/.git
 submodules/real-esrgan/.eggs
@@ -38,8 +52,13 @@ submodules/resshift/assets
 submodules/resshift/basicsr
 submodules/resshift/testdata
 
+datasets
+datasphere
 docs
 images
 logs
 metric
 unreal-engine
+train
+experiments
+tb_logger
