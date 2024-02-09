@@ -1,4 +1,4 @@
-# SR-Gaming-Bench
+# Super Resolution Gaming Benchmark (SRGB)
 
 https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8b8f-63b75d139e61
 
