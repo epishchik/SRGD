@@ -21,6 +21,15 @@ from basicsr.utils.options import copy_opt_file, dict2str, parse_options
 
 
 def train() -> None:
+    """
+    Функция обучения модели Real-ESRGAN.
+    Все параметры прописываются в конфиге .yaml.
+    Путь к конфигу передается через параметр -opt.
+
+    Returns
+    -------
+    None
+    """
     root = Path(__file__).parents[1]
     exp_folder = root / "experiments"
     os.makedirs(exp_folder, exist_ok=True)
