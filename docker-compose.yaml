@@ -19,8 +19,8 @@ services:
       - 8000:8000
     networks:
       - deploy_network
-    container_name: super-resolution-benchmark-api
-    image: super-resolution-benchmark/api:0.0.2
+    container_name: srgb-api
+    image: srgb/api:0.0.2
 
   ui:
     build:
@@ -37,8 +37,8 @@ services:
       - 8501:8501
     networks:
       - deploy_network
-    container_name: super-resolution-benchmark-ui
-    image: super-resolution-benchmark/ui:0.0.2
+    container_name: srgb-ui
+    image: srgb/ui:0.0.2
 
 networks:
   deploy_network:

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "sr-gaming-bench"
+name = "srgb"
 version = "0.1.0"
 description = "super resolution gaming benchmark"
 authors = ["pe4eniks <evgeniipishchik@mail.ru>"]
@@ -11,7 +11,7 @@ python = "^3.10"
 setuptools = "^69.0.2"
 pyyaml = "^6.0.1"
 loguru = "^0.7.2"
-dvc = {extras = ["gdrive"], version = "^3.33.3"}
+dvc = {extras = ["s3"], version = "^3.33.3"}
 pillow = "^10.1.0"
 
 [tool.poetry.group.ml]

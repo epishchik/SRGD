@@ -1,4 +1,5 @@
 [core]
-    remote = gdrive
-['remote "gdrive"']
-    url = gdrive://1vRfjmsJP5mcSYDzscW5GjQjN0v3CHqDV
+    remote = yandex_s3
+['remote "yandex_s3"']
+    url = s3://srgb
+    endpointurl = https://storage.yandexcloud.net
