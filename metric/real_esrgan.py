@@ -6,11 +6,11 @@ from datetime import datetime
 from pathlib import Path
 
 import cv2
+import datasets
 import numpy as np
 import torch
 from options import get_options
 
-import datasets
 from metric import MetricSR
 
 

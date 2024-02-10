@@ -1,5 +1,7 @@
 [core]
-    remote = yandex_s3
+    remote = yandex_s3_https
 ['remote "yandex_s3"']
     url = s3://srgb
     endpointurl = https://storage.yandexcloud.net
+['remote "yandex_s3_https"']
+    url = https://storage.yandexcloud.net/srgb
