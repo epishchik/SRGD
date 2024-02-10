@@ -14,10 +14,11 @@ https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8
 - [Метрики](/docs/METRICS.md).
 - [Сервис](/docs/SERVICE.md).
 - [Обучение](/docs/TRAINING.md).
+- [Веса моделей](/docs/WEIGHTS.md).
 
 ## Ссылки
-- [Датасет Yandex.Disk](https://disk.yandex.ru/d/FUX_JQ-jGEbGPQ).
-- [Веса моделей](https://disk.yandex.ru/d/P1w6Tis0cjoclQ).
+- [Raw датасет Yandex Disk](https://disk.yandex.ru/d/FUX_JQ-jGEbGPQ).
+- [Веса моделей Yandex Disk](https://disk.yandex.ru/d/P1w6Tis0cjoclQ).
 
 ## Команда
 - Пищик Евгений (разработчик, [@Evgenii_Pishchik](https://t.me/Evgenii_Pishchik)).

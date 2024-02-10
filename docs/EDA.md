@@ -61,8 +61,11 @@
 ## Source
 
 ### Проекты
-Был обработан 1 проект:
+Был обработано 4 проекта:
 - [Dota 2](https://store.steampowered.com/app/570/Dota_2/).
+- [CSGO](https://store.steampowered.com/app/730/CounterStrike_2/).
+- [DMXPrevisSample](https://www.unrealengine.com/marketplace/en-US/product/dmx-previs-sample).
+- [CitySample](https://www.unrealengine.com/marketplace/en-US/product/city-sample).
 
 ### Конфигурация
 В играх на движке Source есть встроенный механизм рендеринга через консоль.
