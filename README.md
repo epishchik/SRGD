@@ -18,7 +18,6 @@ https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8
 - [Веса моделей](/docs/WEIGHTS.md).
 
 ## Ссылки
-- [Raw датасет Yandex Disk](https://disk.yandex.ru/d/FUX_JQ-jGEbGPQ).
 - [Веса моделей Yandex Disk](https://disk.yandex.ru/d/P1w6Tis0cjoclQ).
 
 ## Команда
