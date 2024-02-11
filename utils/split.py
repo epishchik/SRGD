@@ -1,4 +1,5 @@
 import os
+from argparse import ArgumentParser
 
 import cv2
 
@@ -39,8 +40,12 @@ def split(video: str, folder: str, prefix: str, save_every: int = 1) -> None:
 
 
 if __name__ == "__main__":
-    video = ""
-    folder = ""
-    prefix, save_every = "", 5
+    parser = ArgumentParser()
+    # TODO добавить help
+    parser.add_argument("-v", "--video", type=str, required=True)
+    parser.add_argument("-f", "--folder", type=str, required=True)
+    parser.add_argument("-p", "--prefix", type=str, required=True)
+    parser.add_argument("-s", "--save-every", type=int, default=5)
+    args = parser.parse_args()
 
-    split(video, folder, prefix, save_every)
+    split(args.video, args.folder, args.prefix, args.save_every)

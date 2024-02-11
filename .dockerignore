@@ -40,7 +40,6 @@ submodules/basicsr/docs
 submodules/basicsr/experiments
 submodules/basicsr/LICENSE
 
-
 submodules/real-esrgan/.git
 submodules/real-esrgan/.eggs
 submodules/real-esrgan/assets
@@ -58,6 +57,7 @@ docs
 images
 logs
 metric
+mlflow
 unreal-engine
 train
 experiments

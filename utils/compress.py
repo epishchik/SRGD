@@ -1,6 +1,7 @@
 import math
 import os
 import random
+from argparse import ArgumentParser
 from typing import Any
 
 import cv2
@@ -285,10 +286,13 @@ def compress(src_folder: str, dst_folder: str, config_path: str) -> None:
 
 
 if __name__ == "__main__":
-    src_folder = ""
-    dst_folder = ""
-    config_path = "../configs/compress.yaml"
-    seed = 42
+    parser = ArgumentParser()
+    # TODO добавить help
+    parser.add_argument("-s", "--src", type=str, required=True)
+    parser.add_argument("-d", "--dst", type=str, required=True)
+    parser.add_argument("-c", "--cfg", type=str, default="../configs/compress.yaml")
+    parser.add_argument("-rs", "--random-seed", type=int, default=42)
+    args = parser.parse_args()
 
-    set_seed(seed)
-    compress(src_folder, dst_folder, config_path)
+    set_seed(args.random_seed)
+    compress(args.src, args.dst, args.cfg)

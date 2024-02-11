@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   api:
@@ -16,7 +16,7 @@ services:
               count: 1
               capabilities: [gpu]
     ports:
-      - 8000:8000
+      - "8000:8000"
     networks:
       - deploy_network
     container_name: srgb-api
@@ -34,7 +34,7 @@ services:
     depends_on:
       - api
     ports:
-      - 8501:8501
+      - "8501:8501"
     networks:
       - deploy_network
     container_name: srgb-ui

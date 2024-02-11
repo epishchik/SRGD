@@ -2,8 +2,7 @@ aiohttp==3.9.3
 albumentations==1.3.1
 black==23.12.1
 datasets==2.16.1
-dvc==3.42.0
-dvc[gdrive]==3.42.0
+dvc[s3]==3.42.0
 einops==0.7.0
 -e submodules/basicsr
 -e submodules/real-esrgan
@@ -11,7 +10,7 @@ facexlib==0.3.0
 fastapi==0.109.2
 flake8==6.1.0
 gfpgan==1.3.8
-git+https://github.com/huggingface/huggingface_hub@0.21.0.dev0
+git+https://github.com/huggingface/huggingface_hub@v0.20.3
 loguru==0.7.2
 numpy==1.26.3
 opencv-python==4.9.0.80

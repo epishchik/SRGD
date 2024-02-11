@@ -1,0 +1,92 @@
+version: "3"
+
+services:
+  minio:
+    command: server /data --console-address ":9001" --address ":9000"
+    restart: always
+    env_file:
+      - .env
+    deploy:
+      resources:
+        limits:
+          memory: 4GB
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - deploy_network
+    volumes:
+      - minio_data:/data
+    container_name: srgb-minio
+    image: minio/minio:RELEASE.2024-02-09T21-25-16Z-cpuv1
+
+  mc:
+    entrypoint: >
+      /bin/sh -c "/usr/bin/mc alias set minio http://minio:9000 ${MINIO_ROOT_USER}
+      ${MINIO_ROOT_PASSWORD} && /usr/bin/mc mb minio/mlflow; exit 0;"
+    env_file:
+      - .env
+    deploy:
+      resources:
+        limits:
+          memory: 512MB
+    depends_on:
+      - minio
+    networks:
+      - deploy_network
+    container_name: srgb-mc
+    image: minio/mc:RELEASE.2024-02-09T22-18-24Z-cpuv1
+
+  postgres:
+    restart: always
+    env_file:
+      - .env
+    deploy:
+      resources:
+        limits:
+          memory: 4GB
+    ports:
+      - "5432:5432"
+    networks:
+      - deploy_network
+    volumes:
+      - dbdata:/data/postgres
+    container_name: srgb-postgres
+    image: postgres:15-alpine3.19
+
+  mlflow:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM ghcr.io/mlflow/mlflow:v2.10.1
+        RUN apt update && apt install -y gcc libpq-dev && pip install psycopg2==2.9.8
+    command: >
+      mlflow server
+      --backend-store-uri postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      --default-artifact-root s3://mlflow
+      --host 0.0.0.0
+      --port 5000
+    restart: always
+    env_file:
+      - .env
+    deploy:
+      resources:
+        limits:
+          memory: 4GB
+    depends_on:
+        - mc
+        - postgres
+    ports:
+      - "5000:5000"
+    networks:
+      - deploy_network
+    container_name: srgb-mlflow
+    image: mlflow:0.0.1
+
+networks:
+  deploy_network:
+    driver: bridge
+
+volumes:
+    minio_data:
+    dbdata:

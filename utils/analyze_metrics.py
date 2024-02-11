@@ -9,8 +9,10 @@ def main() -> None:
     -------
     None
     """
+    # TODO вынести в argparse
     metrics = pd.read_csv("../dvc_data/metrics.csv")
 
+    # TODO вынести в argparse
     show_columns = [
         "time",
         "sr_model",
@@ -24,6 +26,7 @@ def main() -> None:
         "lpips",
     ]
 
+    # TODO сделать возможность писать более общие вопросы
     query = 'project_name == "CSGO" and (split == "train" or split == "val")'
 
     if query:
@@ -35,4 +38,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    # TODO добавить argparse
     main()

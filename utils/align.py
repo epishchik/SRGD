@@ -1,4 +1,5 @@
 import os
+from argparse import ArgumentParser
 
 
 def clean_from_single_folder(root: str, target_folder: str) -> None:
@@ -57,5 +58,9 @@ def clean_all_folders(root: str) -> None:
 
 
 if __name__ == "__main__":
-    root = ""
-    clean_all_folders(root)
+    parser = ArgumentParser()
+    # TODO добавить help
+    parser.add_argument("-r", "--root", type=str, required=True)
+    args = parser.parse_args()
+
+    clean_all_folders(args.root)

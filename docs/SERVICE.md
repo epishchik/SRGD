@@ -6,12 +6,12 @@
 
 ## Deploy API
 ```bash
-sudo docker build \
+docker build \
   -t super-resolution-benchmark/api:0.0.0 \
   -f api/Dockerfile .
 ```
 ```bash
-sudo docker run -d \
+docker run -d \
   -p 8000:8000 \
   --gpus 0 \
   --memory 16GB \
@@ -23,12 +23,12 @@ sudo docker run -d \
 
 ## Deploy UI
 ```bash
-sudo docker build \
+docker build \
   -t super-resolution-benchmark/ui:0.0.0 \
   -f ui/Dockerfile .
 ```
 ```bash
-sudo docker run -d \
+docker run -d \
   -p 8501:8501 \
   --cpus 1 \
   --memory 2GB \
@@ -40,6 +40,6 @@ sudo docker run -d \
 
 ## Deploy Full
 ```bash
-sudo docker compose build
-sudo docker compose up -d
+docker compose build
+docker compose up -d
 ```

@@ -11,7 +11,7 @@ def get_options() -> ArgumentParser:
         Объект парсера.
     """
     parser = ArgumentParser()
-
+    # TODO добавить help
     parser.add_argument("--model-config", type=str, required=True)
     parser.add_argument(
         "--model-type", type=str, required=True, choices=["pretrained", "finetuned"]

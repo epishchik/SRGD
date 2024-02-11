@@ -11,6 +11,7 @@ https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8
 
 ## Материалы
 - [EDA](/docs/EDA.md).
+- [MLFlow](/docs/MLFLOW.md).
 - [Метрики](/docs/METRICS.md).
 - [Сервис](/docs/SERVICE.md).
 - [Обучение](/docs/TRAINING.md).

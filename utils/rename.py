@@ -1,4 +1,5 @@
 import os
+from argparse import ArgumentParser
 
 
 def rename(root: str) -> None:
@@ -30,5 +31,9 @@ def rename(root: str) -> None:
 
 
 if __name__ == "__main__":
-    root = ""
-    rename(root)
+    parser = ArgumentParser()
+    # TODO добавить help
+    parser.add_argument("-r", "--root", type=str, required=True)
+    args = parser.parse_args()
+
+    rename(args.root)

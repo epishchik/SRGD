@@ -42,21 +42,21 @@ def download_file(pk: str, local_name: str, src_type: str) -> None:
         print("Folder downloaded")
 
 
-def main() -> None:
+def download(folder: str) -> None:
     """
     Функция скачивания данных через API Yandex Disk.
+
+    Parameters
+    ----------
+    folder : str
+        Путь к папке для сохранения папок / файлов с Yandex Disk.
 
     Returns
     -------
     None
     """
-    parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("-f", "--folder", type=str, default=None)
-    args = parser.parse_args()
-
-    if args.folder:
-        save_folder = Path(args.folder)
+    if folder:
+        save_folder = Path(folder)
         os.makedirs(save_folder, exist_ok=True)
     else:
         save_folder = Path.cwd().parent
@@ -71,4 +71,9 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = ArgumentParser()
+    # TODO добавить help
+    parser.add_argument("-f", "--folder", type=str, default=None)
+    args = parser.parse_args()
+
+    download(args.folder)
