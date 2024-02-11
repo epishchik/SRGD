@@ -25,4 +25,4 @@ RUN apt update && \
 WORKDIR /frontend/ui
 EXPOSE 8501
 
-CMD poetry run streamlit run main.py
+CMD poetry run streamlit run main.py --server.address 0.0.0.0 --server.port 8501
