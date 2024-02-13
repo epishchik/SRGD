@@ -1,5 +1,8 @@
 # MLFlow
 
+## Disclaimer
+Don't push .env files to git, it's just an example without real credentials.
+
 ## Deploy Full
 
 Compose Up.
@@ -34,4 +37,19 @@ curl --user "admin:new_password" \
 Compose Down.
 ```bash
 docker compose down --volumes
+```
+
+## Usage
+
+Create MLFlow credentials (or use them as positional arguments in scripts)
+```bash
+mkdir -p ~/.mlflow
+touch ~/.mlflow/credentials
+```
+
+MLFlow credentials example.
+```text
+[mlflow]
+mlflow_tracking_username = user
+mlflow_tracking_password = password
 ```

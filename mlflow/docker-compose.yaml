@@ -23,7 +23,9 @@ services:
   mc:
     entrypoint: >
       /bin/sh -c "/usr/bin/mc alias set minio http://minio:9000 ${MINIO_ROOT_USER}
-      ${MINIO_ROOT_PASSWORD} && /usr/bin/mc mb minio/mlflow; exit 0;"
+      ${MINIO_ROOT_PASSWORD} && /usr/bin/mc mb minio/mlflow &&
+      /usr/bin/mc admin user svcacct add --access-key ${MINIO_ACCESS_KEY}
+      --secret-key ${MINIO_SECRET_ACCESS_KEY} minio ${MINIO_ROOT_USER}; exit 0;"
     env_file:
       - .env
     deploy:
@@ -59,7 +61,7 @@ services:
       context: .
       dockerfile_inline: |
         FROM ghcr.io/mlflow/mlflow:v2.10.1
-        RUN apt update && apt install -y gcc libpq-dev && pip install psycopg2==2.9.8
+        RUN apt update && apt install -y gcc libpq-dev && pip install psycopg2==2.9.8 boto3==1.34.40
     command: >
       mlflow server
       --app-name basic-auth
