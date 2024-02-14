@@ -27,5 +27,13 @@ def get_options() -> ArgumentParser:
     parser.add_argument(
         "--hr", type=str, required=True, choices=["r270p", "r360p", "r540p", "r1080p"]
     )
-
+    parser.add_argument("--mlflow", action="store_true")
+    parser.add_argument(
+        "--mlflow-tracking-uri", type=str, default="http://127.0.0.1:5000"
+    )
+    parser.add_argument("--mlflow-user", type=str, default=None)
+    parser.add_argument("--mlflow-password", type=str, default=None)
+    parser.add_argument("--mlflow-experiment", type=str, default="SRGB")
+    parser.add_argument("--mlflow-run", type=str, default=None)
+    parser.add_argument("--mlflow-system-metrics", action="store_true")
     return parser

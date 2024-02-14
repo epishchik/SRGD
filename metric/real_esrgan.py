@@ -11,6 +11,7 @@ import torch
 from options import get_options
 
 import datasets
+import mlflow
 from metric import MetricSR
 
 
@@ -135,6 +136,35 @@ def main() -> None:
     logger.info(f"high resolution = {hr}")
     logger.info(f"split = {split_config}")
 
+    mlflow_usage_flag = args.mlflow
+    if mlflow_usage_flag:
+        if args.mlflow_user:
+            os.environ["MLFLOW_TRACKING_USERNAME"] = args.mlflow_user
+
+        if args.mlflow_password:
+            os.environ["MLFLOW_TRACKING_PASSWORD"] = args.mlflow_password
+
+        mlflow.set_tracking_uri(args.mlflow_tracking_uri)
+        if not mlflow.get_experiment_by_name(args.mlflow_experiment):
+            mlflow.create_experiment(args.mlflow_experiment)
+        mlflow.set_experiment(args.mlflow_experiment)
+
+        mlflow.start_run(
+            run_name=args.mlflow_run, log_system_metrics=args.mlflow_system_metrics
+        )
+
+        mlflow.log_params({f"model_{k}": v for k, v in model_config.items()})
+        mlflow.log_params({f"metric_{k}": v for k, v in metric_config.items()})
+        mlflow.log_params(
+            {
+                "low resolution": lr,
+                "high resolution": hr,
+                "split": split,
+                "model config path": model_config_path,
+                "metric config path": metric_config_path,
+            }
+        )
+
     for idx, el in enumerate(dataset):
         rgb_lr = np.asarray(el[lr].convert("RGB"), dtype=np.float32)
         bgr_lr = cv2.cvtColor(rgb_lr, cv2.COLOR_RGB2BGR)
@@ -144,7 +174,10 @@ def main() -> None:
 
         outscale = int(bgr_hr.shape[0] / bgr_lr.shape[0])
         res_hr = predict(
-            bgr_lr, upsampler, outscale=outscale, use_face_enhancer=use_face_enhancer
+            bgr_lr,
+            upsampler,
+            outscale=outscale,
+            use_face_enhancer=use_face_enhancer,
         )
 
         res_hr, bgr_hr = torch.from_numpy(res_hr), torch.from_numpy(bgr_hr)
@@ -161,13 +194,18 @@ def main() -> None:
         for metric_name in metric_names:
             metric_val = metric_calculator.metric_history[metric_name][-1]
             metric_str += f"{metric_name} = {metric_val:.3f}, "
-
+            if mlflow_usage_flag:
+                mlflow.log_metric(metric_name, metric_val, step=idx)
         logger.info(metric_str[:-2])
 
     metrics_total = []
     for metric_name in metric_names:
         metric_val = metric_calculator.calculate_total(metric_name)
         metrics_total += [f"{metric_val:.3f}"]
+        if mlflow_usage_flag:
+            mlflow.log_metric(f"mean {metric_name}", metric_val)
+    if mlflow_usage_flag:
+        mlflow.end_run()
 
     with open(save_path, "a") as csv_file:
         csv_writer = csv.writer(csv_file)
