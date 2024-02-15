@@ -136,14 +136,7 @@ def main() -> None:
     logger.info(f"high resolution = {hr}")
     logger.info(f"split = {split_config}")
 
-    mlflow_usage_flag = args.mlflow
-    if mlflow_usage_flag:
-        if args.mlflow_user:
-            os.environ["MLFLOW_TRACKING_USERNAME"] = args.mlflow_user
-
-        if args.mlflow_password:
-            os.environ["MLFLOW_TRACKING_PASSWORD"] = args.mlflow_password
-
+    if args.mlflow_tracking_uri:
         mlflow.set_tracking_uri(args.mlflow_tracking_uri)
         if not mlflow.get_experiment_by_name(args.mlflow_experiment):
             mlflow.create_experiment(args.mlflow_experiment)
@@ -194,7 +187,7 @@ def main() -> None:
         for metric_name in metric_names:
             metric_val = metric_calculator.metric_history[metric_name][-1]
             metric_str += f"{metric_name} = {metric_val:.3f}, "
-            if mlflow_usage_flag:
+            if args.mlflow_tracking_uri:
                 mlflow.log_metric(metric_name, metric_val, step=idx)
         logger.info(metric_str[:-2])
 
@@ -202,9 +195,9 @@ def main() -> None:
     for metric_name in metric_names:
         metric_val = metric_calculator.calculate_total(metric_name)
         metrics_total += [f"{metric_val:.3f}"]
-        if mlflow_usage_flag:
+        if args.mlflow_tracking_uri:
             mlflow.log_metric(f"mean {metric_name}", metric_val)
-    if mlflow_usage_flag:
+    if args.mlflow_tracking_uri:
         mlflow.end_run()
 
     with open(save_path, "a") as csv_file:

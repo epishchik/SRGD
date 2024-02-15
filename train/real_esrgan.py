@@ -8,16 +8,22 @@ import torch
 from basicsr.data.prefetch_dataloader import CPUPrefetcher, CUDAPrefetcher
 from basicsr.models import build_model
 from basicsr.train import (
-    AvgTimer,
-    MessageLogger,
     create_train_val_dataloader,
     init_tb_loggers,
     load_resume_state,
+)
+from basicsr.utils import (
+    AvgTimer,
+    MessageLogger,
+    get_env_info,
+    get_root_logger,
+    get_time_str,
     make_exp_dirs,
     mkdir_and_rename,
 )
-from basicsr.utils import get_env_info, get_root_logger, get_time_str
 from basicsr.utils.options import copy_opt_file, dict2str, parse_options
+
+import mlflow
 
 
 def train() -> None:
@@ -100,6 +106,20 @@ def train() -> None:
             f"Supported ones are: None, 'cuda', 'cpu'."
         )
 
+    mlflow_opt = opt["logger"]["mlflow"]
+    if mlflow_opt["tracking_uri"]:
+        mlflow.set_tracking_uri(mlflow_opt["tracking_uri"])
+        if not mlflow.get_experiment_by_name(mlflow_opt["experiment"]):
+            mlflow.create_experiment(mlflow_opt["experiment"])
+        mlflow.set_experiment(mlflow_opt["experiment"])
+
+        mlflow.start_run(
+            run_name=mlflow_opt["run"],
+            log_system_metrics=mlflow_opt["log_system_metrics"],
+        )
+
+        mlflow.log_params(opt)
+
     logger.info(f"Start training from epoch: {start_epoch}, iter: {current_iter}")
     data_timer, iter_timer = AvgTimer(), AvgTimer()
     start_time = time.time()
@@ -134,12 +154,29 @@ def train() -> None:
                         "data_time": data_timer.get_avg_time(),
                     }
                 )
-                log_vars.update(model.get_current_log())
+                train_losses = model.get_current_log()
+                log_vars.update(train_losses)
                 msg_logger(log_vars)
+                if mlflow_opt["tracking_uri"]:
+                    for k, v in train_losses.items():
+                        mlflow.log_metric(k, v, step=current_iter)
 
             if current_iter % opt["logger"]["save_checkpoint_freq"] == 0:
                 logger.info("Saving models and training states.")
                 model.save(epoch, current_iter)
+                if mlflow_opt["tracking_uri"]:
+                    net_g_path = os.path.join(
+                        opt["path"]["models"],
+                        opt["network_prefix"]["network_g"] + f"_{current_iter}.pth",
+                    )
+
+                    net_d_path = os.path.join(
+                        opt["path"]["models"],
+                        opt["network_prefix"]["network_d"] + f"_{current_iter}.pth",
+                    )
+
+                    mlflow.log_artifact(net_g_path)
+                    mlflow.log_artifact(net_d_path)
 
             if opt.get("val") is not None and (
                 current_iter % opt["val"]["val_freq"] == 0
@@ -148,10 +185,21 @@ def train() -> None:
                     logger.warning(
                         "Multiple validation datasets are *only* supported by SRModel."
                     )
-                for val_loader in val_loaders:
+                for val_loader_ind, val_loader in enumerate(val_loaders):
                     model.validation(
-                        val_loader, current_iter, tb_logger, opt["val"]["save_img"]
+                        val_loader,
+                        current_iter,
+                        tb_logger,
+                        opt["val"]["save_img"],
+                        use_first_n_batches=opt["val"]["use_first_n_batches"],
                     )
+                    if mlflow_opt["tracking_uri"]:
+                        for metric, value in model.metric_results.items():
+                            mlflow.log_metric(
+                                f"val{val_loader_ind}_{metric}",
+                                value,
+                                step=current_iter,
+                            )
 
             data_timer.start()
             iter_timer.start()

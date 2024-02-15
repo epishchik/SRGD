@@ -41,7 +41,20 @@ docker compose down --volumes
 
 ## Usage
 
-Create MLFlow credentials (or use them as positional arguments in scripts)
+Create AWS credentials to access MinIO.
+```bash
+mkdir -p ~/.aws
+touch ~/.aws/credentials
+```
+
+AWS credentials example.
+```text
+[default]
+aws_access_key_id = access_key_id
+aws_secret_access_key = secret_access_key
+```
+
+Create MLFlow credentials.
 ```bash
 mkdir -p ~/.mlflow
 touch ~/.mlflow/credentials
@@ -53,3 +66,18 @@ MLFlow credentials example.
 mlflow_tracking_username = user
 mlflow_tracking_password = password
 ```
+
+Set client MLFLOW_S3_ENDPOINT_URL environment variable.
+
+Usage examples:
+```bash
+MLFLOW_S3_ENDPOINT_URL="http://0.0.0.0:9000" python real_esrgan.py \
+  -opt configs/train/finetune_realesrgan_x4plus_game_engine.yaml
+```
+
+You can use only environment variables instead of credential files:
+- MLFLOW_S3_ENDPOINT_URL.
+- MLFLOW_TRACKING_USERNAME.
+- MLFLOW_TRACKING_PASSWORD.
+- AWS_ACCESS_KEY_ID.
+- AWS_SECRET_ACCESS_KEY.

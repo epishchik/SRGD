@@ -61,12 +61,13 @@ datasets:
       prefetch_mode: ~
 
     val:
-       name: GameEngine_val
-       type: PairedImageDataset
-       dataroot_gt: datasets/GameEngineData/1080p/val
-       dataroot_lq: datasets/GameEngineData/270p/val
-       io_backend:
-         type: disk
+      name: GameEngine_val
+      type: PairedImageDataset
+      dataroot_gt: datasets/GameEngineData/1080p/val
+      dataroot_lq: datasets/GameEngineData/270p/val
+      io_backend:
+       type: disk
+
 
 # network structures
 network_g:
@@ -82,6 +83,10 @@ network_d:
   num_in_ch: 3
   num_feat: 64
   skip_connection: True
+
+network_prefix:
+  network_g: net_g
+  network_d: net_d
 
 # path
 path:
@@ -150,23 +155,31 @@ train:
 
 # validation settings
 val:
- val_freq: !!float 5e3
- save_img: False
+  val_freq: !!float 5e3
+  save_img: false
+  pbar: true
+  use_first_n_batches: ~
 
- metrics:
-   psnr: # metric name
-     type: calculate_psnr
-     crop_border: 4
-     test_y_channel: false
+  metrics:
+    psnr: # metric name
+      type: calculate_psnr
+      crop_border: 4
+      test_y_channel: false
 
 # logging settings
 logger:
   print_freq: 100
   save_checkpoint_freq: !!float 5e3
-  use_tb_logger: true
+  use_tb_logger: false
   wandb:
     project: ~
     resume_id: ~
+  mlflow:
+    tracking_uri: http://127.0.0.1:5000
+    experiment: SRGB train
+    run: Finetune RealESRGAN_x4plus GameEngineData
+    log_system_metrics: false
+
 
 # dist training settings
 dist_params:
