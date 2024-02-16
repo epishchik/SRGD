@@ -7,3 +7,6 @@
 [submodule "submodules/basicsr"]
 	path = submodules/basicsr
 	url = git@github.com:Pe4enIks/BasicSR.git
+[submodule "submodules/emt"]
+	path = submodules/emt
+	url = git@github.com:Pe4enIks/EMT.git

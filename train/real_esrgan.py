@@ -175,8 +175,13 @@ def train() -> None:
                         opt["network_prefix"]["network_d"] + f"_{current_iter}.pth",
                     )
 
+                    state_path = os.path.join(
+                        opt["path"]["training_states"], f"{current_iter}.state"
+                    )
+
                     mlflow.log_artifact(net_g_path)
                     mlflow.log_artifact(net_d_path)
+                    mlflow.log_artifact(state_path)
 
             if opt.get("val") is not None and (
                 current_iter % opt["val"]["val_freq"] == 0

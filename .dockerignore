@@ -38,7 +38,6 @@ submodules/basicsr/colab
 submodules/basicsr/datasets
 submodules/basicsr/docs
 submodules/basicsr/experiments
-submodules/basicsr/LICENSE
 
 submodules/real-esrgan/.git
 submodules/real-esrgan/.eggs
@@ -50,6 +49,8 @@ submodules/resshift/.git
 submodules/resshift/assets
 submodules/resshift/basicsr
 submodules/resshift/testdata
+
+submodules/emt/.git
 
 datasets
 datasphere
