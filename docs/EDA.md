@@ -19,7 +19,7 @@
 - Реальные: для каждого разрешения рендеринг происходит на движке, для более низких разрешений выставляются более низкие настройки графики.
 - Синтетические: 1080p рендерится на движке, а 270p, 360p и 540p генерируются алгоритмом из статьи [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN). Скрипт генерации: [compress.py](/utils/compress.py).
 
-## Unreal Engine
+## Реальные данные
 
 ### Проекты
 Было обработано 17 бесплатных проектов:
@@ -41,8 +41,42 @@
 - [SubwaySequencer](https://www.unrealengine.com/marketplace/en-US/product/sequencer-subway).
 - [SunTemple](https://www.unrealengine.com/marketplace/en-US/product/sun-temple).
 
-### Конфигурация
+### Объем данных
 
+Общее количество изображений получилось ~ 72 тысячи или ~ 87 Gb, т.е. ~ 18 тысяч изображений в каждом из разрешений.
+
+## Синтетические данные
+
+### Проекты
+Было обработано 20 проектов:
+- [Dota 2](https://store.steampowered.com/app/570/Dota_2/).
+- [CSGO](https://store.steampowered.com/app/730/CounterStrike_2/).
+- [DMXPrevisSample](https://www.unrealengine.com/marketplace/en-US/product/dmx-previs-sample).
+- [ActionRPG](https://www.unrealengine.com/marketplace/en-US/product/action-rpg).
+- [ArchVizInterior](https://www.unrealengine.com/marketplace/en-US/product/archvis-interior-rendering).
+- [ASCTeuthisan](https://www.unrealengine.com/marketplace/en-US/product/asc-teuthisan).
+- [BroadcastSample](https://www.unrealengine.com/marketplace/en-US/product/broadcast-sample).
+- [CitySample](https://www.unrealengine.com/marketplace/en-US/product/city-sample).
+- [ElectricDreamsEnv](https://www.unrealengine.com/marketplace/en-US/product/electric-dreams-env).
+- [ElementalDemo](https://www.unrealengine.com/marketplace/en-US/product/elemental-demo).
+- [HillsideSample](https://www.unrealengine.com/marketplace/en-US/product/hillside-sample-project).
+- [Matinee](https://www.unrealengine.com/marketplace/en-US/product/matinee).
+- [MeerkatDemo](https://www.unrealengine.com/marketplace/en-US/product/meerkat-demo-05).
+- [MLDeformerSample](https://www.unrealengine.com/marketplace/en-US/product/ml-deformer-sample).
+- [ParticleEffects](https://www.unrealengine.com/marketplace/en-US/product/particle-effects).
+- [RealisticRendering](https://www.unrealengine.com/marketplace/en-US/product/realistic-rendering).
+- [SlayAnimationSample](https://www.unrealengine.com/marketplace/en-US/product/slay-animation-sample).
+- [StylizedRendering](https://www.unrealengine.com/marketplace/en-US/product/stylized-rendering).
+- [SubwaySequencer](https://www.unrealengine.com/marketplace/en-US/product/sequencer-subway).
+- [SunTemple](https://www.unrealengine.com/marketplace/en-US/product/sun-temple).
+
+### Объем данных
+
+Общее количество изображений получилось ~ 110 тысяч или ~ 102 Gb, т.е. ~ 25 тысяч изображений в каждом из разрешений.
+
+## Конфигурация игровых движков
+
+### Unreal Engine
 Все проекты написаны в разных версиях, с разными конфигурациями, но получилось составить общий паттерн действий, чтобы избавиться от багов: блюра, смещения гаммы и т.д.
 
 - В глобальных настройках проекта (Edit -> Project settings) найти параметр Motion Blur и отключить.
@@ -54,20 +88,7 @@
 - Открыть MRQ (Window -> Cinematics -> Movie Render Queue) и загрузить queue из папки с предыдущего шага.
 - Запустить рендер и верить в успех.
 
-### Объем данных
-
-Общее количество изображений получилось ~ 72 тысячи или ~ 87 Gb, т.е. ~ 18 тысяч изображений в каждом из разрешений.
-
-## Source
-
-### Проекты
-Был обработано 4 проекта:
-- [Dota 2](https://store.steampowered.com/app/570/Dota_2/).
-- [CSGO](https://store.steampowered.com/app/730/CounterStrike_2/).
-- [DMXPrevisSample](https://www.unrealengine.com/marketplace/en-US/product/dmx-previs-sample).
-- [CitySample](https://www.unrealengine.com/marketplace/en-US/product/city-sample).
-
-### Конфигурация
+### Source
 В играх на движке Source есть встроенный механизм рендеринга через консоль.
 
 - Открыть запись игры.
@@ -78,10 +99,6 @@
 - Выключить hud командой hud_toggle_visibility 0
 - Закрыть консоль, чтобы ее не было видно на рендере.
 - Остановить запись: endmovie.
-
-### Объем данных
-
-Общее количество изображений получилось ~ 28 тысяч или ~ 15 Gb, т.е. ~ 7 тысяч изображений в каждом из разрешений.
 
 ## Очистка данных
 

@@ -10,7 +10,7 @@ dvc pull
 
 ## Yandex Disk
 
-Веса загружены на Yandex Disk и могут быть скачаны по ссылке или скриптом.
+Веса загружены на Yandex Disk и могут быть скачаны по [ссылке](https://disk.yandex.ru/d/P1w6Tis0cjoclQ) или скриптом.
 
 ```bash
 cd utils

@@ -7,14 +7,27 @@ from PIL import Image, UnidentifiedImageError
 from requests import Response
 
 MODELNAME2API = {
+    # Real-ESRGAN
     ("Real-ESRGAN", "pretrained", "x4"): "pretrained/RealESRGAN_x4plus",
+    ("Real-ESRGAN", "pretrained", "x3"): None,
     ("Real-ESRGAN", "pretrained", "x2"): "pretrained/RealESRGAN_x2plus",
-    ("Real-ESRGAN", "finetuned", "x4"): None,
+    ("Real-ESRGAN", "finetuned", "x4"): "finetuned/RealESRGAN_x4plus",
+    ("Real-ESRGAN", "finetuned", "x3"): None,
     ("Real-ESRGAN", "finetuned", "x2"): None,
+    # ResShift
     ("ResShift", "pretrained", "x4"): "pretrained/ResShift_RealSRx4",
+    ("ResShift", "pretrained", "x3"): None,
     ("ResShift", "pretrained", "x2"): None,
     ("ResShift", "finetuned", "x4"): None,
+    ("ResShift", "finetuned", "x3"): None,
     ("ResShift", "finetuned", "x2"): None,
+    # EMT
+    ("EMT", "pretrained", "x4"): "pretrained/EMT_x4",
+    ("EMT", "pretrained", "x3"): "pretrained/EMT_x3",
+    ("EMT", "pretrained", "x2"): "pretrained/EMT_x2",
+    ("EMT", "finetuned", "x4"): None,
+    ("EMT", "finetuned", "x3"): None,
+    ("EMT", "finetuned", "x2"): None,
 }
 
 
@@ -86,9 +99,9 @@ def main() -> None:
 
     st.title(title)
 
-    model_name = st.selectbox("Model name", ("Real-ESRGAN", "ResShift"))
+    model_name = st.selectbox("Model name", ("Real-ESRGAN", "ResShift", "EMT"))
     model_type = st.selectbox("Model type", ("pretrained", "finetuned"))
-    upsacle_ratio = st.selectbox("Upscale ratio", ("x4", "x2"))
+    upsacle_ratio = st.selectbox("Upscale ratio", ("x4", "x3", "x2"))
 
     configure_model_name = MODELNAME2API[(model_name, model_type, upsacle_ratio)]
 

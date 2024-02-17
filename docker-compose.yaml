@@ -20,7 +20,7 @@ services:
     networks:
       - deploy_network
     container_name: srgb-api
-    image: srgb/api:0.0.2
+    image: srgb/api:0.0.1
 
   ui:
     build:
@@ -38,7 +38,7 @@ services:
     networks:
       - deploy_network
     container_name: srgb-ui
-    image: srgb/ui:0.0.2
+    image: srgb/ui:0.0.1
 
 networks:
   deploy_network:

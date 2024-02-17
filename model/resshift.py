@@ -7,6 +7,7 @@ import numpy as np
 project_root = Path(__file__).parents[1]
 sys.path.insert(0, str(project_root))
 
+# TODO обернуть в python module, добавить в pyproject.toml и requirements.txt
 from submodules.resshift.inference_resshift import get_configs_from_global_config
 from submodules.resshift.sampler import ResShiftSampler
 

@@ -8,16 +8,16 @@ from pathlib import Path
 import cv2
 import numpy as np
 import torch
+from metric_class import MetricSR
 from options import get_options
 
 import datasets
 import mlflow
-from metric import MetricSR
 
 
 def main() -> None:
     """
-    Вычисление и запись в файл метрик для модели Real-ESRGAN.
+    Вычисление, запись в файл метрик metrics.csv, логирование в MLFlow.
     В качестве датасета используется один из проектов из
     epishchik/super-resolution-games с HuggingFace.
 
@@ -26,9 +26,14 @@ def main() -> None:
     None
     """
     root = Path(__file__).parents[1]
-
     sys.path.insert(0, str(root))
-    from model.real_esrgan import configure, predict
+
+    from model.emt_model import configure as configure_emt
+    from model.emt_model import predict as predict_emt
+    from model.real_esrgan import configure as configure_real_esrgan
+    from model.real_esrgan import predict as predict_real_esrgan
+    from model.resshift import configure as configure_resshift
+    from model.resshift import predict as predict_resshift
     from utils.parse import parse_yaml
 
     metric_file_header = [
@@ -68,11 +73,9 @@ def main() -> None:
     metric_file_header += metric_names
 
     args = get_options().parse_args()
-    real_esrgan_model_name = args.model_config
+    model_name = args.model_config
 
-    model_config_path = (
-        root / f"configs/model/{args.model_type}/{real_esrgan_model_name}.yaml"
-    )
+    model_config_path = root / f"configs/model/{args.model_type}/{model_name}.yaml"
 
     metric_config_path = (
         root / f"configs/metric/{args.dataset_type}/{args.dataset}.yaml"
@@ -91,8 +94,14 @@ def main() -> None:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(metric_file_header)
 
-    upsampler = configure(root, model_config)
-    use_face_enhancer = model_config["use_face_enhancer"]
+    if model_config["model"] == "real_esrgan":
+        upsampler = configure_real_esrgan(root, model_config)
+    elif model_config["model"] == "resshift":
+        upsampler = configure_resshift(root, model_config)
+    elif model_config["model"] == "emt":
+        upsampler, emt_device, emt_nbits = configure_emt(root, model_config)
+    else:
+        raise ValueError(f"{model_config['model']} incorrect model type.")
 
     split_config = args.split
     if split_config == "train":
@@ -118,7 +127,7 @@ def main() -> None:
     logs_path = root / "logs"
     os.makedirs(logs_path, exist_ok=True)
 
-    file_handler = logging.FileHandler(logs_path / "metric_real_esrgan.log")
+    file_handler = logging.FileHandler(logs_path / "metric.log")
 
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
@@ -129,7 +138,7 @@ def main() -> None:
 
     logger.setLevel("INFO")
 
-    logger.info(f"model = {real_esrgan_model_name}")
+    logger.info(f"model = {model_name}")
     logger.info(f"project type = {project_type}")
     logger.info(f"project name = {project_name}")
     logger.info(f"low resolution = {lr}")
@@ -166,12 +175,16 @@ def main() -> None:
         bgr_hr = cv2.cvtColor(rgb_hr, cv2.COLOR_RGB2BGR)
 
         outscale = int(bgr_hr.shape[0] / bgr_lr.shape[0])
-        res_hr = predict(
-            bgr_lr,
-            upsampler,
-            outscale=outscale,
-            use_face_enhancer=use_face_enhancer,
-        )
+        if model_config["model"] == "real_esrgan":
+            res_hr = predict_real_esrgan(
+                bgr_lr, upsampler, outscale, model_config["use_face_enhancer"]
+            )
+        elif model_config["model"] == "resshift":
+            res_hr = predict_resshift(bgr_lr, upsampler)
+        elif model_config["model"] == "emt":
+            res_hr = predict_emt(bgr_lr, upsampler, emt_device, emt_nbits)
+        else:
+            raise ValueError(f"{model_config['model']} incorrect model type.")
 
         res_hr, bgr_hr = torch.from_numpy(res_hr), torch.from_numpy(bgr_hr)
         res_hr = res_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0
@@ -206,7 +219,7 @@ def main() -> None:
         csv_writer.writerow(
             [
                 time.strftime("%Y-%m-%d %H:%M:%S"),
-                real_esrgan_model_name,
+                model_name,
                 project_type,
                 project_name,
                 lr[1:],
