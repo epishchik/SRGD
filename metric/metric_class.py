@@ -4,7 +4,7 @@ import torch.cuda
 
 class MetricSR:
     """
-    Класс для вычисления метрик.
+    Калькулятор super resolution метрик.
 
     Attributes
     ----------

@@ -18,17 +18,6 @@ configs/compress.yaml
 dvc_data/metrics.dvc
 dvc_data/metrics
 dvc_data/weights.dvc
-dvc_data/weights/gfpgan
-dvc_data/weights/real-esrgan/GFPGANv1.3.pth
-dvc_data/weights/real-esrgan/realesr-animevideov3.pth
-dvc_data/weights/real-esrgan/realesr-general-wdn-x4v3.pth
-dvc_data/weights/real-esrgan/realesr-general-x4v3.pth
-dvc_data/weights/real-esrgan/RealESRGAN_x2plus_netD.pth
-dvc_data/weights/real-esrgan/RealESRGAN_x4plus_anime_6B.pth
-dvc_data/weights/real-esrgan/RealESRGAN_x4plus_netD.pth
-dvc_data/weights/real-esrgan/RealESRNet_x4plus.pth
-dvc_data/weights/resshift/resshift_bicsrx4_matlab_s15.pth
-dvc_data/weights/resshift/resshift_bicsrx4_opencv_s15.pth
 
 submodules/basicsr/.git
 submodules/basicsr/.vscode

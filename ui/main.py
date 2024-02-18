@@ -148,11 +148,9 @@ def main() -> None:
 
         if input_image:
             try:
-                upscaled_bytes = upscale_file(input_image, base_url)
+                upscaled_bytes = io.BytesIO(upscale_file(input_image, base_url).content)
                 original_image = Image.open(input_image).convert("RGB")
-                upscaled_image = Image.open(io.BytesIO(upscaled_bytes.content)).convert(
-                    "RGB"
-                )
+                upscaled_image = Image.open(upscaled_bytes).convert("RGB")
                 _, hr_h = upscaled_image.size
 
                 col1.header("Low Resolution")
@@ -163,7 +161,7 @@ def main() -> None:
 
                 st.download_button(
                     label="Download upscaled image",
-                    data=io.BytesIO(upscaled_bytes.content),
+                    data=upscaled_bytes,
                     file_name=f"{input_image.name}_{hr_h}p",
                     mime="image/png",
                 )

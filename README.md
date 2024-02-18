@@ -15,7 +15,9 @@ https://github.com/Pe4enIks/SR-Gaming-Bench/assets/57502208/6b598245-6959-40d0-8
 - [Метрики](/docs/METRICS.md).
 - [Сервис](/docs/SERVICE.md).
 - [Обучение](/docs/TRAINING.md).
+- [Оптимизация](/docs/OPTIMIZATION.md).
 - [Веса моделей](/docs/WEIGHTS.md).
+
 
 ## Команда
 - Пищик Евгений (разработчик, [@Evgenii_Pishchik](https://t.me/Evgenii_Pishchik)).

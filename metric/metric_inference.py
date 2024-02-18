@@ -188,9 +188,7 @@ def calculate_metrics(
 
         outscale = int(bgr_hr.shape[0] / bgr_lr.shape[0])
         if model_config_dct["model"] == "real_esrgan":
-            res_hr = predict_real_esrgan(
-                bgr_lr, upsampler, outscale, model_config_dct["use_face_enhancer"]
-            )
+            res_hr = predict_real_esrgan(bgr_lr, upsampler, outscale)
         elif model_config_dct["model"] == "resshift":
             res_hr = predict_resshift(bgr_lr, upsampler)
         elif model_config_dct["model"] == "emt":

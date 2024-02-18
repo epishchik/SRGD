@@ -9,7 +9,7 @@ from emt.models.ir_model import IRModel
 
 def configure(root: PurePath, config: dict[str, Any]) -> Any:
     """
-    Функция создания модели EMT из конфигурационного словаря.
+    Создание модели EMT из конфигурационного словаря.
 
     Parameters
     ----------

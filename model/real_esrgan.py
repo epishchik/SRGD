@@ -1,17 +1,15 @@
-import shutil
-from pathlib import Path, PurePath
+from pathlib import PurePath
 from typing import Any
 
 import numpy as np
 from basicsr.archs.rrdbnet_arch import RRDBNet
-from gfpgan import GFPGANer
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 
 def configure(root: PurePath, config: dict[str, Any]) -> Any:
     """
-    Функция создания модели Real-ESRGAN из конфигурационного словаря.
+    Создание модели Real-ESRGAN из конфигурационного словаря.
 
     Parameters
     ----------
@@ -25,13 +23,11 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
     Any
         Объект модели Real-ESRGAN.
     """
-    model, model_path, netscale, dni_weight = None, None, None, None
+    model, netscale, dni_weight = None, None, None
 
     model_path = str(root / config["weights"])
     model_name = config["model_name"]
-    outscale = config["outscale"]
     denoise_strength = config["denoise_strength"]
-    use_face_enhancer = config["use_face_enhancer"]
     tile = config["tile"]
     tile_pad = config["tile_pad"]
     pre_pad = config["pre_pad"]
@@ -112,22 +108,6 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
         half=not fp32,
         gpu_id=gpu_id,
     )
-
-    if use_face_enhancer:
-        shutil.copytree(
-            root / config["GFPGAN_weights"]["additional"],
-            Path.cwd() / "gfpgan",
-            dirs_exist_ok=True,
-        )
-
-        face_enhancer = GFPGANer(
-            model_path=str(root / config["GFPGAN_weights"]["model"]),
-            upscale=outscale,
-            arch="clean",
-            channel_multiplier=2,
-            bg_upsampler=upsampler,
-        )
-        return face_enhancer
     return upsampler
 
 
@@ -135,7 +115,6 @@ def predict(
     img: np.ndarray,
     upsampler: Any,
     outscale: float = 4.0,
-    use_face_enhancer: bool = False,
 ) -> np.ndarray:
     """
     Перевод LR изображения в HR изображение с использованием Real-ESRGAN.
@@ -150,19 +129,11 @@ def predict(
         Величина upscale, обычно 2.0 или 4.0.
         Можно использовать другие значения, но в таком случае
         делается простой resize сгенерированного HR к нужному размеру.
-    use_face_enhancer : bool, optional
-        Использовать ли модель для улучшения качества лиц GFPGAN.
 
     Returns
     -------
     np.ndarray
         HR изображение в формате (h*outscale, w*outscale, c).
     """
-    if use_face_enhancer:
-        _, _, out_img = upsampler.enhance(
-            img, has_aligned=False, only_center_face=False, paste_back=True
-        )
-    else:
-        out_img, _ = upsampler.enhance(img, outscale=outscale)
-
+    out_img, _ = upsampler.enhance(img, outscale=outscale)
     return out_img

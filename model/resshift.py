@@ -14,7 +14,7 @@ from submodules.resshift.sampler import ResShiftSampler
 
 def configure(root: PurePath, config: dict[str, Any]) -> Any:
     """
-    Функция создания модели  из конфигурационного словаря.
+    Создание модели ResShift из конфигурационного словаря.
 
     Parameters
     ----------

@@ -1,12 +1,8 @@
 model: real_esrgan
 model_name: RealESRNet_x4plus
 weights: dvc_data/weights/real-esrgan/RealESRNet_x4plus.pth
-GFPGAN_weights:
-  model: dvc_data/weights/real-esrgan/GFPGANv1.3.pth
-  additional: dvc_data/weights/gfpgan
 outscale: 4.0
 denoise_strength: 0.5
-use_face_enhancer: no
 tile: 0
 tile_pad: 10
 pre_pad: 0

@@ -168,9 +168,7 @@ def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int]]:
         )
 
     if app.config["model"] == "real_esrgan":
-        out_img = predict_real_esrgan(
-            img, app.upsampler, outscale, app.config["use_face_enhancer"]
-        )
+        out_img = predict_real_esrgan(img, app.upsampler, outscale)
     elif app.config["model"] == "resshift":
         out_img = predict_resshift(img, app.upsampler)
     elif app.config["model"] == "emt":

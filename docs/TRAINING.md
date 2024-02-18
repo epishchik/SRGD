@@ -24,7 +24,7 @@ bash create_local_dataset.sh datasets GameEngineData 270p 1080p
 ### RealESRGAN_x4plus
 
 ```bash
-MLFLOW_S3_ENDPOINT_URL="http://0.0.0.0:9000" python real_esrgan.py \
+MLFLOW_S3_ENDPOINT_URL="http://0.0.0.0:9000" python3 real_esrgan.py \
   -opt configs/train/finetune_realesrgan_x4plus_game_engine.yaml
 ```
 

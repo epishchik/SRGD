@@ -10,7 +10,7 @@ import requests
 
 def download_file(pk: str, local_name: str, src_type: str) -> None:
     """
-    Функция скачивания единицы данных через API Yandex Disk.
+    Скачивание единицы данных через API Yandex Disk.
 
     Parameters
     ----------
@@ -42,27 +42,29 @@ def download_file(pk: str, local_name: str, src_type: str) -> None:
         print("Folder downloaded")
 
 
-def download(folder: str) -> None:
+def download(download_source: str, save_folder: str) -> None:
     """
-    Функция скачивания данных через API Yandex Disk.
+    Скачивание данных через API Yandex Disk.
 
     Parameters
     ----------
-    folder : str
-        Путь к папке для сохранения папок / файлов с Yandex Disk.
+    download_source : str
+        Url к скачиваемому источнику.
+    save_folder : str
+        Путь к папке для сохранения папки с Yandex Disk.
 
     Returns
     -------
     None
     """
-    if folder:
-        save_folder = Path(folder)
+    if save_folder:
+        save_folder = Path(save_folder)
         os.makedirs(save_folder, exist_ok=True)
     else:
         save_folder = Path.cwd().parent
 
     files = {
-        save_folder: ("https://disk.yandex.ru/d/P1w6Tis0cjoclQ", "folder"),
+        save_folder: (download_source, "folder"),
     }
 
     print(f"Will be downloaded {len(files)} sources")
@@ -73,7 +75,8 @@ def download(folder: str) -> None:
 if __name__ == "__main__":
     parser = ArgumentParser()
     # TODO добавить help
-    parser.add_argument("-f", "--folder", type=str, default=None)
+    parser.add_argument("-ds", "--download-source", type=str, required=True)
+    parser.add_argument("-sf", "--save-folder", type=str, default=None)
     args = parser.parse_args()
 
-    download(args.folder)
+    download(args.download_source, args.save_folder)

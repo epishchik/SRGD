@@ -10,9 +10,20 @@ dvc pull
 
 ## Yandex Disk
 
+### Pickle
 Веса загружены на Yandex Disk и могут быть скачаны по [ссылке](https://disk.yandex.ru/d/P1w6Tis0cjoclQ) или скриптом.
 
 ```bash
 cd utils
-python3 download_weights.py
+python3 download_weights.py \
+  --download-source "https://disk.yandex.ru/d/P1w6Tis0cjoclQ"
+```
+
+### Onnx
+Веса загружены на Yandex Disk и могут быть скачаны по [ссылке](https://disk.yandex.ru/d/csDaOUeCKxQk7g) или скриптом.
+
+```bash
+cd utils
+python3 download_weights.py \
+  --download-source "https://disk.yandex.ru/d/csDaOUeCKxQk7g"
 ```

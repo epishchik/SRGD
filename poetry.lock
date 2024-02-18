@@ -181,26 +181,25 @@ frozenlist = ">=1.1.0"
 
 [[package]]
 name = "albumentations"
-version = "1.3.1"
+version = "1.4.0"
 description = "Fast image augmentation library and easy to use wrapper around other libraries"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "albumentations-1.3.1-py3-none-any.whl", hash = "sha256:6b641d13733181d9ecdc29550e6ad580d1bfa9d25e2213a66940062f25e291bd"},
-    {file = "albumentations-1.3.1.tar.gz", hash = "sha256:a6a38388fe546c568071e8c82f414498e86c9ed03c08b58e7a88b31cf7a244c6"},
+    {file = "albumentations-1.4.0-py3-none-any.whl", hash = "sha256:129656a0abdf4bf5c62abf4c297ee251c0d933d7b7509762386a729d2991857d"},
+    {file = "albumentations-1.4.0.tar.gz", hash = "sha256:649f8a14896f788b356ecc70083c4fb91bedab4ff4e2b39ad217a824e189ded0"},
 ]
 
 [package.dependencies]
-numpy = ">=1.11.1"
-opencv-python-headless = ">=4.1.1"
+numpy = ">=1.24.4"
+opencv-python = ">=4.9.0"
 PyYAML = "*"
 qudida = ">=0.0.4"
-scikit-image = ">=0.16.1"
-scipy = ">=1.1.0"
+scikit-image = ">=0.21.0"
+scipy = ">=1.10.0"
 
 [package.extras]
-develop = ["imgaug (>=0.4.0)", "pytest"]
-imgaug = ["imgaug (>=0.4.0)"]
+develop = ["pytest"]
 tests = ["pytest"]
 
 [[package]]
@@ -850,6 +849,23 @@ files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
 ]
+
+[[package]]
+name = "coloredlogs"
+version = "15.0.1"
+description = "Colored terminal output for Python's logging module"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+files = [
+    {file = "coloredlogs-15.0.1-py2.py3-none-any.whl", hash = "sha256:612ee75c546f53e92e70049c9dbfcc18c935a2b9a53b66085ce9ef6a6e5c0934"},
+    {file = "coloredlogs-15.0.1.tar.gz", hash = "sha256:7c991aa71a4577af2f82600d8f8f3a89f936baeaf9b50a9c197da014e5bf16b0"},
+]
+
+[package.dependencies]
+humanfriendly = ">=9.1"
+
+[package.extras]
+cron = ["capturer (>=2.4)"]
 
 [[package]]
 name = "configobj"
@@ -1611,6 +1627,17 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flatbuffers"
+version = "23.5.26"
+description = "The FlatBuffers serialization format for Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "flatbuffers-23.5.26-py2.py3-none-any.whl", hash = "sha256:c0ff356da363087b915fde4b8b45bdda73432fc17cddb3c8157472eab1422ad1"},
+    {file = "flatbuffers-23.5.26.tar.gz", hash = "sha256:9ea1144cac05ce5d86e2859f431c6cd5e66cd9c78c558317c7955fb8d4c78d89"},
+]
+
+[[package]]
 name = "flatten-dict"
 version = "0.4.2"
 description = "A flexible utility for flattening and unflattening dict-like objects in Python."
@@ -2152,6 +2179,20 @@ type = "git"
 url = "https://github.com/huggingface/huggingface_hub.git"
 reference = "HEAD"
 resolved_reference = "f386b2ae74bf18443836936941ae8bd1bfd40903"
+
+[[package]]
+name = "humanfriendly"
+version = "10.0"
+description = "Human friendly output for text interfaces using Python"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+files = [
+    {file = "humanfriendly-10.0-py2.py3-none-any.whl", hash = "sha256:1697e1a8a8f550fd43c2865cd84542fc175a61dcb779b6fee18cf6b6ccba1477"},
+    {file = "humanfriendly-10.0.tar.gz", hash = "sha256:6b0b831ce8f15f7300721aa49829fc4e83921a9a301cc7f606be6686a2288ddc"},
+]
+
+[package.dependencies]
+pyreadline3 = {version = "*", markers = "sys_platform == \"win32\" and python_version >= \"3.8\""}
 
 [[package]]
 name = "hydra-core"
@@ -2998,6 +3039,16 @@ files = [
 ]
 
 [[package]]
+name = "netron"
+version = "7.4.6"
+description = "Viewer for neural network, deep learning, and machine learning models"
+optional = false
+python-versions = "*"
+files = [
+    {file = "netron-7.4.6-py3-none-any.whl", hash = "sha256:bbd2a4b7f11d9ec876f3967f37d9f38fcf050121dfc92b1d20fb4a9b25adee00"},
+]
+
+[[package]]
 name = "networkx"
 version = "3.2.1"
 description = "Python package for creating and manipulating graphs and networks"
@@ -3265,6 +3316,90 @@ antlr4-python3-runtime = "==4.9.*"
 PyYAML = ">=5.1.0"
 
 [[package]]
+name = "onnx"
+version = "1.15.0"
+description = "Open Neural Network Exchange"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "onnx-1.15.0-cp310-cp310-macosx_10_12_universal2.whl", hash = "sha256:51cacb6aafba308aaf462252ced562111f6991cdc7bc57a6c554c3519453a8ff"},
+    {file = "onnx-1.15.0-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:0aee26b6f7f7da7e840de75ad9195a77a147d0662c94eaa6483be13ba468ffc1"},
+    {file = "onnx-1.15.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:baf6ef6c93b3b843edb97a8d5b3d229a1301984f3f8dee859c29634d2083e6f9"},
+    {file = "onnx-1.15.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:96ed899fe6000edc05bb2828863d3841cfddd5a7cf04c1a771f112e94de75d9f"},
+    {file = "onnx-1.15.0-cp310-cp310-win32.whl", hash = "sha256:f1ad3d77fc2f4b4296f0ac2c8cadd8c1dcf765fc586b737462d3a0fe8f7c696a"},
+    {file = "onnx-1.15.0-cp310-cp310-win_amd64.whl", hash = "sha256:ca4ebc4f47109bfb12c8c9e83dd99ec5c9f07d2e5f05976356c6ccdce3552010"},
+    {file = "onnx-1.15.0-cp311-cp311-macosx_10_12_universal2.whl", hash = "sha256:233ffdb5ca8cc2d960b10965a763910c0830b64b450376da59207f454701f343"},
+    {file = "onnx-1.15.0-cp311-cp311-macosx_10_12_x86_64.whl", hash = "sha256:51fa79c9ea9af033638ec51f9177b8e76c55fad65bb83ea96ee88fafade18ee7"},
+    {file = "onnx-1.15.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f277d4861729f5253a51fa41ce91bfec1c4574ee41b5637056b43500917295ce"},
+    {file = "onnx-1.15.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d8a7c94d2ebead8f739fdb70d1ce5a71726f4e17b3e5b8ad64455ea1b2801a85"},
+    {file = "onnx-1.15.0-cp311-cp311-win32.whl", hash = "sha256:17dcfb86a8c6bdc3971443c29b023dd9c90ff1d15d8baecee0747a6b7f74e650"},
+    {file = "onnx-1.15.0-cp311-cp311-win_amd64.whl", hash = "sha256:60a3e28747e305cd2e766e6a53a0a6d952cf9e72005ec6023ce5e07666676a4e"},
+    {file = "onnx-1.15.0-cp38-cp38-macosx_10_12_universal2.whl", hash = "sha256:6b5c798d9e0907eaf319e3d3e7c89a2ed9a854bcb83da5fefb6d4c12d5e90721"},
+    {file = "onnx-1.15.0-cp38-cp38-macosx_10_12_x86_64.whl", hash = "sha256:a4f774ff50092fe19bd8f46b2c9b27b1d30fbd700c22abde48a478142d464322"},
+    {file = "onnx-1.15.0-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b2b0e7f3938f2d994c34616bfb8b4b1cebbc4a0398483344fe5e9f2fe95175e6"},
+    {file = "onnx-1.15.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:49cebebd0020a4b12c1dd0909d426631212ef28606d7e4d49463d36abe7639ad"},
+    {file = "onnx-1.15.0-cp38-cp38-win32.whl", hash = "sha256:1fdf8a3ff75abc2b32c83bf27fb7c18d6b976c9c537263fadd82b9560fe186fa"},
+    {file = "onnx-1.15.0-cp38-cp38-win_amd64.whl", hash = "sha256:763e55c26e8de3a2dce008d55ae81b27fa8fb4acbb01a29b9f3c01f200c4d676"},
+    {file = "onnx-1.15.0-cp39-cp39-macosx_10_12_universal2.whl", hash = "sha256:b2d5e802837629fc9c86f19448d19dd04d206578328bce202aeb3d4bedab43c4"},
+    {file = "onnx-1.15.0-cp39-cp39-macosx_10_12_x86_64.whl", hash = "sha256:9a9cfbb5e5d5d88f89d0dfc9df5fb858899db874e1d5ed21e76c481f3cafc90d"},
+    {file = "onnx-1.15.0-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3f472bbe5cb670a0a4a4db08f41fde69b187a009d0cb628f964840d3f83524e9"},
+    {file = "onnx-1.15.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2bf2de9bef64792e5b8080c678023ac7d2b9e05d79a3e17e92cf6a4a624831d2"},
+    {file = "onnx-1.15.0-cp39-cp39-win32.whl", hash = "sha256:ef4d9eb44b111e69e4534f3233fc2c13d1e26920d24ae4359d513bd54694bc6d"},
+    {file = "onnx-1.15.0-cp39-cp39-win_amd64.whl", hash = "sha256:95d7a3e2d79d371e272e39ae3f7547e0b116d0c7f774a4004e97febe6c93507f"},
+    {file = "onnx-1.15.0.tar.gz", hash = "sha256:b18461a7d38f286618ca2a6e78062a2a9c634ce498e631e708a8041b00094825"},
+]
+
+[package.dependencies]
+numpy = "*"
+protobuf = ">=3.20.2"
+
+[package.extras]
+reference = ["Pillow", "google-re2"]
+
+[[package]]
+name = "onnxruntime-gpu"
+version = "1.17.0"
+description = "ONNX Runtime is a runtime accelerator for Machine Learning models"
+optional = false
+python-versions = "*"
+files = [
+    {file = "onnxruntime_gpu-1.17.0-cp310-cp310-manylinux_2_28_x86_64.whl", hash = "sha256:1f2a4e0468ac0bd8246996c3d5dbba92cbbaca874bcd7f9cee4e99ce6eb27f5b"},
+    {file = "onnxruntime_gpu-1.17.0-cp310-cp310-win_amd64.whl", hash = "sha256:0721b7930d7abed3730b2335e639e60d94ec411bb4d35a0347cc9c8b52c34540"},
+    {file = "onnxruntime_gpu-1.17.0-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:be0314afe399943904de7c1ca797cbcc63e6fad60eb85d3df6422f81dd94e79e"},
+    {file = "onnxruntime_gpu-1.17.0-cp311-cp311-win_amd64.whl", hash = "sha256:52125c24b21406d1431e43de1c98cea29c21e0cceba80db530b7e4c9216d86ea"},
+    {file = "onnxruntime_gpu-1.17.0-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:bb802d8033885c412269f8bc8877d8779b0dc874df6fb9df8b796cba7276ad66"},
+    {file = "onnxruntime_gpu-1.17.0-cp312-cp312-win_amd64.whl", hash = "sha256:8c43533e3e5335eaa78059fb86b849a4faded513a00c1feaaa205ca5af51c40f"},
+    {file = "onnxruntime_gpu-1.17.0-cp38-cp38-manylinux_2_28_x86_64.whl", hash = "sha256:1d461455bba160836d6c11c648c8fd4e4500d5c17096a13e6c2c9d22a4abd436"},
+    {file = "onnxruntime_gpu-1.17.0-cp38-cp38-win_amd64.whl", hash = "sha256:1e4398f2175a92f4b35d95279a6294a89c462f24de058a2736ee1d498bab5a16"},
+    {file = "onnxruntime_gpu-1.17.0-cp39-cp39-manylinux_2_28_x86_64.whl", hash = "sha256:1d0e3805cd1c024aba7f4ae576fd08545fc27530a2aaad2b3c8ac0ee889fbd05"},
+    {file = "onnxruntime_gpu-1.17.0-cp39-cp39-win_amd64.whl", hash = "sha256:fc1da5b93363ee600b5b220b04eeec51ad2c2b3e96f0b7615b16b8a173c88001"},
+]
+
+[package.dependencies]
+coloredlogs = "*"
+flatbuffers = "*"
+numpy = ">=1.21.6"
+packaging = "*"
+protobuf = "*"
+sympy = "*"
+
+[[package]]
+name = "onnxscript"
+version = "0.1.0.dev20240218"
+description = "Naturally author ONNX functions and models using a subset of Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "onnxscript-0.1.0.dev20240218-py3-none-any.whl", hash = "sha256:e080b19ada42c1743d2cb447de0d9885f380c1ed34affbecf1ca0dc3168edf0b"},
+    {file = "onnxscript-0.1.0.dev20240218.tar.gz", hash = "sha256:255322603d68b4edf511e57d8cf868e8d7af36a3dae42b50956cee19ce7a1f0e"},
+]
+
+[package.dependencies]
+numpy = "*"
+onnx = ">=1.14"
+typing_extensions = "*"
+
+[[package]]
 name = "opencv-python"
 version = "4.9.0.80"
 description = "Wrapper package for OpenCV python bindings."
@@ -3282,10 +3417,10 @@ files = [
 
 [package.dependencies]
 numpy = [
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
+    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
     {version = ">=1.21.4", markers = "python_version >= \"3.10\" and platform_system == \"Darwin\" and python_version < \"3.11\""},
     {version = ">=1.21.2", markers = "platform_system != \"Darwin\" and python_version >= \"3.10\" and python_version < \"3.11\""},
-    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
-    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 
 [[package]]
@@ -3306,10 +3441,10 @@ files = [
 
 [package.dependencies]
 numpy = [
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
+    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
     {version = ">=1.21.4", markers = "python_version >= \"3.10\" and platform_system == \"Darwin\" and python_version < \"3.11\""},
     {version = ">=1.21.2", markers = "platform_system != \"Darwin\" and python_version >= \"3.10\" and python_version < \"3.11\""},
-    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
-    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 
 [[package]]
@@ -3422,9 +3557,9 @@ files = [
 
 [package.dependencies]
 numpy = [
-    {version = ">=1.22.4,<2", markers = "python_version < \"3.11\""},
-    {version = ">=1.23.2,<2", markers = "python_version == \"3.11\""},
     {version = ">=1.26.0,<2", markers = "python_version >= \"3.12\""},
+    {version = ">=1.23.2,<2", markers = "python_version == \"3.11\""},
+    {version = ">=1.22.4,<2", markers = "python_version < \"3.11\""},
 ]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
@@ -3986,6 +4121,17 @@ files = [
 
 [package.extras]
 diagrams = ["jinja2", "railroad-diagrams"]
+
+[[package]]
+name = "pyreadline3"
+version = "3.4.1"
+description = "A python implementation of GNU readline."
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyreadline3-3.4.1-py3-none-any.whl", hash = "sha256:b0efb6516fd4fb07b45949053826a62fa4cb353db5be2bbb4a7aa1fdd1e345fb"},
+    {file = "pyreadline3-3.4.1.tar.gz", hash = "sha256:6f3d1f7b8a31ba32b73917cefc1f28cc660562f39aea8646d30bd6eff21f7bae"},
+]
 
 [[package]]
 name = "python-dateutil"
@@ -5025,12 +5171,12 @@ widechars = ["wcwidth"]
 
 [[package]]
 name = "tb-nightly"
-version = "2.17.0a20240216"
+version = "2.17.0a20240218"
 description = "TensorBoard lets you watch Tensors Flow"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "tb_nightly-2.17.0a20240216-py3-none-any.whl", hash = "sha256:31f9352dff5eb71c97d50dcf31fdc92cb62a73d314053c1ba992468a780651c5"},
+    {file = "tb_nightly-2.17.0a20240218-py3-none-any.whl", hash = "sha256:1715a75a2d15ead31ae7633550ce039ac905fc9c0cababa4a36822b8f815374a"},
 ]
 
 [package.dependencies]
@@ -5946,4 +6092,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a32a05d308b040c6baa3e72b51b13a8a964755d3a36be7bdad46d2abeb4db708"
+content-hash = "48663c510f0fb1d1ae08411b3cd33650e35e966b7ebb13bd9a137d4a48cb4010"
