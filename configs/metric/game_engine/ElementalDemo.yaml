@@ -1,3 +1,3 @@
-output_path: dvc_data
+output_path: dvc_data/metrics/game_engine
 repository: epishchik/super-resolution-games
 project_name: GameEngine_ElementalDemo
