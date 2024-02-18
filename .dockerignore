@@ -15,8 +15,8 @@ configs/train
 configs/metric
 configs/compress.yaml
 
-dvc_data/metrics.csv.dvc
-dvc_data/metrics.csv
+dvc_data/metrics.dvc
+dvc_data/metrics
 dvc_data/weights.dvc
 dvc_data/weights/gfpgan
 dvc_data/weights/real-esrgan/GFPGANv1.3.pth

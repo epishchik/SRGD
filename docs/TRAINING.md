@@ -30,8 +30,8 @@ MLFLOW_S3_ENDPOINT_URL="http://0.0.0.0:9000" python real_esrgan.py \
 
 #### Пример графиков MLFlow
 
-![real_esrgan_steps=100k_bs=2_gt_crop=256_scale=4_losses](/images/train/real_esrgan_steps=100k_bs=2_gt_crop=256_scale=4_losses.png)
+![real_esrgan_game_engine_data_steps=100k_bs=2_gt_crop=256_scale=4_losses](/images/train/real_esrgan_game_engine_data_steps=100k_bs=2_gt_crop=256_scale=4_losses.png)
 
-![real_esrgan_steps=100k_bs=2_gt_crop=256_scale=4_psnr](/images/train/real_esrgan_steps=100k_bs=2_gt_crop=256_scale=4_psnr.png)
+![real_esrgan_game_engine_data_steps=100k_bs=2_gt_crop=256_scale=4_psnr](/images/train/real_esrgan_game_engine_data_steps=100k_bs=2_gt_crop=256_scale=4_psnr.png)
 
 Графики остальных экспериментов можно найти в папке [images/train](/images/train).

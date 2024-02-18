@@ -28,7 +28,7 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
     model, model_path, netscale, dni_weight = None, None, None, None
 
     model_path = str(root / config["weights"])
-    model_name = config["filename"]
+    model_name = config["model_name"]
     outscale = config["outscale"]
     denoise_strength = config["denoise_strength"]
     use_face_enhancer = config["use_face_enhancer"]

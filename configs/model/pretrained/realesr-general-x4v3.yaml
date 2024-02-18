@@ -1,4 +1,5 @@
 model: real_esrgan
+model_name: realesr-general-x4v3
 weights: dvc_data/weights/real-esrgan/realesr-general-x4v3.pth
 wdn_weights: dvc_data/weights/real-esrgan/realesr-general-wdn-x4v3.pth
 GFPGAN_weights:

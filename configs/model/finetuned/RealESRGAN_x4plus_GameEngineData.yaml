@@ -1,5 +1,6 @@
 model: real_esrgan
-weights: dvc_data/weights/real-esrgan/Finetuned_RealESRGAN_x4plus.pth
+model_name: RealESRGAN_x4plus
+weights: dvc_data/weights/real-esrgan/Finetuned_RealESRGAN_x4plus_GameEngineData.pth
 GFPGAN_weights:
   model: dvc_data/weights/real-esrgan/GFPGANv1.3.pth
   additional: dvc_data/weights/gfpgan

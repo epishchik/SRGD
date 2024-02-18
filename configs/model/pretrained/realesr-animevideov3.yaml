@@ -1,4 +1,5 @@
 model: real_esrgan
+model_name: realesr-animevideov3
 weights: dvc_data/weights/real-esrgan/realesr-animevideov3.pth
 GFPGAN_weights:
   model: dvc_data/weights/real-esrgan/GFPGANv1.3.pth
