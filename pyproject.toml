@@ -63,7 +63,12 @@ optional = true
 [tool.poetry.group.optimization.dependencies]
 onnx = "^1.15.0"
 onnxscript = "^0.1.0.dev20240218"
-onnxruntime-gpu = "^1.17.0"
+onnxruntime-gpu = {version = "^1.17.0", source = "ort_azure_devops_feed"}
+
+[[tool.poetry.source]]
+name = "ort_azure_devops_feed"
+url = "https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/"
+priority = "supplemental"
 
 [build-system]
 requires = ["poetry-core"]

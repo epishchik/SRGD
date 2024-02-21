@@ -15,7 +15,7 @@ mlflow==2.10.2
 netron==7.4.6
 numpy==1.26.3
 onnx==1.15.0
-onnxruntime-gpu==1.17.0
+onnxruntime-gpu==1.17.0 --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/
 onnxscript==0.1.0.dev20240218
 opencv-python==4.9.0.80
 pillow==10.2.0

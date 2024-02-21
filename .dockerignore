@@ -18,6 +18,8 @@ configs/compress.yaml
 dvc_data/metrics.dvc
 dvc_data/metrics
 dvc_data/weights.dvc
+dvc_data/weights/real-esrgan
+dvc_data/onnx.dvc
 
 submodules/basicsr/.git
 submodules/basicsr/.vscode

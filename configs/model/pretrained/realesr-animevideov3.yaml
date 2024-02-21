@@ -1,6 +1,8 @@
 model: real_esrgan
 model_name: realesr-animevideov3
+backend: onnx
 weights: dvc_data/weights/real-esrgan/realesr-animevideov3.pth
+onnx: dvc_data/onnx/real-esrgan/realesr-animevideov3.onnx
 outscale: 4.0
 denoise_strength: 0.5
 tile: 0

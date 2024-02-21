@@ -1,6 +1,8 @@
 model: real_esrgan
 model_name: RealESRNet_x4plus
+backend: onnx
 weights: dvc_data/weights/real-esrgan/RealESRNet_x4plus.pth
+onnx: dvc_data/onnx/real-esrgan/RealESRNet_x4plus.onnx
 outscale: 4.0
 denoise_strength: 0.5
 tile: 0

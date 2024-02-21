@@ -37,7 +37,9 @@ def torch2onnx(root: PurePath, save_path: str, model_config_path: str) -> None:
     torch_model, device, half = upsampler.model, upsampler.device, upsampler.half
     dtype = torch.float16 if half else torch.float32
 
-    h_in, w_in = 32, 32
+    torch_model.eval()
+
+    h_in, w_in = 64, 64
     dummy_input = torch.rand((1, 3, h_in, w_in), dtype=dtype).to(device)
     dummy_output = torch_model(dummy_input)
     h_out = dummy_output.shape[2]

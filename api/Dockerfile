@@ -23,7 +23,7 @@ RUN apt update && \
     apt install -y curl && \
     curl -sSL https://install.python-poetry.org | python3 - && \
     poetry config virtualenvs.create false && \
-    poetry install --with api,ml --no-root && \
+    poetry install --with api,ml,optimization --no-root && \
     rm -rf ~/.cache/pypoetry/artifacts && \
     rm -rf ~/.cache/pypoetry/cache && \
     conda clean -y --all

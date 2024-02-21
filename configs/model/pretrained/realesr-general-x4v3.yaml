@@ -1,7 +1,9 @@
 model: real_esrgan
 model_name: realesr-general-x4v3
+backend: onnx
 weights: dvc_data/weights/real-esrgan/realesr-general-x4v3.pth
 wdn_weights: dvc_data/weights/real-esrgan/realesr-general-wdn-x4v3.pth
+onnx: dvc_data/onnx/real-esrgan/realesr-general-x4v3.onnx
 outscale: 4.0
 denoise_strength: 0.5
 tile: 0

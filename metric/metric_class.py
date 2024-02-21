@@ -31,6 +31,7 @@ class MetricSR:
         metric_names: list[str],
         no_ref_metric_names: list[str],
         map_metric_names: dict[str, str],
+        device: str = None,
     ) -> None:
         """
         Конфигурация класса для вычисления метрик.
@@ -44,6 +45,8 @@ class MetricSR:
         map_metric_names : dict[str, str]
             Словарь маппинга из собственного названия метрики в название
             функции реализующей эту метрику.
+        device : str
+            Название устройства для вычислений.
 
         Returns
         -------
@@ -53,14 +56,17 @@ class MetricSR:
         self.map_metric_names = map_metric_names
 
         self_metric_names = []
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+        if not device:
+            self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        else:
+            self.device = device
 
         if "lpips" in self.metric_names:
-            self.lpips = piq.LPIPS().to(device)
+            self.lpips = piq.LPIPS().to(self.device)
             self_metric_names += ["lpips"]
 
         if "dists" in self.metric_names:
-            self.dists = piq.DISTS().to(device)
+            self.dists = piq.DISTS().to(self.device)
             self_metric_names += ["dists"]
 
         self.self_metric_names = self_metric_names
@@ -84,6 +90,9 @@ class MetricSR:
         -------
         None
         """
+        upscaled_hr = upscaled_hr.to(self.device)
+        real_hr = real_hr.to(self.device)
+
         for metric_name in self.metric_names:
             if metric_name not in self.no_ref_metric_names:
                 if metric_name in self.self_metric_names:

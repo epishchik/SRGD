@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import sys
+import time
 from argparse import ArgumentParser
 from datetime import datetime
 from pathlib import Path, PurePath
@@ -33,6 +34,8 @@ def calculate_metrics(
     split: str,
     lr: str,
     hr: str,
+    metrics_device: str,
+    backend: str,
     mlflow_tracking_uri: str,
     mlflow_experiment: str,
     mlflow_run: str,
@@ -56,9 +59,13 @@ def calculate_metrics(
     split : str
         Сплит датасета [train / val].
     lr : str
-        Низкое разрешение [r270p / r360p / r540p / r1080p]
+        Низкое разрешение [r270p / r360p / r540p / r1080p].
     hr : str
-        Высокое разрешение [r270p / r360p / r540p / r1080p]
+        Высокое разрешение [r270p / r360p / r540p / r1080p].
+    metrics_device : str
+        Устройство на котором будет производиться вычисление метрик.
+    backend : str
+        Бэкенд для модели, перезаписывает настройку из конфига модели [torch / onnx].
     mlflow_tracking_uri : str
         Адрес трекера MLFlow.
     mlflow_experiment : str
@@ -110,6 +117,9 @@ def calculate_metrics(
         f"_{dataset_type}_{split}_{lr}_{hr}.json"
     )
 
+    if backend:
+        model_config_dct["backend"] = backend
+
     if model_config_dct["model"] == "real_esrgan":
         upsampler = configure_real_esrgan(root, model_config_dct)
     elif model_config_dct["model"] == "resshift":
@@ -132,7 +142,13 @@ def calculate_metrics(
         split=dataset_split,
         streaming=True,
     )
-    metric_calculator = MetricSR(metric_names, no_ref_metric_names, map_metric_names)
+
+    metric_calculator = MetricSR(
+        metric_names,
+        no_ref_metric_names,
+        map_metric_names,
+        device=metrics_device,
+    )
 
     logger = logging.getLogger()
     formatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
@@ -179,6 +195,7 @@ def calculate_metrics(
             }
         )
 
+    time_lst = []
     for idx, el in enumerate(dataset):
         rgb_lr = np.asarray(el[lr].convert("RGB"), dtype=np.float32)
         bgr_lr = cv2.cvtColor(rgb_lr, cv2.COLOR_RGB2BGR)
@@ -187,6 +204,7 @@ def calculate_metrics(
         bgr_hr = cv2.cvtColor(rgb_hr, cv2.COLOR_RGB2BGR)
 
         outscale = int(bgr_hr.shape[0] / bgr_lr.shape[0])
+        start_time = time.time()
         if model_config_dct["model"] == "real_esrgan":
             res_hr = predict_real_esrgan(bgr_lr, upsampler, outscale)
         elif model_config_dct["model"] == "resshift":
@@ -195,14 +213,12 @@ def calculate_metrics(
             res_hr = predict_emt(bgr_lr, upsampler, emt_device, emt_nbits)
         else:
             raise ValueError(f"{model_config_dct['model']} incorrect model type.")
+        total_time = time.time() - start_time
+        time_lst += [total_time]
 
         res_hr, bgr_hr = torch.from_numpy(res_hr), torch.from_numpy(bgr_hr)
         res_hr = res_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0
         bgr_hr = bgr_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0
-
-        if torch.cuda.is_available():
-            res_hr = res_hr.cuda()
-            bgr_hr = bgr_hr.cuda()
 
         metric_calculator.calculate(res_hr, bgr_hr)
 
@@ -212,6 +228,9 @@ def calculate_metrics(
             metric_str += f"{metric_name} = {metric_val:.3f}, "
             if mlflow_tracking_uri:
                 mlflow.log_metric(metric_name, metric_val, step=idx)
+        if mlflow_tracking_uri:
+            mlflow.log_metric("time", total_time, step=idx)
+        metric_str += f"time = {total_time:.3f}"
         logger.info(metric_str[:-2])
 
     json_dct = {
@@ -238,8 +257,11 @@ def calculate_metrics(
         json_dct["metrics"][metric_name] = float(f"{metric_val:.4f}")
         if mlflow_tracking_uri:
             mlflow.log_metric(f"mean {metric_name}", metric_val)
+    mean_time = sum(time_lst) / len(time_lst)
     if mlflow_tracking_uri:
+        mlflow.log_metric("mean time", mean_time)
         mlflow.end_run()
+    json_dct["time"] = mean_time
     json_dct["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     with open(save_path, "w") as f:
@@ -264,6 +286,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--hr", type=str, required=True, choices=["r270p", "r360p", "r540p", "r1080p"]
     )
+    parser.add_argument("--metrics-device", type=str, default="cuda")
+    parser.add_argument("--backend", type=str, default=None)
     parser.add_argument("--mlflow-tracking-uri", type=str, default=None)
     parser.add_argument("--mlflow-experiment", type=str, default="SRGB Inference")
     parser.add_argument("--mlflow-run", type=str, default=None)
@@ -280,6 +304,8 @@ if __name__ == "__main__":
         args.split,
         args.lr,
         args.hr,
+        args.metrics_device,
+        args.backend,
         args.mlflow_tracking_uri,
         args.mlflow_experiment,
         args.mlflow_run,
