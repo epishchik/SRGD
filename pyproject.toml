@@ -35,7 +35,7 @@ optional = true
 [tool.poetry.group.api.dependencies]
 fastapi = "^0.109.1"
 uvicorn = "^0.24.0.post1"
-python-multipart = "^0.0.6"
+python-multipart = "^0.0.7"
 
 [tool.poetry.group.exp]
 optional = true
