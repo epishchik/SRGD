@@ -1,8 +1,11 @@
 model: real_esrgan
 model_name: RealESRGAN_x4plus_anime_6B
-backend: onnx
+backend: triton
 weights: dvc_data/weights/real-esrgan/RealESRGAN_x4plus_anime_6B.pth
 onnx: dvc_data/onnx/real-esrgan/RealESRGAN_x4plus_anime_6B.onnx
+triton_url: localhost:8001
+triton_model_name: RealESRGAN_x4plus_anime_6B
+triton_model_version: 1
 outscale: 4.0
 denoise_strength: 0.5
 tile: 0

@@ -40,6 +40,8 @@ def calculate_metrics(
     mlflow_experiment: str,
     mlflow_run: str,
     mlflow_system_metrics: bool,
+    triton_url: str,
+    only_time: bool,
 ) -> None:
     """
     Вычисление метрик.
@@ -74,6 +76,10 @@ def calculate_metrics(
         Название запуска MLFlow.
     mlflow_system_metrics : bool
         Логирование системных метрик.
+    triton_url : str
+        URL к Triton Inference Server.
+    only_time : bool
+        Замерить только время inference как метрику.
 
     Returns
     -------
@@ -120,6 +126,9 @@ def calculate_metrics(
     if backend:
         model_config_dct["backend"] = backend
 
+    if triton_url:
+        model_config_dct["triton_url"] = triton_url
+
     if model_config_dct["model"] == "real_esrgan":
         upsampler = configure_real_esrgan(root, model_config_dct)
     elif model_config_dct["model"] == "resshift":
@@ -143,12 +152,13 @@ def calculate_metrics(
         streaming=True,
     )
 
-    metric_calculator = MetricSR(
-        metric_names,
-        no_ref_metric_names,
-        map_metric_names,
-        device=metrics_device,
-    )
+    if not only_time:
+        metric_calculator = MetricSR(
+            metric_names,
+            no_ref_metric_names,
+            map_metric_names,
+            device=metrics_device,
+        )
 
     logger = logging.getLogger()
     formatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
@@ -220,18 +230,20 @@ def calculate_metrics(
         res_hr = res_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0
         bgr_hr = bgr_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0
 
-        metric_calculator.calculate(res_hr, bgr_hr)
+        metric_str = f"image = {idx + 1}, "
+        if not only_time:
+            metric_calculator.calculate(res_hr, bgr_hr)
+            for metric_name in metric_names:
+                metric_val = metric_calculator.metric_history[metric_name][-1]
+                metric_str += f"{metric_name} = {metric_val:.3f}, "
+                if mlflow_tracking_uri:
+                    mlflow.log_metric(metric_name, metric_val, step=idx)
 
-        metric_str = f"image = {idx+1}, "
-        for metric_name in metric_names:
-            metric_val = metric_calculator.metric_history[metric_name][-1]
-            metric_str += f"{metric_name} = {metric_val:.3f}, "
-            if mlflow_tracking_uri:
-                mlflow.log_metric(metric_name, metric_val, step=idx)
         if mlflow_tracking_uri:
             mlflow.log_metric("time", total_time, step=idx)
+
         metric_str += f"time = {total_time:.3f}"
-        logger.info(metric_str[:-2])
+        logger.info(metric_str)
 
     json_dct = {
         "cli_args": {
@@ -252,16 +264,18 @@ def calculate_metrics(
         "metrics": {},
     }
 
-    for metric_name in metric_names:
-        metric_val = metric_calculator.calculate_total(metric_name)
-        json_dct["metrics"][metric_name] = float(f"{metric_val:.4f}")
-        if mlflow_tracking_uri:
-            mlflow.log_metric(f"mean {metric_name}", metric_val)
-    mean_time = sum(time_lst) / len(time_lst)
+    if not only_time:
+        for metric_name in metric_names:
+            metric_val = metric_calculator.calculate_total(metric_name)
+            json_dct["metrics"][metric_name] = float(f"{metric_val:.4f}")
+            if mlflow_tracking_uri:
+                mlflow.log_metric(f"mean {metric_name}", metric_val)
+
+    mean_time = sum(time_lst[1:]) / (len(time_lst) - 1)  # first run is always slower
     if mlflow_tracking_uri:
         mlflow.log_metric("mean time", mean_time)
         mlflow.end_run()
-    json_dct["time"] = mean_time
+    json_dct["time"] = float(f"{mean_time:.4f}")
     json_dct["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     with open(save_path, "w") as f:
@@ -292,6 +306,8 @@ if __name__ == "__main__":
     parser.add_argument("--mlflow-experiment", type=str, default="SRGB Inference")
     parser.add_argument("--mlflow-run", type=str, default=None)
     parser.add_argument("--mlflow-system-metrics", action="store_true")
+    parser.add_argument("--triton-url", type=str, default=None)
+    parser.add_argument("--only-time", action="store_true")
     args = parser.parse_args()
 
     root = Path(__file__).parents[1]
@@ -310,4 +326,6 @@ if __name__ == "__main__":
         args.mlflow_experiment,
         args.mlflow_run,
         args.mlflow_system_metrics,
+        args.triton_url,
+        args.only_time,
     )

@@ -1,8 +1,11 @@
 model: real_esrgan
 model_name: realesr-animevideov3
-backend: onnx
+backend: triton
 weights: dvc_data/weights/real-esrgan/realesr-animevideov3.pth
 onnx: dvc_data/onnx/real-esrgan/realesr-animevideov3.onnx
+triton_url: localhost:8001
+triton_model_name: realesr-animevideov3
+triton_model_version: 1
 outscale: 4.0
 denoise_strength: 0.5
 tile: 0

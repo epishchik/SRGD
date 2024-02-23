@@ -167,3 +167,4 @@ api/gfpgan/
 experiments/
 datasets/
 tb_logger/
+*.plan

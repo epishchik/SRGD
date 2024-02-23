@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -134,7 +135,7 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
     return app.config
 
 
-def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int]]:
+def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int], float]:
     """
     Функция повышения качества изображения.
 
@@ -145,10 +146,11 @@ def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int]]:
 
     Returns
     -------
-    tuple[bytes, tuple[int, int], tuple[int, int]]
+    tuple[bytes, tuple[int, int], tuple[int, int], float]
         Закодированное в байткод изображение высокого качества,
         (low resolution height, low resolution width),
-        (high resolution height, high resolution width).
+        (high resolution height, high resolution width),
+        время предсказания на inference.
     """
     h, w = img.shape[0], img.shape[1]
 
@@ -167,6 +169,7 @@ def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int]]:
             "max possible resolution is (4320, 7680) pixels in (h, w) format.",
         )
 
+    start_time = time.time()
     if app.config["model"] == "real_esrgan":
         out_img = predict_real_esrgan(img, app.upsampler, outscale)
     elif app.config["model"] == "resshift":
@@ -175,10 +178,11 @@ def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int]]:
         out_img = predict_emt(img, app.upsampler, app.emt_device, app.emt_nbits)
     else:
         raise ValueError(f"{app.config['model']} incorrect model type.")
+    total_time = time.time() - start_time
 
     _, enc_img = cv2.imencode(".png", out_img)
     bytes_img = enc_img.tobytes()
-    return bytes_img, (h, w), (h_up, w_up)
+    return bytes_img, (h, w), (h_up, w_up), total_time
 
 
 @app.post("/upscale/example")
@@ -192,10 +196,14 @@ def upscale_example() -> Response:
         Сгенерированное HR изображение.
     """
     img = cv2.imread("./extra/example.png", cv2.IMREAD_UNCHANGED)
-    bytes_img, (h, w), (h_up, w_up) = _upscale(img)
+    bytes_img, (h, w), (h_up, w_up), total_time = _upscale(img)
 
     logger.debug("used /upscale/example")
-    logger.debug(f"low_res shape = ({h},{w}), ups_res shape = ({h_up},{w_up})")
+    logger.debug(
+        f"low_res shape = ({h},{w}), "
+        f"ups_res shape = ({h_up},{w_up}), "
+        f"ups_time = {total_time:.3f}"
+    )
     return Response(bytes_img, media_type="image/png")
 
 
@@ -216,8 +224,12 @@ def upscale(image_file: UploadFile) -> Response:
     """
     raw = np.fromstring(image_file.file.read(), np.uint8)
     img = cv2.imdecode(raw, cv2.IMREAD_COLOR)
-    bytes_img, (h, w), (h_up, w_up) = _upscale(img)
+    bytes_img, (h, w), (h_up, w_up), total_time = _upscale(img)
 
     logger.debug("used /upscale/file")
-    logger.debug(f"low_res shape = ({h},{w}), ups_res shape = ({h_up},{w_up})")
+    logger.debug(
+        f"low_res shape = ({h},{w}), "
+        f"ups_res shape = ({h_up},{w_up}), "
+        f"ups_time = {total_time:.3f}"
+    )
     return Response(bytes_img, media_type="image/png")

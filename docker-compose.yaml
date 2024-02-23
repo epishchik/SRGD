@@ -1,5 +1,6 @@
 version: "3"
 
+# TODO добавить service=tritonserver, название контейнера srgb-triton
 services:
   api:
     build:

@@ -64,6 +64,7 @@ optional = true
 onnx = "^1.15.0"
 onnxscript = "^0.1.0.dev20240218"
 onnxruntime-gpu = {version = "^1.17.0", source = "ort_azure_devops_feed"}
+tritonclient = {extras = ["all"], version = "^2.42.0"}
 
 [[tool.poetry.source]]
 name = "ort_azure_devops_feed"

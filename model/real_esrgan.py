@@ -108,6 +108,9 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
         gpu_id=config["gpu_id"],
         backend=config["backend"],
         onnx_path=onnx_path,
+        triton_url=config["triton_url"],
+        triton_model_name=config["triton_model_name"],
+        triton_model_version=config["triton_model_version"],
     )
     return upsampler
 
