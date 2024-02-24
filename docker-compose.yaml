@@ -1,7 +1,43 @@
 version: "3"
 
-# TODO добавить service=tritonserver, название контейнера srgb-triton
 services:
+  triton:
+    build:
+      context: ./
+      dockerfile_inline: |
+        FROM nvcr.io/nvidia/tritonserver:24.01-py3
+        WORKDIR /opt/tritonserver
+        COPY triton_models /models
+    command: >
+      tritonserver
+      --model-repository=/models
+      --model-control-mode=explicit
+    privileged: true
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 24GB
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+    ports:
+      - "8001:8000"
+      - "8002:8001"
+      - "8003:8002"
+    networks:
+      - deploy_network
+    healthcheck:
+      test: ["CMD", "curl", "-v", "localhost:8000/v2/health/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    container_name: srgb-triton
+    image: srgb/triton:0.0.1
+
   api:
     build:
       context: ./
@@ -10,12 +46,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 16GB
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+          memory: 2GB
     ports:
       - "8000:8000"
     networks:
@@ -32,8 +63,6 @@ services:
       resources:
         limits:
           memory: 2GB
-    depends_on:
-      - api
     ports:
       - "8501:8501"
     networks:

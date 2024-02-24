@@ -116,7 +116,6 @@ def main() -> None:
     -------
     None
     """
-
     base_url = "http://api:8000"
     title = "Super Resolution in Games"
 

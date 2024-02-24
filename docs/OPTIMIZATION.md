@@ -33,7 +33,7 @@ export PATH="/usr/src/tensorrt/bin:$PATH"
 
 `TensorRT` для конвертации удобно использовать из официального образа [tensorrt](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorrt), однако если настроили его для `onnx`, то можно использовать локальный.
 
-Воспользуемся `bash` скриптом для конвертации и положим в директорию `triton_models`, формат которой совпадает с форматом `--model-repository` для `triton`.
+Воспользуемся `bash` скриптом для конвертации и положим в директорию `triton_models`, формат которой совпадает с форматом `--model-repository` для `triton`. Значение `maxr` необходимо выставлять максимально возможным, которое не будет приводить к превышению `VRAM` для вашей `GPU`.
 ```bash
 cd optimization
 bash onnx2trt.sh -o ~/SRGB/dvc_data/onnx/real-esrgan \
@@ -61,18 +61,20 @@ realpath_triton_model_repository=$(realpath $triton_model_repository)
 ### config.pbxt
 Для каждой модели в `triton` необходимо задать конфигурацию. Примеры можно найти в папке [triton_models](/triton_models).
 
-### Запуск локального сервера
+### Запуск локального сервера с загрузкой конкретной модели
 ```bash
-docker run -d \
+docker run --rm \
     --privileged \
     --gpus 0 \
     -p 8001:8000 \
     -p 8002:8001 \
     -p 8003:8002 \
     -v $realpath_triton_model_repository:/models \
-    --name srgb-triton \
+    --name srgb-local-triton \
     nvcr.io/nvidia/tritonserver:24.01-py3 \
-    tritonserver --model-repository=/models
+    tritonserver --model-repository=/models \
+    --model-control-mode=explicit \
+    --load-model model_name
 ```
 
 Health check.

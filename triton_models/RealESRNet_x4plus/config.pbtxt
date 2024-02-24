@@ -1,0 +1,17 @@
+name: "RealESRNet_x4plus"
+platform: "tensorrt_plan"
+max_batch_size : 0
+input [
+  {
+    name: "lr"
+    data_type: TYPE_FP32
+    dims: [ 1, 3, -1, -1 ]
+  }
+]
+output [
+  {
+    name: "hr"
+    data_type: TYPE_FP32
+    dims: [ 1, 3, -1, -1 ]
+  }
+]

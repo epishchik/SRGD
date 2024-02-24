@@ -7,6 +7,7 @@ from typing import Any
 
 import cv2
 import numpy as np
+import requests
 import yaml
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
@@ -22,11 +23,55 @@ from model.resshift import configure as configure_resshift
 from model.resshift import predict as predict_resshift
 from utils.parse import parse_yaml
 
+
+def load_triton_model(triton_url: str, model_name: str) -> None:
+    """
+    Загрузка модели на GPU из репозитория. Необходимая мера, чтобы не превысить объем
+    VRAM на GPU, потому что моделей много и по умолчанию они все загружаются в VRAM.
+
+    Parameters
+    ----------
+    triton_url : str
+        URL к tritonserver, например triton:8000 для запуска через docker compose.
+    model_name : str
+        Название модели из triton model_repository.
+
+    Returns
+    -------
+    None
+    """
+    requests.post(f"http://{triton_url}/v2/repository/models/{model_name}/load")
+
+
+def unload_triton_model(triton_url: str, model_name: str) -> None:
+    """
+    Выгрузка модели из GPU. Необходимая мера, чтобы не превысить объем VRAM на GPU,
+    потому что моделей много и по умолчанию они все загружаются в VRAM.
+
+    Parameters
+    ----------
+    triton_url : str
+        URL к tritonserver, например triton:8000 для запуска через docker compose.
+    model_name : str
+        Название модели из triton model_repository.
+
+    Returns
+    -------
+    None
+    """
+    requests.post(f"http://{triton_url}/v2/repository/models/{model_name}/unload")
+
+
 app = FastAPI()
 
-app.config_path = str(root / "configs/model/pretrained/RealESRGAN_x4plus.yaml")
+init_model = "RealESRGAN_x4plus"
+app.config_path = str(root / f"configs/model/pretrained/{init_model}.yaml")
 app.config = parse_yaml(app.config_path)
 
+app.triton_url = "triton:8000"
+app.config["triton_url"] = app.triton_url
+
+load_triton_model(app.triton_url, init_model)
 app.upsampler = configure_real_esrgan(root, app.config)
 
 logger = logging.getLogger("uvicorn")
@@ -95,9 +140,16 @@ def configure_model(config_name: str) -> dict[str, Any]:
     dict[str, Any]
         Словарь конфигурационных параметров.
     """
+    if "triton_model_name" in app.config:
+        tmp_model_name = app.config["triton_model_name"]
+        unload_triton_model(app.triton_url, tmp_model_name)
+
     app.config_path = str(root / f"configs/model/{config_name}.yaml")
     app.config = parse_yaml(app.config_path)
+    app.config["triton_url"] = app.triton_url
 
+    if "triton_model_name" in app.config:
+        load_triton_model(app.triton_url, app.config["triton_model_name"])
     _configure_model()
 
     logger.debug("used /configure_model/name")
@@ -122,10 +174,17 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
     dict[str, Any]
         Словарь конфигурационных параметров.
     """
+    if "triton_model_name" in app.config:
+        tmp_model_name = app.config["triton_model_name"]
+        unload_triton_model(app.triton_url, tmp_model_name)
+
     app.config_path = None
     app.config = yaml.safe_load(config_file.file.read())
     app.config["filename"] = Path(config_file.filename).stem
+    app.config["triton_url"] = app.triton_url
 
+    if "triton_model_name" in app.config:
+        load_triton_model(app.triton_url, app.config["triton_model_name"])
     _configure_model()
 
     logger.debug("used /configure_model/file")
