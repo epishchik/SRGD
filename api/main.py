@@ -120,7 +120,7 @@ def _configure_model() -> None:
     elif app.config["model"] == "resshift":
         app.upsampler = configure_resshift(root, app.config)
     elif app.config["model"] == "emt":
-        app.upsampler, app.emt_device, app.emt_nbits = configure_emt(root, app.config)
+        app.upsampler = configure_emt(root, app.config)
     else:
         raise ValueError(f"{app.config['model']} incorrect model type.")
 
@@ -234,7 +234,7 @@ def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int], 
     elif app.config["model"] == "resshift":
         out_img = predict_resshift(img, app.upsampler)
     elif app.config["model"] == "emt":
-        out_img = predict_emt(img, app.upsampler, app.emt_device, app.emt_nbits)
+        out_img = predict_emt(img, app.upsampler)
     else:
         raise ValueError(f"{app.config['model']} incorrect model type.")
     total_time = time.time() - start_time

@@ -5,14 +5,16 @@ from pathlib import Path, PurePath
 
 import torch
 
-sys.path.insert(0, str(Path(__file__).parents[2]))
-from model.real_esrgan import configure
+sys.path.insert(0, str(Path(__file__).parents[1]))
+from model.emt_model import configure as configure_emt
+from model.real_esrgan import configure as configure_real_esrgan
+from model.resshift import configure as configure_resshift
 from utils.parse import parse_yaml
 
 
 def torch2onnx(root: PurePath, save_path: str, model_config_path: str) -> None:
     """
-    Конвертация torch Real-ESRGAN модели в onnx формат.
+    Конвертация из формата torch в формат onnx.
 
     Parameters
     ----------
@@ -32,15 +34,27 @@ def torch2onnx(root: PurePath, save_path: str, model_config_path: str) -> None:
 
     model_config = root / model_config_path
     model_config_dct = parse_yaml(str(model_config))
+    model_config_dct["backend"] = "torch"
 
-    upsampler = configure(root, model_config_dct)
-    torch_model, device, half = upsampler.model, upsampler.device, upsampler.half
-    dtype = torch.float16 if half else torch.float32
+    if model_config_dct["model"] == "real_esrgan":
+        upsampler = configure_real_esrgan(root, model_config_dct)
+        torch_model, device, half = upsampler.model, upsampler.device, upsampler.half
+        dtype = torch.float16 if half else torch.float32
+        torch_model.eval()
+    elif model_config_dct["model"] == "resshift":
+        # TODO закодить конвертацию ResShift
+        upsampler = configure_resshift(root, model_config_dct)  # noqa
+    elif model_config_dct["model"] == "emt":
+        upsampler = configure_emt(root, model_config_dct)
+        torch_model, device = upsampler.net_g, upsampler.device
+        dtype = torch.float32
+        torch_model.eval()
+    else:
+        raise ValueError(f"{model_config_dct['model']} incorrect model type.")
 
-    torch_model.eval()
-
+    print(f"dtype={dtype}, device={device}")
     h_in, w_in = 64, 64
-    dummy_input = torch.rand((1, 3, h_in, w_in), dtype=dtype).to(device)
+    dummy_input = torch.ones((1, 3, h_in, w_in), dtype=dtype).to(device)
     dummy_output = torch_model(dummy_input)
     h_out = dummy_output.shape[2]
     print(f"h_in={h_in}, h_out={h_out}")
@@ -69,5 +83,5 @@ if __name__ == "__main__":
     parser.add_argument("--model-config", type=str, required=True)
     args = parser.parse_args()
 
-    root = Path(__file__).parents[2]
+    root = Path(__file__).parents[1]
     torch2onnx(root, args.save_path, args.model_config)

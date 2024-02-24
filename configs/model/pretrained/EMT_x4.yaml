@@ -1,6 +1,13 @@
 # model type
 model: emt
 
+# backend settings
+backend: torch
+onnx: null
+triton_url: localhost:8001
+triton_model_name: EMT_x4
+triton_model_version: 1
+
 # general settings
 name: EMT_x4
 model_type: IRModel

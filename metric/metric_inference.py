@@ -134,7 +134,7 @@ def calculate_metrics(
     elif model_config_dct["model"] == "resshift":
         upsampler = configure_resshift(root, model_config_dct)
     elif model_config_dct["model"] == "emt":
-        upsampler, emt_device, emt_nbits = configure_emt(root, model_config_dct)
+        upsampler = configure_emt(root, model_config_dct)
     else:
         raise ValueError(f"{model_config_dct['model']} incorrect model type.")
 
@@ -220,7 +220,7 @@ def calculate_metrics(
         elif model_config_dct["model"] == "resshift":
             res_hr = predict_resshift(bgr_lr, upsampler)
         elif model_config_dct["model"] == "emt":
-            res_hr = predict_emt(bgr_lr, upsampler, emt_device, emt_nbits)
+            res_hr = predict_emt(bgr_lr, upsampler)
         else:
             raise ValueError(f"{model_config_dct['model']} incorrect model type.")
         total_time = time.time() - start_time

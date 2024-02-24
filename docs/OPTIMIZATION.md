@@ -51,17 +51,10 @@ bash onnx2trt.sh -o ~/SRGB/dvc_data/onnx/real-esrgan \
 - Установить [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
 - Скачать образ [tritonserver](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tritonserver).
 
-### Model repository
-
-```bash
-triton_model_repository=triton_models
-realpath_triton_model_repository=$(realpath $triton_model_repository)
-```
-
 ### config.pbxt
 Для каждой модели в `triton` необходимо задать конфигурацию. Примеры можно найти в папке [triton_models](/triton_models).
 
-### Запуск локального сервера с загрузкой конкретной модели
+### Запуск сервера с моделью RealESRGAN_x4plus
 ```bash
 docker run --rm \
     --privileged \
@@ -69,12 +62,12 @@ docker run --rm \
     -p 8001:8000 \
     -p 8002:8001 \
     -p 8003:8002 \
-    -v $realpath_triton_model_repository:/models \
+    -v "$(realpath triton_models)":/models \
     --name srgb-local-triton \
     nvcr.io/nvidia/tritonserver:24.01-py3 \
     tritonserver --model-repository=/models \
     --model-control-mode=explicit \
-    --load-model model_name
+    --load-model RealESRGAN_x4plus
 ```
 
 Health check.
