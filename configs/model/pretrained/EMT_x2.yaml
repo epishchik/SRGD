@@ -1,5 +1,5 @@
 # model type
-model: emt
+model: emt_model
 
 # backend settings
 backend: torch

@@ -28,27 +28,20 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
     Any
         Объект модели ResShift.
     """
-    chop_size = config["chop_size"]
-    seed = config["seed"]
-    fp32 = config["fp32"]
-    device = config["device"]
-
     configs, chop_stride, desired_min_size = get_configs_from_global_config(
         root, config
     )
-
     resshift_sampler = ResShiftSampler(
         configs,
-        chop_size=chop_size,
+        chop_size=config["chop_size"],
         chop_stride=chop_stride,
         chop_bs=1,
-        use_fp16=not fp32,
-        seed=seed,
+        use_fp16=not config["fp32"],
+        seed=config["seed"],
         desired_min_size=desired_min_size,
-        device=device,
+        device=config["device"],
         package_root=config["resshift_location"],
     )
-
     return resshift_sampler
 
 

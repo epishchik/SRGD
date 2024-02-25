@@ -69,6 +69,7 @@ class EMTModel:
             self.net_g.eval()
             for param in self.net_g.parameters():
                 param.requires_grad = False
+            self.dtype = torch.float32
         elif self.backend == "onnx":
             self.ort_session = ort.InferenceSession(
                 root / config["onnx"],

@@ -111,6 +111,7 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
         triton_url=config["triton_url"],
         triton_model_name=config["triton_model_name"],
         triton_model_version=config["triton_model_version"],
+        outscale=config["outscale"],
     )
     return upsampler
 
@@ -118,7 +119,6 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
 def predict(
     img: np.ndarray,
     upsampler: Any,
-    outscale: float = 4.0,
 ) -> np.ndarray:
     """
     Перевод LR изображения в HR изображение с использованием Real-ESRGAN.
@@ -129,15 +129,11 @@ def predict(
         Изображение в формате (h, w, c).
     upsampler : Any
         Объект модели Real-ESRGAN.
-    outscale : float, optional
-        Величина upscale, обычно 2.0 или 4.0.
-        Можно использовать другие значения, но в таком случае
-        делается простой resize сгенерированного HR к нужному размеру.
 
     Returns
     -------
     np.ndarray
         HR изображение в формате (h*outscale, w*outscale, c).
     """
-    out_img, _ = upsampler.enhance(img, outscale=outscale)
+    out_img, _ = upsampler.enhance(img)
     return out_img

@@ -15,12 +15,7 @@ from fastapi.responses import FileResponse, Response
 root = Path(__file__).parents[1]
 sys.path.insert(0, str(root))
 
-from model.emt_model import configure as configure_emt
-from model.emt_model import predict as predict_emt
-from model.real_esrgan import configure as configure_real_esrgan
-from model.real_esrgan import predict as predict_real_esrgan
-from model.resshift import configure as configure_resshift
-from model.resshift import predict as predict_resshift
+import model as model_registry
 from utils.parse import parse_yaml
 
 
@@ -72,7 +67,7 @@ app.triton_url = "triton:8000"
 app.config["triton_url"] = app.triton_url
 
 load_triton_model(app.triton_url, init_model)
-app.upsampler = configure_real_esrgan(root, app.config)
+app.upsampler = getattr(model_registry, app.config["model"]).configure(root, app.config)
 
 logger = logging.getLogger("uvicorn")
 formatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
@@ -107,24 +102,6 @@ def info() -> FileResponse:
     return info_file
 
 
-def _configure_model() -> None:
-    """
-    Конфигурация super-resolution модели по названию.
-
-    Returns
-    -------
-    None
-    """
-    if app.config["model"] == "real_esrgan":
-        app.upsampler = configure_real_esrgan(root, app.config)
-    elif app.config["model"] == "resshift":
-        app.upsampler = configure_resshift(root, app.config)
-    elif app.config["model"] == "emt":
-        app.upsampler = configure_emt(root, app.config)
-    else:
-        raise ValueError(f"{app.config['model']} incorrect model type.")
-
-
 @app.post("/configure_model/name")
 def configure_model(config_name: str) -> dict[str, Any]:
     """
@@ -150,7 +127,9 @@ def configure_model(config_name: str) -> dict[str, Any]:
 
     if "triton_model_name" in app.config:
         load_triton_model(app.triton_url, app.config["triton_model_name"])
-    _configure_model()
+    app.upsampler = getattr(model_registry, app.config["model"]).configure(
+        root, app.config
+    )
 
     logger.debug("used /configure_model/name")
     logger.debug(f"set new config path = {app.config_path}")
@@ -185,7 +164,9 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
 
     if "triton_model_name" in app.config:
         load_triton_model(app.triton_url, app.config["triton_model_name"])
-    _configure_model()
+    app.upsampler = getattr(model_registry, app.config["model"]).configure(
+        root, app.config
+    )
 
     logger.debug("used /configure_model/file")
     logger.debug(f"set new config path = {app.config_path}")
@@ -229,14 +210,7 @@ def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int], 
         )
 
     start_time = time.time()
-    if app.config["model"] == "real_esrgan":
-        out_img = predict_real_esrgan(img, app.upsampler, outscale)
-    elif app.config["model"] == "resshift":
-        out_img = predict_resshift(img, app.upsampler)
-    elif app.config["model"] == "emt":
-        out_img = predict_emt(img, app.upsampler)
-    else:
-        raise ValueError(f"{app.config['model']} incorrect model type.")
+    out_img = getattr(model_registry, app.config["model"]).predict(img, app.upsampler)
     total_time = time.time() - start_time
 
     _, enc_img = cv2.imencode(".png", out_img)

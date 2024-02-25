@@ -16,12 +16,7 @@ import datasets
 import mlflow
 
 sys.path.insert(0, str(Path(__file__).parents[1]))
-from model.emt_model import configure as configure_emt
-from model.emt_model import predict as predict_emt
-from model.real_esrgan import configure as configure_real_esrgan
-from model.real_esrgan import predict as predict_real_esrgan
-from model.resshift import configure as configure_resshift
-from model.resshift import predict as predict_resshift
+import model as model_registry
 from utils.parse import parse_yaml
 
 
@@ -129,14 +124,9 @@ def calculate_metrics(
     if triton_url:
         model_config_dct["triton_url"] = triton_url
 
-    if model_config_dct["model"] == "real_esrgan":
-        upsampler = configure_real_esrgan(root, model_config_dct)
-    elif model_config_dct["model"] == "resshift":
-        upsampler = configure_resshift(root, model_config_dct)
-    elif model_config_dct["model"] == "emt":
-        upsampler = configure_emt(root, model_config_dct)
-    else:
-        raise ValueError(f"{model_config_dct['model']} incorrect model type.")
+    upsampler = getattr(model_registry, model_config_dct["model"]).configure(
+        root, model_config_dct
+    )
 
     if split == "train":
         dataset_split = datasets.Split.TRAIN
@@ -213,16 +203,10 @@ def calculate_metrics(
         rgb_hr = np.asarray(el[hr].convert("RGB"), dtype=np.float32)
         bgr_hr = cv2.cvtColor(rgb_hr, cv2.COLOR_RGB2BGR)
 
-        outscale = int(bgr_hr.shape[0] / bgr_lr.shape[0])
         start_time = time.time()
-        if model_config_dct["model"] == "real_esrgan":
-            res_hr = predict_real_esrgan(bgr_lr, upsampler, outscale)
-        elif model_config_dct["model"] == "resshift":
-            res_hr = predict_resshift(bgr_lr, upsampler)
-        elif model_config_dct["model"] == "emt":
-            res_hr = predict_emt(bgr_lr, upsampler)
-        else:
-            raise ValueError(f"{model_config_dct['model']} incorrect model type.")
+        res_hr = getattr(model_registry, model_config_dct["model"]).predict(
+            bgr_lr, upsampler
+        )
         total_time = time.time() - start_time
         time_lst += [total_time]
 
