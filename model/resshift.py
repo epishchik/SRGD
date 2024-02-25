@@ -2,6 +2,7 @@ import sys
 from pathlib import Path, PurePath
 from typing import Any
 
+import cv2
 import numpy as np
 
 project_root = Path(__file__).parents[1]
@@ -65,4 +66,5 @@ def predict(
         HR изображение в формате (h*outscale, w*outscale, c).
     """
     out_img = upsampler.inference_single(img)
+    out_img = cv2.cvtColor(out_img, cv2.COLOR_RGB2BGR)
     return out_img

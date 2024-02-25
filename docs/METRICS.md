@@ -16,4 +16,6 @@
 |    TYPE    |  LR  |  HR   | PSNR ↑  | SSIM ↑ | FSIM ↑ | LPIPS ↑ | HaarPSI ↑ | BRISQUE ↓ |
 |:----------:|:----:|:-----:|:-------:|:------:|:------:|:-------:|:---------:|:---------:|
 | Pretrained | 270p | 1080p | 24.5443 | 0.8231 | 0.8882 | 0.3889  |  0.5417   |  61.9432  |
-| Finetuned  | 270p | 1080p |         |        |        |         |           |           |
+| Finetuned  | 270p | 1080p |  *dnc   |  *dnc  |  *dnc  |  *dnc   |   *dnc    |   *dnc    |
+
+*dnc - didn't converge.
