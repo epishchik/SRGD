@@ -9,7 +9,7 @@ set -e
 if [[ "$DOWNLOAD" = "true" ]]; then
   mkdir -p "$LOCALDIR/tmp"
 
-  huggingface-cli download epishchik/super-resolution-games \
+  huggingface-cli download epishchik/srgb \
     --local-dir "$LOCALDIR/tmp" \
     --local-dir-use-symlinks True \
     --repo-type dataset \

@@ -7,7 +7,7 @@
 ## Deploy API
 ```bash
 docker build \
-  -t super-resolution-benchmark/api:0.0.0 \
+  -t srgb/api:0.0.0 \
   -f api/Dockerfile .
 ```
 ```bash
@@ -17,14 +17,14 @@ docker run -d \
   --memory 16GB \
   --memory-swap 16GB \
   --restart=always \
-  --name super-resolution-benchmark-api \
-  super-resolution-benchmark/api:0.0.0
+  --name srgb-api \
+  srgb/api:0.0.0
 ```
 
 ## Deploy UI
 ```bash
 docker build \
-  -t super-resolution-benchmark/ui:0.0.0 \
+  -t srgb/ui:0.0.0 \
   -f ui/Dockerfile .
 ```
 ```bash
@@ -34,8 +34,8 @@ docker run -d \
   --memory 2GB \
   --memory-swap 2GB \
   --restart=always \
-  --name super-resolution-benchmark-ui \
-  super-resolution-benchmark/ui:0.0.0
+  --name srgb-ui \
+  srgb/ui:0.0.0
 ```
 
 ## Deploy Full

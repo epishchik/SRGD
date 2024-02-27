@@ -1,3 +1,3 @@
 output_path: dvc_data/metrics/downscale
-repository: epishchik/super-resolution-games
+repository: epishchik/srgb
 project_name: Downscale_StylizedRendering

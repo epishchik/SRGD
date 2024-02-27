@@ -18,7 +18,7 @@ datasets:
   type: files
 
   huggingface:
-    huggingface_dir: epishchik/super-resolution-games
+    huggingface_dir: epishchik/srgb
     train:
       name: GameEngine_train
       project: GameEngine_All
