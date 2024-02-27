@@ -28,6 +28,7 @@ basicsr = {path = './submodules/basicsr', develop = true}
 emt = {path = './submodules/emt', develop = true}
 realesrgan = {path = './submodules/real-esrgan', develop = true}
 xformers = "^0.0.23.post1"
+transformers = "^4.38.1"
 
 [tool.poetry.group.api]
 optional = true

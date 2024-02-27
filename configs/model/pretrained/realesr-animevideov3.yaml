@@ -6,6 +6,7 @@ onnx: dvc_data/onnx/real-esrgan/realesr-animevideov3.onnx
 triton_url: localhost:8001
 triton_model_name: realesr-animevideov3
 triton_model_version: 1
+huggingface_model_repository: epishchik/realesr-animevideov3
 outscale: 4.0
 denoise_strength: 0.5
 tile: 0

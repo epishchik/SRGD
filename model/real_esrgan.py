@@ -112,6 +112,7 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
         triton_model_name=config["triton_model_name"],
         triton_model_version=config["triton_model_version"],
         outscale=config["outscale"],
+        hf_repository=config["huggingface_model_repository"],
     )
     return upsampler
 

@@ -6,6 +6,7 @@ onnx: dvc_data/onnx/real-esrgan/Finetuned_RealESRGAN_x4plus_GameEngineData.onnx
 triton_url: localhost:8001
 triton_model_name: Finetuned_RealESRGAN_x4plus_GameEngineData
 triton_model_version: 1
+huggingface_model_repository: epishchik/GameEngine_RealESRGAN_x4plus
 outscale: 4.0
 denoise_strength: 0.5
 tile: 0

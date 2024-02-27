@@ -6,6 +6,7 @@ onnx: dvc_data/onnx/real-esrgan/RealESRGAN_x4plus.onnx
 triton_url: localhost:8001
 triton_model_name: RealESRGAN_x4plus
 triton_model_version: 1
+huggingface_model_repository: epishchik/RealESRGAN_x4plus
 outscale: 4.0
 denoise_strength: 0.5
 tile: 0
