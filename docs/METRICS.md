@@ -16,6 +16,11 @@
 |    TYPE    |  LR  |  HR   | PSNR ↑  | SSIM ↑ | FSIM ↑ | LPIPS ↑ | HaarPSI ↑ | BRISQUE ↓ |
 |:----------:|:----:|:-----:|:-------:|:------:|:------:|:-------:|:---------:|:---------:|
 | Pretrained | 270p | 1080p | 24.5443 | 0.8231 | 0.8882 | 0.3889  |  0.5417   |  61.9432  |
-| Finetuned  | 270p | 1080p |  *dnc   |  *dnc  |  *dnc  |  *dnc   |   *dnc    |   *dnc    |
 
-*dnc - didn't converge.
+## ResShift
+
+### ResShift_RealSRx4 GameEngineData
+
+|    TYPE    |  LR  |  HR   | PSNR ↑  | SSIM ↑ | FSIM ↑ | LPIPS ↑ | HaarPSI ↑ | BRISQUE ↓ |
+|:----------:|:----:|:-----:|:-------:|:------:|:------:|:-------:|:---------:|:---------:|
+| Pretrained | 270p | 1080p | 23.0368 | 0.7992 | 0.8855 | 0.4829  |  0.5225   |  13.0324  |
