@@ -1,6 +1,6 @@
 model: real_esrgan
 model_name: realesr-animevideov3
-backend: torch
+backend: triton
 weights: dvc_data/weights/real-esrgan/realesr-animevideov3.pth
 onnx: dvc_data/onnx/real-esrgan/realesr-animevideov3.onnx
 triton_url: localhost:8001

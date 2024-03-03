@@ -1,4 +1,5 @@
 import io
+import sys
 from typing import Any
 
 import requests
@@ -108,15 +109,19 @@ def configure_model(config_name: str, server_url: str) -> Response:
     return response
 
 
-def main() -> None:
+def main(base_url: str) -> None:
     """
     Отображение frontend части.
+
+    Parameters
+    ----------
+    base_url : str
+        API URL.
 
     Returns
     -------
     None
     """
-    base_url = "http://api:8000"
     title = "Super Resolution in Games"
 
     st.title(title)
@@ -171,4 +176,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    api = sys.argv[-1]
+    main(api)

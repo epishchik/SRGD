@@ -2,12 +2,10 @@
 
 ## Конвертация в onnx
 
-Все скрипты конвертации лежат в папке [optimization/onnx](/optimization/onnx).
-
 Пример конвертации.
 ```bash
-cd optimization/onnx
-python3 real_esrgan.py \
+cd optimization
+python3 torch2onnx.py \
   --save-path "dvc_data/onnx/real-esrgan/RealESRGAN_x4plus.onnx" \
   --model-config "configs/model/pretrained/RealESRGAN_x4plus.yaml"
 ```
@@ -57,7 +55,6 @@ bash onnx2trt.sh -o ~/SRGB/dvc_data/onnx/real-esrgan \
 ### Запуск сервера с моделью RealESRGAN_x4plus
 ```bash
 docker run --rm \
-    --privileged \
     --gpus 0 \
     -p 8001:8000 \
     -p 8002:8001 \
@@ -89,8 +86,7 @@ curl localhost:8003/metrics
 ### Performance Analyzer
 Запуск контейнера.
 ```bash
-docker run --privileged \
-    --gpus 0 \
+docker run --gpus 0 \
     --rm \
     -it \
     --network host \

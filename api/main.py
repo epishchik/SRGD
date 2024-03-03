@@ -63,10 +63,11 @@ init_model = "RealESRGAN_x4plus"
 app.config_path = str(root / f"configs/model/pretrained/{init_model}.yaml")
 app.config = parse_yaml(app.config_path)
 
-app.triton_url = "triton:8000"
-app.config["triton_url"] = app.triton_url
+if app.config["backend"] == "triton":
+    app.triton_url = "triton:8000"
+    app.config["triton_url"] = app.triton_url
+    load_triton_model(app.triton_url, init_model)
 
-load_triton_model(app.triton_url, init_model)
 app.upsampler = getattr(model_registry, app.config["model"]).configure(root, app.config)
 
 logger = logging.getLogger("uvicorn")
@@ -117,16 +118,17 @@ def configure_model(config_name: str) -> dict[str, Any]:
     dict[str, Any]
         Словарь конфигурационных параметров.
     """
-    if "triton_model_name" in app.config:
+    if app.config["backend"] == "triton":
         tmp_model_name = app.config["triton_model_name"]
         unload_triton_model(app.triton_url, tmp_model_name)
 
     app.config_path = str(root / f"configs/model/{config_name}.yaml")
     app.config = parse_yaml(app.config_path)
-    app.config["triton_url"] = app.triton_url
 
-    if "triton_model_name" in app.config:
+    if app.config["backend"] == "triton":
+        app.config["triton_url"] = app.triton_url
         load_triton_model(app.triton_url, app.config["triton_model_name"])
+
     app.upsampler = getattr(model_registry, app.config["model"]).configure(
         root, app.config
     )
@@ -153,17 +155,18 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
     dict[str, Any]
         Словарь конфигурационных параметров.
     """
-    if "triton_model_name" in app.config:
+    if app.config["backend"] == "triton":
         tmp_model_name = app.config["triton_model_name"]
         unload_triton_model(app.triton_url, tmp_model_name)
 
     app.config_path = None
     app.config = yaml.safe_load(config_file.file.read())
     app.config["filename"] = Path(config_file.filename).stem
-    app.config["triton_url"] = app.triton_url
 
-    if "triton_model_name" in app.config:
+    if app.config["backend"] == "triton":
+        app.config["triton_url"] = app.triton_url
         load_triton_model(app.triton_url, app.config["triton_model_name"])
+
     app.upsampler = getattr(model_registry, app.config["model"]).configure(
         root, app.config
     )

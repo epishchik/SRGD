@@ -12,7 +12,6 @@ services:
       tritonserver
       --model-repository=/models
       --model-control-mode=explicit
-    privileged: true
     restart: always
     deploy:
       resources:
@@ -28,20 +27,24 @@ services:
       - "8002:8001"
       - "8003:8002"
     networks:
-      - deploy_network
+      - triton_network
     healthcheck:
       test: ["CMD", "curl", "-v", "localhost:8000/v2/health/ready"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 30s
+    profiles:
+      - triton_backend
     container_name: srgb-triton
     image: srgb/triton:0.0.1
 
-  api:
+  triton_api:
     build:
       context: ./
       dockerfile: ./api/Dockerfile
+      args:
+        MODEL_FOLDER: triton_model
     restart: always
     deploy:
       resources:
@@ -50,14 +53,18 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - deploy_network
-    container_name: srgb-api
-    image: srgb/api:0.0.1
+      - triton_network
+    profiles:
+      - triton_backend
+    container_name: srgb-triton-api
+    image: srgb/triton_api:0.0.1
 
-  ui:
+  triton_ui:
     build:
       context: ./
       dockerfile: ./ui/Dockerfile
+      args:
+        API_URL: http://triton_api:8000
     restart: always
     deploy:
       resources:
@@ -66,10 +73,59 @@ services:
     ports:
       - "8501:8501"
     networks:
-      - deploy_network
-    container_name: srgb-ui
-    image: srgb/ui:0.0.1
+      - triton_network
+    profiles:
+      - triton_backend
+    container_name: srgb-triton-ui
+    image: srgb/triton_ui:0.0.1
+
+  torch_api:
+    build:
+      context: ./
+      dockerfile: ./api/Dockerfile
+      args:
+        MODEL_FOLDER: model
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 24GB
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+    ports:
+      - "8000:8000"
+    networks:
+      - torch_network
+    profiles:
+      - torch_backend
+    container_name: srgb-torch-api
+    image: srgb/torch_api:0.0.1
+
+  torch_ui:
+    build:
+      context: ./
+      dockerfile: ./ui/Dockerfile
+      args:
+        API_URL: http://torch_api:8000
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 2GB
+    ports:
+      - "8501:8501"
+    networks:
+      - torch_network
+    profiles:
+      - torch_backend
+    container_name: srgb-torch-ui
+    image: srgb/torch_ui:0.0.1
 
 networks:
-  deploy_network:
+  triton_network:
+    driver: bridge
+  torch_network:
     driver: bridge

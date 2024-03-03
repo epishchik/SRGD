@@ -1,5 +1,6 @@
 model: resshift
 task: realsrx4
+backend: torch
 ckpt_dir: dvc_data/weights/resshift
 resshift_location: submodules/resshift
 outscale: 4

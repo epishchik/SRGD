@@ -1,5 +1,7 @@
 FROM python:3.10-slim
 
+ARG API_URL
+
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
@@ -7,7 +9,8 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DEFAULT_TIMEOUT=100 \
     POETRY_VERSION=1.6.1 \
     POETRY_NO_INTERACTION=1 \
-    PATH="${PATH}:/root/.local/bin"
+    PATH="${PATH}:/root/.local/bin" \
+    API_URL_ENV=$API_URL
 
 COPY ui /frontend/ui
 COPY pyproject.toml poetry.lock /frontend/
@@ -25,4 +28,4 @@ RUN apt update && \
 WORKDIR /frontend/ui
 EXPOSE 8501
 
-CMD poetry run streamlit run main.py --server.address 0.0.0.0 --server.port 8501
+CMD ["sh", "-c", "poetry run streamlit run --server.address 0.0.0.0 --server.port 8501 main.py ${API_URL_ENV}"]

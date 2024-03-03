@@ -1,6 +1,6 @@
 model: real_esrgan
 model_name: RealESRGAN_x4plus
-backend: torch
+backend: triton
 weights: dvc_data/weights/real-esrgan/Finetuned_RealESRGAN_x4plus_GameEngineData.pth
 onnx: dvc_data/onnx/real-esrgan/Finetuned_RealESRGAN_x4plus_GameEngineData.onnx
 triton_url: localhost:8001

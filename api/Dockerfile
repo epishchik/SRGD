@@ -1,5 +1,7 @@
 FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime
 
+ARG MODEL_FOLDER
+
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
@@ -11,7 +13,7 @@ ENV PYTHONUNBUFFERED=1 \
 
 COPY api /backend/api
 COPY dvc_data /backend/dvc_data
-COPY configs /backend/configs
+COPY configs/${MODEL_FOLDER} /backend/configs/model
 COPY model /backend/model
 COPY submodules /backend/submodules
 COPY utils /backend/utils

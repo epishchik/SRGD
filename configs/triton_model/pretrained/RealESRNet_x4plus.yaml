@@ -1,6 +1,6 @@
 model: real_esrgan
 model_name: RealESRNet_x4plus
-backend: torch
+backend: triton
 weights: dvc_data/weights/real-esrgan/RealESRNet_x4plus.pth
 onnx: dvc_data/onnx/real-esrgan/RealESRNet_x4plus.onnx
 triton_url: localhost:8001

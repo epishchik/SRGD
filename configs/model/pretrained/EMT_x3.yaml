@@ -4,9 +4,9 @@ model: emt_model
 # backend settings
 backend: torch
 onnx: null
-triton_url: localhost:8001
-triton_model_name: EMT_x3
-triton_model_version: 1
+triton_url: null
+triton_model_name: null
+triton_model_version: null
 
 # general settings
 name: EMT_x3
