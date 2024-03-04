@@ -168,3 +168,6 @@ experiments/
 datasets/
 tb_logger/
 *.plan
+kaggle/dataset
+kaggle/hidden_data
+kaggle/srgb.tar.gz
