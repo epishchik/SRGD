@@ -16,6 +16,7 @@ def prediction(
     output_file: str,
     model: str,
     device: str,
+    simple_resize: str,
 ) -> None:
     """
     Получение предсказания с помощью предобученной модели с huggingface.
@@ -32,6 +33,8 @@ def prediction(
         Название (repository) модели на huggingface.
     device : str
         Устройство на котором будут выполняться вычисления.
+    simple_resize : str
+        Если указан, то upscale делается указанным алгоритмом, а не моделью.
 
     Returns
     -------
@@ -44,13 +47,22 @@ def prediction(
     for i in tqdm(range(len(filenames))):
         filename = filenames[i]
         init_img = cv2.imread(os.path.join(lr_folder, filename))
-        init_tnsr = (
-            img2tensor(init_img, bgr2rgb=True, float32=True).unsqueeze(0).to(device)
-        )
-        out_tnsr = model(init_tnsr)
-        out_img = tensor2img(
-            out_tnsr.squeeze().detach().cpu(), rgb2bgr=True, out_type=np.uint8
-        )
+        if simple_resize:
+            out_img = cv2.resize(
+                init_img,
+                (init_img.shape[1] * 4, init_img.shape[0] * 4),
+                interpolation=getattr(cv2, simple_resize),
+            ).astype(np.uint8)
+        else:
+            init_tnsr = (
+                img2tensor(init_img, bgr2rgb=True, float32=True).unsqueeze(0).to(device)
+            ) / 255.0
+            out_tnsr = model(init_tnsr)
+            out_img = tensor2img(
+                out_tnsr,
+                rgb2bgr=True,
+                out_type=np.uint8,
+            )
         submission_df.loc[i, "rle"] = encode(out_img)
     submission_df.to_csv(output_file, index=False)
 
@@ -61,6 +73,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--sample-submission", type=str, required=True)
     parser.add_argument("-l", "--lr-folder", type=str, required=True)
     parser.add_argument("-o", "--output-file", type=str, default="submission.csv")
+    parser.add_argument("-r", "--simple-resize", type=str, default=None)
     parser.add_argument(
         "-m", "--model", type=str, default="epishchik/RealESRNet_x4plus"
     )
@@ -73,4 +86,5 @@ if __name__ == "__main__":
         args.output_file,
         args.model,
         args.device,
+        args.simple_resize,
     )
