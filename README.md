@@ -1,18 +1,30 @@
 # Super Resolution Gaming Benchmark (SRGB)
 
-## Описание проекта
-Данный проект представляет из себя бенчмарк для задачи Super Resolution в домене игр, существуют технологии которые этим занимаются, такие как AMD FSR или Nvidia DLSS, но сейчас в интернете почти нет открытых датасетов для SR в играх, хочется сделать такой датасет, чтобы была возможность обучать на нем модели и тестировать насколько такая модель будет работать в реальных играх.
+### <div align="center"><b><a href="README.md">English</a> | <a href="README_RU.md">Русский</a></b></div>
 
-## Материалы
-- [EDA](/docs/EDA.md).
-- [MLFlow](/docs/MLFLOW.md).
-- [Метрики](/docs/METRICS.md).
-- [Сервис](/docs/SERVICE.md).
-- [Обучение](/docs/TRAINING.md).
-- [Оптимизация](/docs/OPTIMIZATION.md).
-- [Веса моделей](/docs/WEIGHTS.md).
+<p align="center">
+    <img src="images/readme/banner.png" height=270>
+</p>
+
+<div align="center">
+
+[![download](https://img.shields.io/github/downloads/pe4eniks/SRGB/total.svg)](https://github.com/pe4eniks/SRGB/releases)
+[![Open issue](https://img.shields.io/github/issues/pe4eniks/SRGB)](https://github.com/pe4eniks/SRGB/issues)
+[![Closed issue](https://img.shields.io/github/issues-closed/pe4eniks/SRGB)](https://github.com/pe4eniks/SRGB/issues)
+[![LICENSE](https://img.shields.io/github/license/pe4eniks/SRGB)](https://github.com/Pe4enIks/SRGB/blob/main/LICENSE)
+
+</div>
+
+## Kaggle
+A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-games) based on the SRGB dataset has been launched on the Kaggle platform and will run until August 31, 2024. The SRGB dataset will be publicly available on Huggingface after the competition ends. More information is available on the [wiki](https://github.com/Pe4enIks/SRGB/wiki/Kaggle-competition).
 
 
-## Команда
-- Пищик Евгений (разработчик, [@Evgenii_Pishchik](https://t.me/Evgenii_Pishchik)).
-- Рогачев Александр (куратор, [@airogachev](https://t.me/airogachev)).
+## Bibtex
+```bibtex
+@misc{SRGB,
+    author = {Evgenii Pishchik},
+    title = {Super Resolution Gaming Benchmark},
+    year = {2024},
+    url = {https://github.com/Pe4enIks/SRGB}
+}
+```
