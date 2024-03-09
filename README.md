@@ -1,7 +1,5 @@
 # Super Resolution Gaming Benchmark (SRGB)
 
-### <div align="center"><b><a href="README.md">English</a> | <a href="README_RU.md">Русский</a></b></div>
-
 <p align="center">
     <img src="images/readme/banner.png" height=270>
 </p>
@@ -17,7 +15,7 @@
 
 ## Description
 
-[Image Super Resolution](https://paperswithcode.com/task/image-super-resolution) is a machine learning task where the goal is to increase the resolution of an image, often by a factor of 4x or more, while maintaining its content and details as much as possible. The end result is a high-resolution version of the original image. This task can be used for various applications such as improving image quality, enhancing visual detail, and increasing the accuracy of computer vision algorithms.
+[Image Super Resolution](https://paperswithcode.com/task/image-super-resolution) is a machine learning task where the goal is to increase the resolution of an image, often by a factor of 4x or more, while maintaining its content and details as much as possible. The end result is a high resolution version of the original image. This task can be used for various applications such as improving image quality, enhancing visual detail, and increasing the accuracy of computer vision algorithms.
 
 Video games require a lot of computing resources such as GPU, CPU, RAM, etc. To reduce the computing cost, some companies such as [NVIDIA](https://www.nvidia.com/en-us/), [AMD](https://www.amd.com/en.html) create their own solutions based on super resolution technologies. This is because it may be faster to render at a lower resolution and then upscale the image than to just render at high resolution.
 
