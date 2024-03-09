@@ -27,7 +27,7 @@ Each part described below, and others such as the setup process, has a short ove
 ## Dataset
 Dataset was collected using [Unreal Engine](https://www.unrealengine.com/en-US) and consists of 2 independent datasets, each dataset has all images in 4 different resolutions - 270p, 360p, 540p, 1080p:
 - GameEngineData: 14431 train and 3600 test images.
-- DownscaleData: N train and N test images.
+- DownscaleData: 29726 train and 7421 test images.
 
 ## Models
 |Name|Link|Type|Config|PSNR*|SSIM*|LPIPS*|

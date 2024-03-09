@@ -12,8 +12,12 @@ if [[ "$DOWNLOAD" = "true" ]]; then
   huggingface-cli download epishchik/srgb \
     --local-dir "$LOCALDIR/tmp" \
     --local-dir-use-symlinks True \
+    --cache-dir "$LOCALDIR/cache" \
     --repo-type dataset \
     --include "data/$DATASET_TYPE/*$LR.tar.gz" "data/$DATASET_TYPE/*$HR.tar.gz"
+
+  sleep 5m
+  rm -rf "$LOCALDIR/cache"
 fi
 
 mkdir -p "$LOCALDIR/$DATASET_TYPE/$LR/train"
