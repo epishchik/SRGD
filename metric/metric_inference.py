@@ -214,19 +214,20 @@ def calculate_metrics(
         res_hr = res_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0
         bgr_hr = bgr_hr.unsqueeze(0).permute(0, 3, 1, 2) / 255.0
 
-        metric_str = f"image = {idx + 1}, "
+        metric_str = [f"image = {idx + 1},"]
         if not only_time:
             metric_calculator.calculate(res_hr, bgr_hr)
             for metric_name in metric_names:
                 metric_val = metric_calculator.metric_history[metric_name][-1]
-                metric_str += f"{metric_name} = {metric_val:.3f}, "
+                metric_str += [f"{metric_name} = {metric_val:.3f},"]
                 if mlflow_tracking_uri:
                     mlflow.log_metric(metric_name, metric_val, step=idx)
 
         if mlflow_tracking_uri:
             mlflow.log_metric("time", total_time, step=idx)
 
-        metric_str += f"time = {total_time:.3f}"
+        metric_str += [f"time = {total_time:.3f}"]
+        metric_str = " ".join(metric_str)
         logger.info(metric_str)
 
     json_dct = {
