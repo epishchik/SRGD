@@ -118,20 +118,49 @@ def configure_model(config_name: str) -> dict[str, Any]:
     dict[str, Any]
         Словарь конфигурационных параметров.
     """
-    if app.config["backend"] == "triton":
-        tmp_model_name = app.config["triton_model_name"]
-        unload_triton_model(app.triton_url, tmp_model_name)
+    if "backend" in app.config and app.config["backend"] == "triton":
+        try:
+            tmp_model_name = app.config["triton_model_name"]
+            unload_triton_model(app.triton_url, tmp_model_name)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="something went wrong with unloading triton model.",
+            )
 
-    app.config_path = str(root / f"configs/model/{config_name}.yaml")
-    app.config = parse_yaml(app.config_path)
+    previous_config, previous_config_path = app.config, app.config_path
+    try:
+        app.config_path = str(root / f"configs/model/{config_name}.yaml")
+        app.config = parse_yaml(app.config_path)
+    except ValueError:
+        app.config_path = previous_config_path
+        app.config = previous_config
+        raise HTTPException(
+            status_code=400, detail=f"config '{config_name}' is not supported."
+        )
 
-    if app.config["backend"] == "triton":
-        app.config["triton_url"] = app.triton_url
-        load_triton_model(app.triton_url, app.config["triton_model_name"])
+    if "backend" in app.config and app.config["backend"] == "triton":
+        try:
+            app.config["triton_url"] = app.triton_url
+            load_triton_model(app.triton_url, app.config["triton_model_name"])
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="something went wrong with loading triton model.",
+            )
 
-    app.upsampler = getattr(model_registry, app.config["model"]).configure(
-        root, app.config
-    )
+    try:
+        app.upsampler = getattr(model_registry, app.config["model"]).configure(
+            root, app.config
+        )
+    except AttributeError:
+        raise HTTPException(
+            status_code=400, detail=f"model '{app.config['model']}' is not supported."
+        )
+    except ValueError:
+        raise HTTPException(
+            status_code=400, detail="something went wrong with model configuration."
+        )
 
     logger.debug("used /configure_model/name")
     logger.debug(f"set new config path = {app.config_path}")
@@ -155,21 +184,48 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
     dict[str, Any]
         Словарь конфигурационных параметров.
     """
-    if app.config["backend"] == "triton":
-        tmp_model_name = app.config["triton_model_name"]
-        unload_triton_model(app.triton_url, tmp_model_name)
+    if config_file.content_type not in ["application/x-yaml"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"file type of {config_file.content_type} is not supported",
+        )
+
+    if "backend" in app.config and app.config["backend"] == "triton":
+        try:
+            tmp_model_name = app.config["triton_model_name"]
+            unload_triton_model(app.triton_url, tmp_model_name)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="something went wrong with unloading triton model.",
+            )
 
     app.config_path = None
     app.config = yaml.safe_load(config_file.file.read())
     app.config["filename"] = Path(config_file.filename).stem
 
-    if app.config["backend"] == "triton":
-        app.config["triton_url"] = app.triton_url
-        load_triton_model(app.triton_url, app.config["triton_model_name"])
+    if "backend" in app.config and app.config["backend"] == "triton":
+        try:
+            app.config["triton_url"] = app.triton_url
+            load_triton_model(app.triton_url, app.config["triton_model_name"])
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="something went wrong with loading triton model.",
+            )
 
-    app.upsampler = getattr(model_registry, app.config["model"]).configure(
-        root, app.config
-    )
+    try:
+        app.upsampler = getattr(model_registry, app.config["model"]).configure(
+            root, app.config
+        )
+    except AttributeError:
+        raise HTTPException(
+            status_code=400, detail=f"model {app.config['model']} is not supported."
+        )
+    except ValueError:
+        raise HTTPException(
+            status_code=400, detail="something went wrong with model configuration."
+        )
 
     logger.debug("used /configure_model/file")
     logger.debug(f"set new config path = {app.config_path}")
@@ -195,19 +251,25 @@ def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int], 
         (high resolution height, high resolution width),
         время предсказания на inference.
     """
-    h, w = img.shape[0], img.shape[1]
+    try:
+        h, w = img.shape[0], img.shape[1]
+    except AttributeError:
+        raise HTTPException(
+            status_code=400,
+            detail="incorrect img object, should be 3 dimensional numpy.ndarray.",
+        )
 
     if "outscale" in app.config:
         outscale = app.config["outscale"]
     elif "network_g" in app.config and "upscale" in app.config["network_g"]:
         outscale = app.config["network_g"]["upscale"]
     else:
-        raise ValueError("there is no 'outscale' parameter.")
+        outscale = 4
 
     h_up, w_up = int(h * outscale), int(w * outscale)
     if h_up > 4320 or w_up > 7680:
         raise HTTPException(
-            status_code=481,
+            status_code=400,
             detail=f"potential output resolution ({h_up, w_up}) is too large, "
             "max possible resolution is (4320, 7680) pixels in (h, w) format.",
         )
@@ -258,6 +320,12 @@ def upscale(image_file: UploadFile) -> Response:
     Response
         Сгенерированное HR изображение.
     """
+    if image_file.content_type.split("/")[0] != "image":
+        raise HTTPException(
+            status_code=400,
+            detail=f"file type of {image_file.content_type} is not supported",
+        )
+
     raw = np.fromstring(image_file.file.read(), np.uint8)
     img = cv2.imdecode(raw, cv2.IMREAD_COLOR)
     bytes_img, (h, w), (h_up, w_up), total_time = _upscale(img)
