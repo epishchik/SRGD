@@ -7,6 +7,7 @@ __pycache__
 .dvc
 
 README.md
+README_RU.md
 LICENSE
 .pre-commit-config.yaml
 requirements.txt
@@ -46,11 +47,14 @@ submodules/emt/.git
 datasets
 datasphere
 docs
+html_coverage
 images
+kaggle
 logs
 metric
 mlflow
 unreal-engine
+tests
 train
 experiments
 tb_logger
