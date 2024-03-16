@@ -1,8 +1,8 @@
 # Super Resolution Gaming Benchmark (SRGB)
 
-<p align="center">
-    <img src="images/readme/banner.png" height=270>
-</p>
+|                     LR                     |                     HR                     |
+|:------------------------------------------:|:------------------------------------------:|
+| <img src="images/readme/lr.png" width=480> | <img src="images/readme/hr.png" width=480> |
 
 <div align="center">
 
@@ -22,7 +22,7 @@ Video games require a lot of computing resources such as GPU, CPU, RAM, etc. To 
 We've collected a dataset mostly using the [Unreal Engine](https://www.unrealengine.com/en-US) game engine. There aren't a lot of datasets for super resolution in games, so we hope that the collected dataset will give independent developers more room to get started in this area. This dataset can be used as a benchmark for super resolution models in the domain of video games.
 
 ## Documentation
-Each part described below, and others such as the setup process, has a short overview on the README page, for more information see the [wiki](https://github.com/Pe4enIks/SRGB/wiki) page.
+Each part described below, and others such as the setup process, has a short overview on the [README](https://github.com/Pe4enIks/SRGB/blob/main/README.md) page, for more information see the [wiki](https://github.com/Pe4enIks/SRGB/wiki) page.
 
 ## Dataset
 Dataset was collected using [Unreal Engine](https://www.unrealengine.com/en-US) and consists of 2 independent datasets, each dataset has all images in 4 different resolutions - 270p, 360p, 540p, 1080p:

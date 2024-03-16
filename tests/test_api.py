@@ -42,4 +42,3 @@ class APITestCase(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree("./extra")
-        del cls.api_client

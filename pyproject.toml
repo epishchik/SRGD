@@ -13,6 +13,7 @@ pyyaml = "^6.0.1"
 loguru = "^0.7.2"
 dvc = {extras = ["s3"], version = "^3.33.3"}
 pillow = "^10.1.0"
+coverage = "^7.4.4"
 
 [tool.poetry.group.ml]
 optional = true
@@ -72,6 +73,18 @@ tritonclient = {extras = ["all"], version = "^2.42.0"}
 name = "ort_azure_devops_feed"
 url = "https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/"
 priority = "supplemental"
+
+
+[tool.coverage.run]
+branch = true
+source = ["api", "kaggle", "metric", "model", "optimization", "train", "ui", "utils"]
+command_line = "-m unittest discover -s tests/"
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.coverage.html]
+directory = "html_coverage"
 
 [build-system]
 requires = ["poetry-core"]
