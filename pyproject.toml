@@ -74,7 +74,6 @@ name = "ort_azure_devops_feed"
 url = "https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/"
 priority = "supplemental"
 
-
 [tool.coverage.run]
 branch = true
 source = ["api", "kaggle", "metric", "model", "optimization", "train", "ui", "utils"]
