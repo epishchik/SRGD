@@ -14,9 +14,12 @@ from api.main import app
 class APITestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        path_to_extra = Path(__file__).parents[1] / "api/extra"
-        shutil.copytree(path_to_extra, "./extra")
+        folder_name = "extra"
+        path_to_extra = Path(__file__).parents[1] / f"api/{folder_name}"
+        folder = f"./{folder_name}"
+        shutil.copytree(path_to_extra, folder)
         cls.api_client = TestClient(app)
+        cls.folder = folder
 
     def test_get_info(self):
         response = self.api_client.get("/info")
@@ -41,4 +44,4 @@ class APITestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        shutil.rmtree("./extra")
+        shutil.rmtree(cls.folder)

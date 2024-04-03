@@ -8,6 +8,7 @@ from typing import Any
 import cv2
 import numpy as np
 import requests
+import torch.cuda
 import yaml
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
@@ -57,6 +58,31 @@ def unload_triton_model(triton_url: str, model_name: str) -> None:
     requests.post(f"http://{triton_url}/v2/repository/models/{model_name}/unload")
 
 
+def set_cpu_mode(config: dict[str, Any]) -> dict[str, Any]:
+    """
+    Запуск модели принудительно на cpu.
+
+    Parameters
+    ----------
+    config : dict[str, Any]
+        Конфигурационный словарь модели.
+
+    Returns
+    -------
+    dict[str, Any]
+        Измененный конфигурационный словарь модели.
+    """
+    if config["model"] == "emt_model":
+        config["num_gpu"] = 0
+    elif config["model"] == "real_esrgan":
+        config["gpu_id"] = -1
+    elif config["model"] == "resshift":
+        config["device"] = "cpu"
+    else:
+        raise ValueError(f"{config['model']} model isn't supported.")
+    return config
+
+
 app = FastAPI()
 
 init_model = "RealESRGAN_x4plus"
@@ -67,6 +93,9 @@ if app.config["backend"] == "triton":
     app.triton_url = "triton:8000"
     app.config["triton_url"] = app.triton_url
     load_triton_model(app.triton_url, init_model)
+
+if torch.cuda.device_count() < 1 and app.config["backend"] != "triton":
+    app.config = set_cpu_mode(app.config)
 
 app.upsampler = getattr(model_registry, app.config["model"]).configure(root, app.config)
 
@@ -150,6 +179,8 @@ def configure_model(config_name: str) -> dict[str, Any]:
             )
 
     try:
+        if torch.cuda.device_count() < 1 and app.config["backend"] != "triton":
+            app.config = set_cpu_mode(app.config)
         app.upsampler = getattr(model_registry, app.config["model"]).configure(
             root, app.config
         )
@@ -215,6 +246,8 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
             )
 
     try:
+        if torch.cuda.device_count() < 1 and app.config["backend"] != "triton":
+            app.config = set_cpu_mode(app.config)
         app.upsampler = getattr(model_registry, app.config["model"]).configure(
             root, app.config
         )
