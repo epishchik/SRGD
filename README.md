@@ -41,7 +41,7 @@ Dataset was collected using [Unreal Engine](https://www.unrealengine.com/en-US) 
 \** - the config field specifies the exact version of the model which was used to calculate metric.
 
 ## Kaggle
-A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-games) based on the SRGB dataset has been launched on the Kaggle platform and will run until August 31, 2024. The SRGB dataset will be publicly available on Huggingface after the competition ends.
+A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-games) based on the SRGB dataset has been launched on the Kaggle platform and will run until August 31, 2024. **The SRGB dataset will be publicly available on Huggingface after the competition ends**.
 
 
 ## Bibtex
