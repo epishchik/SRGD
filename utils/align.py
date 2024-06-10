@@ -4,16 +4,14 @@ from argparse import ArgumentParser
 
 def clean_from_single_folder(root: str, target_folder: str) -> None:
     """
-    Очистка всех папок из root от файлов без пары в папке target_folder.
+    Clean all folders in root without pair in target_folder.
 
     Parameters
     ----------
     root : str
-        Путь к корню, все папки из root будут сравниваться
-        с target_folder по файлам.
+        All folders in root folder will be compared to target_folder file by file.
     target_folder : str
-        Путь к папке, все файлы из папок из root будут удалены,
-        если их нет в target_folder.
+        All files in root subfolders will be deleted if they aren't in target_folder.
 
     Returns
     -------
@@ -38,13 +36,12 @@ def clean_from_single_folder(root: str, target_folder: str) -> None:
 
 def clean_all_folders(root: str) -> None:
     """
-    Функция попарной очистки всех файлов из всех
-    папок из root от файлов без пары.
+    Delete all files without pair.
 
     Parameters
     ----------
     root : str
-        Путь к корню, все папки из root будут поданы в попарную очистку.
+        Path to root folder, all subfolders will be paired and cleaned.
 
     Returns
     -------
@@ -59,8 +56,13 @@ def clean_all_folders(root: str) -> None:
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("-r", "--root", type=str, required=True)
+    parser.add_argument(
+        "-r",
+        "--root",
+        type=str,
+        required=True,
+        help="path to root folder",
+    )
     args = parser.parse_args()
 
     clean_all_folders(args.root)

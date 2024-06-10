@@ -22,15 +22,14 @@ from utils.parse import parse_yaml
 
 def load_triton_model(triton_url: str, model_name: str) -> None:
     """
-    Загрузка модели на GPU из репозитория. Необходимая мера, чтобы не превысить объем
-    VRAM на GPU, потому что моделей много и по умолчанию они все загружаются в VRAM.
+    Load specific model into tritonserver.
 
     Parameters
     ----------
     triton_url : str
-        URL к tritonserver, например triton:8000 для запуска через docker compose.
+        Triton inference server URL.
     model_name : str
-        Название модели из triton model_repository.
+        Model name form triton model_repository.
 
     Returns
     -------
@@ -41,15 +40,14 @@ def load_triton_model(triton_url: str, model_name: str) -> None:
 
 def unload_triton_model(triton_url: str, model_name: str) -> None:
     """
-    Выгрузка модели из GPU. Необходимая мера, чтобы не превысить объем VRAM на GPU,
-    потому что моделей много и по умолчанию они все загружаются в VRAM.
+    Unload specific model from tritonserver.
 
     Parameters
     ----------
     triton_url : str
-        URL к tritonserver, например triton:8000 для запуска через docker compose.
+        Triton inference server URL.
     model_name : str
-        Название модели из triton model_repository.
+        Model name form triton model_repository.
 
     Returns
     -------
@@ -60,17 +58,17 @@ def unload_triton_model(triton_url: str, model_name: str) -> None:
 
 def set_cpu_mode(config: dict[str, Any]) -> dict[str, Any]:
     """
-    Запуск модели принудительно на cpu.
+    Set CPU mode.
 
     Parameters
     ----------
     config : dict[str, Any]
-        Конфигурационный словарь модели.
+        Model configuration dictionary.
 
     Returns
     -------
     dict[str, Any]
-        Измененный конфигурационный словарь модели.
+        Changed model configuration dictionary.
     """
     if config["model"] == "emt_model":
         config["num_gpu"] = 0
@@ -118,12 +116,12 @@ logger.debug(f"set config dict = {app.config}")
 @app.get("/info")
 def info() -> FileResponse:
     """
-    Получение файла с краткой информацией о проекте.
+    Get file with short overview of project.
 
     Returns
     -------
     FileResponse
-        Текстовый файл.
+        Text file.
     """
     info_file = FileResponse(
         path="./extra/info.txt", filename="info.txt", media_type="text"
@@ -135,17 +133,17 @@ def info() -> FileResponse:
 @app.post("/configure_model/name")
 def configure_model(config_name: str) -> dict[str, Any]:
     """
-    Конфигурация super-resolution модели по названию конфига.
+    Configure model using its config name.
 
     Parameters
     ----------
     config_name : str
-        Название модели в формате pretrained/model или trained/model.
+        Model config name in pretrained/model or trained/model format.
 
     Returns
     -------
     dict[str, Any]
-        Словарь конфигурационных параметров.
+        Dictionary with model configuration parameters.
     """
     if "backend" in app.config and app.config["backend"] == "triton":
         try:
@@ -203,17 +201,17 @@ def configure_model(config_name: str) -> dict[str, Any]:
 @app.post("/configure_model/file")
 def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
     """
-    Конфигурация super-resolution модели конфигурационным yaml файлом.
+    Configure model using its config YAML file.
 
     Parameters
     ----------
     config_file : UploadFile
-        Конфигурационный .yaml файл.
+        Config YAML file.
 
     Returns
     -------
     dict[str, Any]
-        Словарь конфигурационных параметров.
+        Dictionary with model configuration parameters.
     """
     if config_file.content_type not in ["application/x-yaml"]:
         raise HTTPException(
@@ -269,20 +267,20 @@ def configure_model_file(config_file: UploadFile) -> dict[str, Any]:
 
 def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int], float]:
     """
-    Функция повышения качества изображения.
+    Enhance image.
 
     Parameters
     ----------
     img : np.ndarray
-        Изображение в формате np.ndarray размера (h, w, c).
+        np.ndarray image in (h, w, c) format.
 
     Returns
     -------
     tuple[bytes, tuple[int, int], tuple[int, int], float]
-        Закодированное в байткод изображение высокого качества,
-        (low resolution height, low resolution width),
-        (high resolution height, high resolution width),
-        время предсказания на inference.
+        0. Encoded image,
+        1. (low resolution height, low resolution width),
+        2. (high resolution height, high resolution width),
+        3. Inference time.
     """
     try:
         h, w = img.shape[0], img.shape[1]
@@ -319,12 +317,12 @@ def _upscale(img: np.ndarray) -> tuple[bytes, tuple[int, int], tuple[int, int], 
 @app.post("/upscale/example")
 def upscale_example() -> Response:
     """
-    Пример работы super-resolution модели на заготовленном LR изображении.
+    Upscale example image using configured model.
 
     Returns
     -------
     Response
-        Сгенерированное HR изображение.
+        Generated HR image.
     """
     img = cv2.imread("./extra/example.png", cv2.IMREAD_UNCHANGED)
     bytes_img, (h, w), (h_up, w_up), total_time = _upscale(img)
@@ -341,17 +339,17 @@ def upscale_example() -> Response:
 @app.post("/upscale/file")
 def upscale(image_file: UploadFile) -> Response:
     """
-    Обработка super-resolution моделью изображения из файла.
+    Upscale image from file using configured model.
 
     Parameters
     ----------
     image_file : UploadFile
-        Файл с LR изображением.
+        File with image in (h, w, c) format.
 
     Returns
     -------
     Response
-        Сгенерированное HR изображение.
+        Generated HR image.
     """
     if image_file.content_type.split("/")[0] != "image":
         raise HTTPException(

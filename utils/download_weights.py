@@ -10,16 +10,16 @@ import requests
 
 def download_file(pk: str, local_name: str, src_type: str) -> None:
     """
-    Скачивание единицы данных через API Yandex Disk.
+    Download file / folder from Yandex Disk using API.
 
     Parameters
     ----------
     pk : str
-        Публичная ссылка на папку / файл на диске.
+        Public link to the folder or file from Yandex Disk.
     local_name : str
-        Путь для сохранения папки / путь к расположению файла (с именем файла).
+        Path to save file (with filename) or folder.
     src_type : str
-        Тип источника, folder / file.
+        Source type [folder, file].
 
     Returns
     -------
@@ -44,14 +44,14 @@ def download_file(pk: str, local_name: str, src_type: str) -> None:
 
 def download(download_source: str, save_folder: str) -> None:
     """
-    Скачивание данных через API Yandex Disk.
+    Download data from Yandex Disk using API.
 
     Parameters
     ----------
     download_source : str
-        Url к скачиваемому источнику.
+        URL to download from.
     save_folder : str
-        Путь к папке для сохранения папки с Yandex Disk.
+        Path to save folder.
 
     Returns
     -------
@@ -74,9 +74,20 @@ def download(download_source: str, save_folder: str) -> None:
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("-ds", "--download-source", type=str, required=True)
-    parser.add_argument("-sf", "--save-folder", type=str, default=None)
+    parser.add_argument(
+        "-ds",
+        "--download-source",
+        type=str,
+        required=True,
+        help="URL to download from",
+    )
+    parser.add_argument(
+        "-sf",
+        "--save-folder",
+        type=str,
+        default=None,
+        help="path to save folder",
+    )
     args = parser.parse_args()
 
     download(args.download_source, args.save_folder)

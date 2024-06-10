@@ -1,10 +1,10 @@
-SRC=$1  # путь к корню датасета
-TYPE=$2  # GameEngineData или DownscaleData
-FOLDER=$3  # название проекта = название папки
-DST=$4  # папка куда сохранять данные
-TESTSIZE=$5  # размер тестовой части
-EXT=$6  # расширение файлов
-WORKDIR=$7  # текущая рабочая директория
+SRC=$1  # path to the dataset root directory
+TYPE=$2  # [GameEngineData, DownscaleData]
+FOLDER=$3  # project name = folder name
+DST=$4  # folder where to save the dataset
+TESTSIZE=$5  # test size
+EXT=$6  # file extension
+WORKDIR=$7  # current working directory
 
 mkdir "$FOLDER"
 cd "$SRC"/"$TYPE"/"$FOLDER"

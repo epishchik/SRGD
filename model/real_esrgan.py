@@ -9,19 +9,19 @@ from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 def configure(root: PurePath, config: dict[str, Any]) -> Any:
     """
-    Создание модели Real-ESRGAN из конфигурационного словаря.
+    Create Real-ESRGAN model from configuration dictionary.
 
     Parameters
     ----------
     root : PurePath
-        Путь к корню проекта.
+        Path to project root directory.
     config : dict[str, Any]
-        Словарь с конфигурационными параметрами.
+        Dictionary with configuration parameters.
 
     Returns
     -------
     Any
-        Объект модели Real-ESRGAN.
+        Real-ESRGAN model.
     """
     model, netscale, dni_weight = None, None, None
 
@@ -122,19 +122,19 @@ def predict(
     upsampler: Any,
 ) -> np.ndarray:
     """
-    Перевод LR изображения в HR изображение с использованием Real-ESRGAN.
+    Enhance low resolution image using Real-ESRGAN model.
 
     Parameters
     ----------
     img : np.ndarray
-        Изображение в формате (h, w, c).
+        Image in (h, w, c) format.
     upsampler : Any
-        Объект модели Real-ESRGAN.
+        Real-ESRGAN model.
 
     Returns
     -------
     np.ndarray
-        HR изображение в формате (h*outscale, w*outscale, c).
+        High resolution image in (h*, w*, c) format.
     """
     out_img, _ = upsampler.enhance(img)
     return out_img

@@ -1,8 +1,8 @@
-LOCALDIR=$1  # путь сохранения датасета
-DATASET_TYPE=$2  # тип датасета, GameEngineData или DownscaleData
-LR=$3  # значение низкого разрешения
-HR=$4  # значение высокого разрешения
-DOWNLOAD=$5  # скачать датасет
+LOCALDIR=$1  # path to dataset save directory
+DATASET_TYPE=$2  # [GameEngineData, DownscaleData]
+LR=$3  # low resolution [270p, 360p, 540p, 1080p]
+HR=$4  # high resolution [270p, 360p, 540p, 1080p]
+DOWNLOAD=$5  # flag to download data
 
 set -e
 

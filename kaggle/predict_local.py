@@ -22,22 +22,22 @@ def prediction(
     model_type: str,
 ) -> None:
     """
-    Получение предсказания с помощью локальной модели.
+    Get prediction for sample submission using local model.
 
     Parameters
     ----------
     root : str
-        Путь к корню проекта.
+        Path to project root directory.
     sample_submission : str
-        Путь к файлу с примером структуры посылки на kaggle.
+        Path to sample submission file.
     lr_folder : str
-        Путь к папке тестового датасета с изображениями в низком качестве.
+        Path to test dataset folder with LR images.
     output_file : str
-        Путь для сохранения, полученного файла с предсказаниями.
+        Path to output file with predictions.
     model_config : str
-        Название конфигурационного файла модели.
+        Model config filename.
     model_type : str
-        Тип модели [pretrained | finetuned].
+        [pretrained | finetuned].
 
     Returns
     -------
@@ -65,12 +65,41 @@ def prediction(
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("-s", "--sample-submission", type=str, required=True)
-    parser.add_argument("-l", "--lr-folder", type=str, required=True)
-    parser.add_argument("-o", "--output-file", type=str, default="submission.csv")
-    parser.add_argument("-c", "--model-config", type=str, default="RealESRGAN_x4plus")
-    parser.add_argument("-t", "--model-type", type=str, default="pretrained")
+    parser.add_argument(
+        "-s",
+        "--sample-submission",
+        type=str,
+        required=True,
+        help="path to sample submission file",
+    )
+    parser.add_argument(
+        "-l",
+        "--lr-folder",
+        type=str,
+        required=True,
+        help="path to test dataset folder with LR images",
+    )
+    parser.add_argument(
+        "-o",
+        "--output-file",
+        type=str,
+        default="submission.csv",
+        help="path to output file with predictions",
+    )
+    parser.add_argument(
+        "-c",
+        "--model-config",
+        type=str,
+        default="RealESRGAN_x4plus",
+        help="model config filename",
+    )
+    parser.add_argument(
+        "-t",
+        "--model-type",
+        type=str,
+        default="pretrained",
+        help="[pretrained | finetuned]",
+    )
     args = parser.parse_args()
 
     root = Path(__file__).parents[1]

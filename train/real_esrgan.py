@@ -28,8 +28,8 @@ import mlflow
 
 def train() -> None:
     """
-    Обучение модели Real-ESRGAN. Все параметры прописываются в конфиге .yaml.
-    Путь к конфигу передается через параметр -opt.
+    Real-ESRGAN model training. All parameters are set in the config YAML file.
+    Path to config file is specified using -opt parameter.
 
     Returns
     -------
@@ -70,7 +70,7 @@ def train() -> None:
 
     tb_logger = init_tb_loggers(opt)
 
-    # TODO: создать даталоадер для datasets.type == "huggingface"
+    # TODO: create dataloader for datasets.type == "huggingface"
     datasets_type = opt["datasets"]["type"]
     if datasets_type == "files":
         result = create_train_val_dataloader(opt, logger, datasets_type, root=root)

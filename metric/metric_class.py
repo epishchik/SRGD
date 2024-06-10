@@ -4,26 +4,25 @@ import torch.cuda
 
 class MetricSR:
     """
-    Калькулятор super resolution метрик.
+    Class for calculating SR metrics.
 
     Attributes
     ----------
     metric_names : list[str]
-        Список названий всех метрик.
+        List of all metric names.
     no_ref_metric_names : list[str]
-        Список названий метрик, работающих без reference изображения.
+        List of No-Reference (NR) metric names.
     map_metric_names : dict[str, str]
-        Словарь маппинга из собственного названия метрики в название
-        функции реализующей эту метрику.
+        Mapping of metric names to function names.
     metric_history : dict[str, list[float]]
-        История значений каждой метрики.
+        History values for all metrics.
 
     Methods
     -------
     calculate(upscaled_hr, real_hr)
-        Вычисление всех метрик между сгенерированным HR и reference HR.
+        Calculate all metrics between upscaled HR and real HR.
     calculate_total(metric_name)
-        Вычисление среднего значения определенной метрики по всей истории.
+        Calculate mean value of specific metric accross all history.
     """
 
     def __init__(
@@ -34,19 +33,18 @@ class MetricSR:
         device: str = None,
     ) -> None:
         """
-        Конфигурация класса для вычисления метрик.
+        Constructor of MetricSR class.
 
         Parameters
         ----------
         metric_names : list[str]
-            Список названий всех метрик.
+            List of all metric names.
         no_ref_metric_names : list[str]
-            Список названий метрик, работающих без reference изображения.
+            List of No-Reference (NR) metric names.
         map_metric_names : dict[str, str]
-            Словарь маппинга из собственного названия метрики в название
-            функции реализующей эту метрику.
+            Mapping of metric names to function names.
         device : str
-            Название устройства для вычислений.
+            Device to use for calculations.
 
         Returns
         -------
@@ -77,14 +75,14 @@ class MetricSR:
         self, upscaled_hr: torch.FloatTensor, real_hr: torch.FloatTensor
     ) -> None:
         """
-        Вычисление всех метрик между сгенерированным HR и reference HR.
+        Calculate all metrics between upscaled HR and real HR.
 
         Parameters
         ----------
         upscaled_hr : torch.FloatTensor
-            Сгенерированное HR изображение в формате (1, c, h, w).
+            Upscaled HR image in (1, c, h, w) format.
         real_hr : torch.FloatTensor
-            Reference HR изображение в формате (1, c, h, w).
+            Reference HR image in (1, c, h, w) format.
 
         Returns
         -------
@@ -115,17 +113,17 @@ class MetricSR:
 
     def calculate_total(self, metric_name: str) -> float:
         """
-        Вычисление среднего значения определенной метрики по всей истории.
+        Calculate mean value of specific metric accross all history.
 
         Parameters
         ----------
         metric_name : str
-            Название метрики.
+            Metric name.
 
         Returns
         -------
         float
-            Значение указанной метрики.
+            Calculated metric value.
         """
         metric_sum = sum(self.metric_history[metric_name])
         metric_len = len(self.metric_history[metric_name])

@@ -12,16 +12,16 @@ from utils.parse import parse_yaml
 
 def torch2onnx(root: PurePath, save_path: str, model_config_path: str) -> None:
     """
-    Конвертация из формата torch в формат onnx.
+    Convert torch model to onnx model.
 
     Parameters
     ----------
     root : PurePath
-        Путь к корню проекта.
+        Path to the root directory of the project.
     save_path : str
-        Относительный путь к создаваемому .onnx файлу модели.
+        Relative path to the onnx file.
     model_config_path : str
-        Относительный путь к конфигурационному файлу модели.
+        Relative path to the model config file.
 
     Returns
     -------
@@ -38,7 +38,7 @@ def torch2onnx(root: PurePath, save_path: str, model_config_path: str) -> None:
         root, model_config_dct
     )
 
-    # TODO закодить конвертацию ResShift
+    # TODO: add ResShift converter
     torch_model, device, dtype = upsampler.net_g, upsampler.device, upsampler.dtype
     torch_model.eval()
 
@@ -68,9 +68,18 @@ def torch2onnx(root: PurePath, save_path: str, model_config_path: str) -> None:
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("--save-path", type=str, required=True)
-    parser.add_argument("--model-config", type=str, required=True)
+    parser.add_argument(
+        "--save-path",
+        type=str,
+        required=True,
+        help="relative path to the onnx file",
+    )
+    parser.add_argument(
+        "--model-config",
+        type=str,
+        required=True,
+        help="relative path to the model config file",
+    )
     args = parser.parse_args()
 
     root = Path(__file__).parents[1]

@@ -19,22 +19,22 @@ def prediction(
     simple_resize: str,
 ) -> None:
     """
-    Получение предсказания с помощью предобученной модели с huggingface.
+    Get prediction for sample submission using huggingface model.
 
     Parameters
     ----------
     sample_submission : str
-        Путь к файлу с примером структуры посылки на kaggle.
+        Path to sample submission file.
     lr_folder : str
-        Путь к папке тестового датасета с изображениями в низком качестве.
+        Path to test dataset folder with LR images.
     output_file : str
-        Путь для сохранения, полученного файла с предсказаниями.
+        Path to output file with predictions.
     model : str
-        Название (repository) модели на huggingface.
+        Name (repository) of huggingface model.
     device : str
-        Устройство на котором будут выполняться вычисления.
+        Device on which the model will be run.
     simple_resize : str
-        Если указан, то upscale делается указанным алгоритмом, а не моделью.
+        If specified then the upscaling will be done using deterministic interpolation.
 
     Returns
     -------
@@ -69,15 +69,48 @@ def prediction(
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("-s", "--sample-submission", type=str, required=True)
-    parser.add_argument("-l", "--lr-folder", type=str, required=True)
-    parser.add_argument("-o", "--output-file", type=str, default="submission.csv")
-    parser.add_argument("-r", "--simple-resize", type=str, default=None)
     parser.add_argument(
-        "-m", "--model", type=str, default="epishchik/RealESRNet_x4plus"
+        "-s",
+        "--sample-submission",
+        type=str,
+        required=True,
+        help="path to sample submission file",
     )
-    parser.add_argument("-d", "--device", type=str, default="cuda:0")
+    parser.add_argument(
+        "-l",
+        "--lr-folder",
+        type=str,
+        required=True,
+        help="path to test dataset folder with LR images",
+    )
+    parser.add_argument(
+        "-o",
+        "--output-file",
+        type=str,
+        default="submission.csv",
+        help="path to output file with predictions",
+    )
+    parser.add_argument(
+        "-r",
+        "--simple-resize",
+        type=str,
+        default=None,
+        help="interpolation method for upscaling or None for model upscaling",
+    )
+    parser.add_argument(
+        "-m",
+        "--model",
+        type=str,
+        default="epishchik/RealESRNet_x4plus",
+        help="name of huggingface model",
+    )
+    parser.add_argument(
+        "-d",
+        "--device",
+        type=str,
+        default="cuda:0",
+        help="device on which the model will be run",
+    )
     args = parser.parse_args()
 
     prediction(

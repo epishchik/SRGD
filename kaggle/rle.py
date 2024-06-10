@@ -11,19 +11,19 @@ from tqdm import tqdm
 
 def encode(img: np.ndarray) -> bytes:
     """
-    Кодирование изображения без потерь для submission на платформе kaggle.
-    Kaggle не поддерживает отправки кроме как через submission.csv.
-    Аналогичным образом необходимо хранить таргет в solution.csv.
+    Lossless encoding of images for submission on kaggle platform.
+    Kaggle doesn't support submissons not in csv format.
+    In the same way target images should be stored.
 
     Parameters
     ----------
     img : np.ndarray
-        cv2.imread(f) - BGR изображение в формате (h, w, c), c = 3 (даже для .png).
+        cv2.imread(f) - BGR image in (h, w, c) format, c = 3 (even for png format).
 
     Returns
     -------
     bytes
-        Закодированное изображение.
+        Encoded image as bytes.
     """
     img_to_encode = img.astype(np.uint8)
     img_to_encode = img_to_encode.flatten()
@@ -47,17 +47,17 @@ def encode(img: np.ndarray) -> bytes:
 
 def decode(encoded_img: bytes) -> np.ndarray:
     """
-    Декодирование изображения - обратная операция к кодированию функцией encode.
+    Reverse operation for encode function to get original images.
 
     Parameters
     ----------
     encoded_img : bytes
-        Закодированное изображение.
+        Encoded image as bytes.
 
     Returns
     -------
     np.ndarray
-        BGR изображение в формате (h, w, c), c = 3 (даже для .png).
+        BGR image in (h, w, c) format, c = 3 (even for png format).
     """
     rle = zlib.decompress(base64.b64decode(encoded_img))
     decoded_img = []
@@ -70,17 +70,16 @@ def encode_folder(
     folder: str, save_path: str = "solution.csv", public_size: float = 0.3
 ) -> None:
     """
-    Кодирование изображений из папки (таргет изображения из тестового датасета).
-    Сохранение в подготовленный к загрузке на kaggle solution.csv.
+    Encode images from folder (target images from test set) and save into solution.csv.
 
     Parameters
     ----------
     folder : str
-        Путь к папке с таргет изображениями.
+        Path to directory with target images.
     save_path : str
-        Путь к создаваемому файлу solution.csv.
+        Path to save solution.csv.
     public_size : float
-        Размер public части тестового датасета для лидерборда.
+        Size of public part of the dataset for the leaderboard.
 
     Returns
     -------
@@ -113,11 +112,33 @@ def encode_folder(
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("-f", "--folder", type=str, required=True)
-    parser.add_argument("-s", "--save-path", type=str, default="solution.csv")
-    parser.add_argument("-p", "--public-size", type=float, default=0.3)
-    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "-f",
+        "--folder",
+        type=str,
+        required=True,
+        help="path to folder with target images",
+    )
+    parser.add_argument(
+        "-s",
+        "--save-path",
+        type=str,
+        default="solution.csv",
+        help="path to save solution.csv",
+    )
+    parser.add_argument(
+        "-p",
+        "--public-size",
+        type=float,
+        default=0.3,
+        help="size of public part of the dataset for the leaderboard",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="random seed value",
+    )
     args = parser.parse_args()
 
     np.random.seed(args.seed)

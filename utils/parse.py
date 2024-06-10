@@ -7,17 +7,17 @@ import yaml
 
 def parse_yaml(path: str) -> dict[str, Any]:
     """
-    Функция парсинга конфигурационного yaml файла в python dict.
+    Parse yaml file and return dict.
 
     Parameters
     ----------
     path : str
-        Путь к конфигурационному файлу.
+        Path to yaml file.
 
     Returns
     -------
     dict[str, Any]
-        Словарь параметр - значение параметра.
+        Dict of yaml file.
     """
     if not os.path.exists(path):
         raise ValueError(f"File {path} does not exist.")

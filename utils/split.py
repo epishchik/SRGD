@@ -6,18 +6,18 @@ import cv2
 
 def split(video: str, folder: str, prefix: str, save_every: int = 1) -> None:
     """
-    Разделение видео на кадры.
+    Split video into frames.
 
     Parameters
     ----------
     video : str
-        Путь к файлу видео.
+        Path to video file.
     folder : str
-        Путь к папке, куда будут сохраняться кадры.
+        Path to folder where frames will be saved.
     prefix : str
-        Префикс имени файла для каждого кадра.
+        Prefix for each frame.
     save_every : int, optional
-        Раз в сколько шагов сохранять кадр.
+        Save every save_every-th frame.
 
     Returns
     -------
@@ -41,11 +41,34 @@ def split(video: str, folder: str, prefix: str, save_every: int = 1) -> None:
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("-v", "--video", type=str, required=True)
-    parser.add_argument("-f", "--folder", type=str, required=True)
-    parser.add_argument("-p", "--prefix", type=str, required=True)
-    parser.add_argument("-s", "--save-every", type=int, default=5)
+    parser.add_argument(
+        "-v",
+        "--video",
+        type=str,
+        required=True,
+        help="path to video file",
+    )
+    parser.add_argument(
+        "-f",
+        "--folder",
+        type=str,
+        required=True,
+        help="path to folder where frames will be saved",
+    )
+    parser.add_argument(
+        "-p",
+        "--prefix",
+        type=str,
+        required=True,
+        help="prefix for each frame",
+    )
+    parser.add_argument(
+        "-s",
+        "--save-every",
+        type=int,
+        default=5,
+        help="save every s-th frame",
+    )
     args = parser.parse_args()
 
     split(args.video, args.folder, args.prefix, args.save_every)

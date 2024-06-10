@@ -13,25 +13,25 @@ def score(
     rle_column_name: str,
 ) -> float:
     """
-    Вычисление метрики PSNR для лидерборда на kaggle.
+    PSNR metric calculation for kaggle leaderboard.
 
     Parameters
     ----------
     solution : pd.DataFrame
-        Датафрейм содержащий закодированные таргет изображения.
+        pd.DataFrame with encoded target images.
     submission : pd.DataFrame
-        Датафрейм содержащий закодированные полученные изображения.
+        pd.DataFrame with encoded submission images.
     row_id_column_name : str
-        Название первой колонки, которая используется как id для join.
+        Name of first column, which is used as id for join.
     filename_column_name : str
-        Название колонки, в которой хранятся названия файлов.
+        Name of column in which filenames are stored.
     rle_column_name : str
-        Название колонки, в которой хранятся закодированные изображения.
+        Name of column in which RLEs are stored.
 
     Returns
     -------
     float
-        Значение метрики PSNR.
+        PSNR score.
     """
     if row_id_column_name:
         del solution[row_id_column_name]
@@ -56,9 +56,18 @@ def score(
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("--submission", type=str, default="submission.csv")
-    parser.add_argument("--solution", type=str, default="solution.csv")
+    parser.add_argument(
+        "--submission",
+        type=str,
+        default="submission.csv",
+        help="path to submission file",
+    )
+    parser.add_argument(
+        "--solution",
+        type=str,
+        default="solution.csv",
+        help="path to solution file",
+    )
     parser.add_argument("--col1", type=str, default=None)
     parser.add_argument("--col2", type=str, default="filename")
     parser.add_argument("--col3", type=str, default="rle")

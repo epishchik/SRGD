@@ -4,14 +4,13 @@ from argparse import ArgumentParser
 
 def rename(root: str) -> None:
     """
-    Переименование файлов со всех папок внутри root,
-    файлы с одинаковым названием получат новое одинаковое название.
+    Recursively rename all files in subdirectories of root directory,
+    files with the same name will be renamed with the same name.
 
     Parameters
     ----------
     root : str
-        Путь к корню, содержащий все папки,
-        файлы внутри которых нужно переименовать.
+        Path to root directory with all subdirectories.
 
     Returns
     -------
@@ -32,8 +31,13 @@ def rename(root: str) -> None:
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("-r", "--root", type=str, required=True)
+    parser.add_argument(
+        "-r",
+        "--root",
+        type=str,
+        required=True,
+        help="path to root directory with all subdirectories",
+    )
     args = parser.parse_args()
 
     rename(args.root)

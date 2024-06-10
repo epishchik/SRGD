@@ -44,37 +44,37 @@ def calculate_metrics(
     Parameters
     ----------
     root : PurePath
-        Корень проекта.
+        Path to project root directory.
     model_config : str
-        Название конфигурационного файла модели.
+        Model config filename.
     model_type : str
-        Тип модели [pretrained / finetuned].
+        [pretrained / finetuned].
     dataset_name : str
-        Название датасета.
+        Dataset name.
     dataset_type : str
-        Тип датасета [game_engine / downscale].
+        [game_engine / downscale].
     split : str
-        Сплит датасета [train / val].
+        [train / val].
     lr : str
-        Низкое разрешение [r270p / r360p / r540p / r1080p].
+        Low resolution value [r270p / r360p / r540p / r1080p].
     hr : str
-        Высокое разрешение [r270p / r360p / r540p / r1080p].
+        High resolution value [r270p / r360p / r540p / r1080p].
     metrics_device : str
-        Устройство на котором будет производиться вычисление метрик.
+        Device for metrics calculation.
     backend : str
-        Бэкенд для модели, перезаписывает настройку из конфига модели [torch / onnx].
+        Backend for model, override configuration setting of backend.
     mlflow_tracking_uri : str
-        Адрес трекера MLFlow.
+        MLFlow Tracking URI.
     mlflow_experiment : str
-        Название эксперимента MLFlow.
+        MLFlow experiment name.
     mlflow_run : str
-        Название запуска MLFlow.
+        MLFlow run name.
     mlflow_system_metrics : bool
-        Логирование системных метрик.
+        Log system metrics.
     triton_url : str
-        URL к Triton Inference Server.
+        Triton Inference Server URL.
     only_time : bool
-        Замерить только время inference как метрику.
+        Calculate only inference time metric.
 
     Returns
     -------
@@ -269,30 +269,94 @@ def calculate_metrics(
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("--model-config", type=str, required=True)
     parser.add_argument(
-        "--model-type", type=str, required=True, choices=["pretrained", "finetuned"]
-    )
-    parser.add_argument("--dataset-name", type=str, required=True)
-    parser.add_argument(
-        "--dataset-type", type=str, required=True, choices=["downscale", "game_engine"]
-    )
-    parser.add_argument("--split", type=str, required=True, choices=["train", "val"])
-    parser.add_argument(
-        "--lr", type=str, required=True, choices=["r270p", "r360p", "r540p", "r1080p"]
+        "--model-config",
+        type=str,
+        required=True,
+        help="model config filename",
     )
     parser.add_argument(
-        "--hr", type=str, required=True, choices=["r270p", "r360p", "r540p", "r1080p"]
+        "--model-type",
+        type=str,
+        required=True,
+        choices=["pretrained", "finetuned"],
     )
-    parser.add_argument("--metrics-device", type=str, default="cuda")
-    parser.add_argument("--backend", type=str, default=None)
-    parser.add_argument("--mlflow-tracking-uri", type=str, default=None)
-    parser.add_argument("--mlflow-experiment", type=str, default="SRGB Inference")
-    parser.add_argument("--mlflow-run", type=str, default=None)
-    parser.add_argument("--mlflow-system-metrics", action="store_true")
-    parser.add_argument("--triton-url", type=str, default=None)
-    parser.add_argument("--only-time", action="store_true")
+    parser.add_argument(
+        "--dataset-name",
+        type=str,
+        required=True,
+        help="dataset name",
+    )
+    parser.add_argument(
+        "--dataset-type",
+        type=str,
+        required=True,
+        choices=["downscale", "game_engine"],
+    )
+    parser.add_argument(
+        "--split",
+        type=str,
+        required=True,
+        choices=["train", "val"],
+    )
+    parser.add_argument(
+        "--lr",
+        type=str,
+        required=True,
+        choices=["r270p", "r360p", "r540p", "r1080p"],
+    )
+    parser.add_argument(
+        "--hr",
+        type=str,
+        required=True,
+        choices=["r270p", "r360p", "r540p", "r1080p"],
+    )
+    parser.add_argument(
+        "--metrics-device",
+        type=str,
+        default="cuda",
+        help="device for calculations",
+    )
+    parser.add_argument(
+        "--backend",
+        type=str,
+        default=None,
+        help="backend for calculations",
+    )
+    parser.add_argument(
+        "--mlflow-tracking-uri",
+        type=str,
+        default=None,
+        help="mlflow tracking uri",
+    )
+    parser.add_argument(
+        "--mlflow-experiment",
+        type=str,
+        default="SRGB Inference",
+        help="mlflow experiment name",
+    )
+    parser.add_argument(
+        "--mlflow-run",
+        type=str,
+        default=None,
+        help="mlflow run name",
+    )
+    parser.add_argument(
+        "--mlflow-system-metrics",
+        action="store_true",
+        help="log system metrics",
+    )
+    parser.add_argument(
+        "--triton-url",
+        type=str,
+        default=None,
+        help="triton url",
+    )
+    parser.add_argument(
+        "--only-time",
+        action="store_true",
+        help="calculate only time metric",
+    )
     args = parser.parse_args()
 
     root = Path(__file__).parents[1]

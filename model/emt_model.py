@@ -12,47 +12,47 @@ from tritonclient import http as httpclient
 
 class EMTModel:
     """
-    Класс EMT модели.
+    EMT model class.
 
     Attributes
     ----------
     backend : str
-        Backend для запуска модели [torch / onnx / triton].
+        [torch / onnx / triton].
     nbits : int
-        Количество бит данных, взято у авторов модели.
+        Bits to encode data, taken from authors of EMT paper.
     net_g : optional, Any
-        Класс torch.nn.Module модели, доступен только при backend == 'torch'.
+        torch.nn.Module class, available only if backend == 'torch'.
     device : optional, Any
-        Устройство для запуска модели, доступен только при backend == 'torch'.
+        device, available only if backend == 'torch'.
     ort_session : optional, onnxruntime.InferenceSession
-        Onnx inference сессия, доступна только при backend == 'onnx'.
+        ONNX inference session, available only if backend == 'onnx'.
     ort_input_name : optional, str
-        Название входных данных для onnx сессии, доступно только при backend == 'onnx'.
+        Name of input tensors in onnx session, available only if backend  ==  'onnx'.
     ort_output_name : optional, str
-        Название выходных данных для onnx сессии, доступно только при backend == 'onnx'.
+        Name of output tensors in onnx session, available only if backend  ==  'onnx'.
     triton_client : optional, tritonclient.http.InferenceServerClient
-        Triton inference сессия, доступна только при backend == 'triton'.
+        Triton inference session, available only if backend == 'triton'.
     triton_model_name : optional, str
-        Название модели внутри tritonserver, доступно только при backend == 'triton'.
+        Model name in tritonserver, available only if backend == 'triton'.
     triton_model_version : optional, str
-        Версия модели внутри tritonserver, доступно только при backend == 'triton'.
+        Model version in tritonserver, available only if backend == 'triton'.
 
     Methods
     -------
     enhance(img)
-        Повышение качества изображения моделью EMT.
+        Enhance image using EMT model.
     """
 
     def __init__(self, root: PurePath, config: dict[str, Any]) -> None:
         """
-        Конфигурация класса модели EMT.
+        Constructor of EMTModel class.
 
         Parameters
         ----------
         root : PurePath
-            Путь к корню проекта.
+            Path to project root directory.
         config : dict[str, Any]
-            Конфигурационный словарь модели.
+            Configuration dictionary.
 
         Returns
         -------
@@ -93,17 +93,17 @@ class EMTModel:
     @torch.no_grad()
     def enhance(self, img: np.ndarray) -> np.ndarray:
         """
-        Повышение качества изображения моделью EMT.
+        Enhance image using EMT model.
 
         Parameters
         ----------
         img : np.ndarray
-            Изображение в формате (h, w, c).
+            Image in (h, w, c) format.
 
         Returns
         -------
         np.ndarray
-            Изображение в высоком качестве в формате (h, w, c).
+            High resolution image in (h*, w*, c) format.
         """
         if self.backend == "torch":
             inp_tensor = img2tensor(img).unsqueeze(0).to(self.device)
@@ -152,19 +152,19 @@ class EMTModel:
 
 def configure(root: PurePath, config: dict[str, Any]) -> Any:
     """
-    Создание модели EMT из конфигурационного словаря.
+    Create EMTModel class instance from configuration dictionary.
 
     Parameters
     ----------
     root : PurePath
-        Путь к корню проекта.
+        Path to project root directory.
     config : dict[str, Any]
-        Словарь с конфигурационными параметрами.
+        Dictionary with configuration parameters.
 
     Returns
     -------
     Any
-        Объект модели EMT.
+        EMTModel class instance.
     """
     upsampler = EMTModel(root, config)
     return upsampler
@@ -172,19 +172,19 @@ def configure(root: PurePath, config: dict[str, Any]) -> Any:
 
 def predict(img: np.ndarray, upsampler: Any) -> np.ndarray:
     """
-    Перевод LR изображения в HR изображение с использованием EMT.
+    Enhance low resolution image using EMT model.
 
     Parameters
     ----------
     img : np.ndarray
-        Изображение в формате (h, w, c).
+        Image in (h, w, c) format.
     upsampler : Any
-        Объект модели EMT.
+        EMTModel class instance.
 
     Returns
     -------
     np.ndarray
-        HR изображение в формате (h*outscale, w*outscale, c).
+        High resolution image in (h*, w*, c) format.
     """
     out_img = upsampler.enhance(img)
     return out_img

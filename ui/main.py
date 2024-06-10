@@ -57,19 +57,19 @@ MODELNAME2API = {
 
 def upscale_file(image: Any, server_url: str) -> Response:
     """
-    Повышение качества изображения при помощи запроса к API.
+    Upscale image using API.
 
     Parameters
     ----------
     image : Any
-        Изображение низкого разрешения в формате (h, w, c).
+        Low resolution image in (h, w, c) format.
     server_url : str
-        IP-адрес API backend сервиса.
+        IP-address for backend API service.
 
     Returns
     -------
     Response
-        Ответ API сервиса на запрос.
+        API response.
     """
     files = [
         (
@@ -88,19 +88,19 @@ def upscale_file(image: Any, server_url: str) -> Response:
 
 def configure_model(config_name: str, server_url: str) -> Response:
     """
-    Конфигурация модели при помощи запроса к API.
+    Model configuration using API.
 
     Parameters
     ----------
     config_name : str
-        Название конфигурационного файла модели.
+        Model configuration filename.
     server_url : str
-        IP-адрес API backend сервиса.
+        IP-address for backend API service.
 
     Returns
     -------
     Response
-        Ответ API сервиса на запрос.
+        API response.
     """
     params = {"config_name": config_name}
     response = requests.request(
@@ -111,7 +111,7 @@ def configure_model(config_name: str, server_url: str) -> Response:
 
 def main(base_url: str) -> None:
     """
-    Отображение frontend части.
+    Frontend application.
 
     Parameters
     ----------

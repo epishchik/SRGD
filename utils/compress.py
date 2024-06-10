@@ -18,12 +18,12 @@ from parse import parse_yaml
 
 def set_seed(seed: int) -> None:
     """
-    Фиксацию последовательности псевдослучайных чисел.
+    Fix random seed.
 
     Parameters
     ----------
     seed : int
-        Номер последовательности псевдослучайных чисел.
+        Seed value.
 
     Returns
     -------
@@ -34,22 +34,23 @@ def set_seed(seed: int) -> None:
 
 
 def inter_resolution(
-    res_lr: tuple[int, int], res_hr: tuple[int, int]
+    res_lr: tuple[int, int],
+    res_hr: tuple[int, int],
 ) -> tuple[int, int]:
     """
-    Получение промежуточного разрешения между низким и высоким разрешением.
+    Get intermediate resolution between low resolution and high resolution.
 
     Parameters
     ----------
     res_lr : tuple[int, int]
-        Высота, ширина низкого разрешения в формате (h, w).
+        Height and width of low resolution image in (h, w) format.
     res_hr : tuple[int, int]
-        Высота, ширина высокого разрешения в формате (h, w).
+        Height and width of high resolution image in (h, w) format.
 
     Returns
     -------
     tuple[int, int]
-        Высота, ширина промежуточного разрешения в формате (h, w).
+        Height and width of intermediate resolution image in (h, w) format.
     """
     h_lr, w_lr = res_lr
     h_hr, w_hr = res_hr
@@ -63,17 +64,17 @@ def inter_resolution(
 
 def blur_kernels(config: dict[str, Any]) -> tuple[np.ndarray, np.ndarray]:
     """
-    Генерация ядер из статьи https://arxiv.org/abs/2107.10833.
+    Generate blur kernels, algorithm from paper https://arxiv.org/abs/2107.10833.
 
     Parameters
     ----------
     config : dict[str, Any]
-        Словарь конфигурации с параметрами для генерации сверток.
+        Configuration dictionary with parameters to generate blur kernels.
 
     Returns
     -------
     tuple[np.ndarray, np.ndarray]
-        Ядра сверток. Без sync_kernel, потому что оно выдает артефакты.
+        Convolution kernels for blurring without sync_kernel.
     """
     max_kernel_size = config["max_kernel_size"]
 
@@ -146,24 +147,26 @@ def blur_kernels(config: dict[str, Any]) -> tuple[np.ndarray, np.ndarray]:
 
 
 def resize(
-    img: np.ndarray, resolution: tuple[int, int], config: dict[str, Any]
+    img: np.ndarray,
+    resolution: tuple[int, int],
+    config: dict[str, Any],
 ) -> np.ndarray:
     """
-    Ресайз изображения.
+    Image resize algorithm.
 
     Parameters
     ----------
     img : np.ndarray
-        Изображение в формате (h, w, c) BGR.
+        Image in (h, w, c) BGR format.
     resolution : tuple[int, int]
-        Разрешение к которому делать ресайз в формате (h, w).
+        Target resolution for resizing in (h, w) format.
     config : dict[str, Any]
-        Словарь конфигурации с параметрами для ресайза.
+        Configuration dictionary with parameters to resize.
 
     Returns
     -------
     np.ndarray
-        Изображение в новом разрешении.
+        Resized image.
     """
     resize_type = np.random.choice(config["resize_list"])
 
@@ -179,19 +182,19 @@ def resize(
 
 def noise(img: np.ndarray, config: dict[str, Any]) -> np.ndarray:
     """
-    Добавление шума к изображению.
+    Noise addition algorithm.
 
     Parameters
     ----------
     img : np.ndarray
-        Изображение в формате (h, w, c) BGR.
+        Image in (h, w, c) BGR format.
     config : dict[str, Any]
-        Словарь конфигурации с параметрами для генерации шума.
+        Configuration dictionary with parameters to generate noise.
 
     Returns
     -------
     np.ndarray
-        Зашумленное изображение.
+        Noisy image.
     """
     gaussian_noise_prob = config["gaussian_noise_prob"]
     gray_noise_prob = config["gray_noise_prob"]
@@ -209,19 +212,19 @@ def noise(img: np.ndarray, config: dict[str, Any]) -> np.ndarray:
 
 def jpg(img: np.ndarray, config: dict[str, Any]) -> np.ndarray:
     """
-    JPEG сжатие изображения.
+    JPEG compression algorithm.
 
     Parameters
     ----------
     img : np.ndarray
-        Изображение в формате (h, w, c) BGR.
+        Image in (h, w, c) BGR format.
     config : dict[str, Any]
-        Словарь конфигурации с параметрами для JPEG сжатия.
+        Configuration dictionary with parameters to compress.
 
     Returns
     -------
     np.ndarray
-        Сжатое изображение.
+        Compressed image.
     """
     jpeg_quality = config["jpeg_quality"]
     img = add_jpg_compression(img, jpeg_quality)
@@ -230,16 +233,16 @@ def jpg(img: np.ndarray, config: dict[str, Any]) -> np.ndarray:
 
 def compress(src_folder: str, dst_folder: str, config_path: str) -> None:
     """
-    Сжатие изображений и сохранение в новую папку.
+    Compress images and save them in new folder.
 
     Parameters
     ----------
     src_folder : str
-        Папка содержащая изображения, которые нужно сжать.
+        Folder with images to compress.
     dst_folder : str
-        Папка куда сохранять сжатые изображения.
+        Folder to save compressed images.
     config_path : str
-        Путь к конфигурационному .yaml файлу.
+        Path to configuration YAML file.
 
     Returns
     -------
@@ -287,11 +290,34 @@ def compress(src_folder: str, dst_folder: str, config_path: str) -> None:
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    # TODO добавить help
-    parser.add_argument("-s", "--src", type=str, required=True)
-    parser.add_argument("-d", "--dst", type=str, required=True)
-    parser.add_argument("-c", "--cfg", type=str, default="../configs/compress.yaml")
-    parser.add_argument("-rs", "--random-seed", type=int, default=42)
+    parser.add_argument(
+        "-s",
+        "--src",
+        type=str,
+        required=True,
+        help="folder with images to compress",
+    )
+    parser.add_argument(
+        "-d",
+        "--dst",
+        type=str,
+        required=True,
+        help="folder to save compressed images",
+    )
+    parser.add_argument(
+        "-c",
+        "--cfg",
+        type=str,
+        default="../configs/compress.yaml",
+        help="path to configuration YAML file",
+    )
+    parser.add_argument(
+        "-rs",
+        "--random-seed",
+        type=int,
+        default=42,
+        help="random seed value",
+    )
     args = parser.parse_args()
 
     set_seed(args.random_seed)
