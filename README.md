@@ -48,7 +48,7 @@ A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-ga
 ```bibtex
 @misc{srgd,
     author = {Evgenii Pishchik},
-    title = {Super Resolution Gaming Benchmark},
+    title = {Super Resolution Gaming Dataset},
     year = {2023},
     url = {https://github.com/Pe4enIks/SRGD}
 }
