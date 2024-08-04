@@ -46,10 +46,10 @@ A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-ga
 
 ## Bibtex
 ```bibtex
-@misc{srgb,
+@misc{srgd,
     author = {Evgenii Pishchik},
     title = {Super Resolution Gaming Benchmark},
     year = {2023},
-    url = {https://github.com/Pe4enIks/SRGB}
+    url = {https://github.com/Pe4enIks/SRGD}
 }
 ```
