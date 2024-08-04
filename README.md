@@ -1,4 +1,4 @@
-# Super Resolution Gaming Benchmark (SRGB)
+# Super Resolution Gaming Dataset (SRGD)
 
 |                     LR                     |                     HR                     |
 |:------------------------------------------:|:------------------------------------------:|
@@ -19,7 +19,7 @@
 
 Video games require a lot of computing resources such as GPU, CPU, RAM, etc. To reduce the computing cost, some companies such as [NVIDIA](https://www.nvidia.com/en-us/), [AMD](https://www.amd.com/en.html) create their own solutions based on super resolution technologies. This is because it may be faster to render at a lower resolution and then upscale the image than to just render at high resolution.
 
-We've collected a dataset mostly using the [Unreal Engine](https://www.unrealengine.com/en-US) game engine. There aren't a lot of datasets for super resolution in games, so we hope that the collected dataset will give independent developers more room to get started in this area. This dataset can be used as a benchmark for super resolution models in the domain of video games.
+We've collected a dataset mostly using the [Unreal Engine](https://www.unrealengine.com/en-US) game engine. There aren't a lot of datasets for super resolution in games, so we hope that the collected dataset will give independent developers more room to get started in this area.
 
 ## Documentation
 Each part described below, and others such as the setup process, has a short overview on the [README](https://github.com/Pe4enIks/SRGB/blob/main/README.md) page, for more information see the [wiki](https://github.com/Pe4enIks/SRGB/wiki) page.
@@ -41,7 +41,7 @@ Dataset was collected using [Unreal Engine](https://www.unrealengine.com/en-US) 
 \** - the config field specifies the exact version of the model which was used to calculate metric.
 
 ## Kaggle
-A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-games) based on the SRGB dataset has been launched on the Kaggle platform and will run until August 31, 2024. **The SRGB dataset will be publicly available on Huggingface after the competition ends**.
+A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-games) based on the SRGD dataset has been launched on the Kaggle platform and will run until August 26, 2024. **The SRGD dataset will be publicly available on Huggingface after the competition ends**.
 
 
 ## Bibtex
