@@ -6,10 +6,11 @@
 
 <div align="center">
 
-[![download](https://img.shields.io/github/downloads/pe4eniks/SRGB/total.svg)](https://github.com/pe4eniks/SRGB/releases)
-[![Open issue](https://img.shields.io/github/issues/pe4eniks/SRGB)](https://github.com/pe4eniks/SRGB/issues)
-[![Closed issue](https://img.shields.io/github/issues-closed/pe4eniks/SRGB)](https://github.com/pe4eniks/SRGB/issues)
-[![LICENSE](https://img.shields.io/github/license/pe4eniks/SRGB)](https://github.com/Pe4enIks/SRGB/blob/main/LICENSE)
+[![HuggingFace](https://huggingface.co/datasets/huggingface/badges/resolve/main/dataset-on-hf-md.svg)](https://huggingface.co/datasets/epishchik/SRGD)
+[![download](https://img.shields.io/github/downloads/pe4eniks/SRGB/total.svg)](https://github.com/epishchik/SRGD/releases)
+[![Open issue](https://img.shields.io/github/issues/pe4eniks/SRGB)](https://github.com/epishchik/SRGD/issues)
+[![Closed issue](https://img.shields.io/github/issues-closed/pe4eniks/SRGB)](https://github.com/epishchik/SRGD/issues)
+[![LICENSE](https://img.shields.io/github/license/pe4eniks/SRGB)](https://github.com/epishchik/SRGD/blob/main/LICENSE)
 
 </div>
 
@@ -22,7 +23,7 @@ Video games require a lot of computing resources such as GPU, CPU, RAM, etc. To 
 We've collected a dataset mostly using the [Unreal Engine](https://www.unrealengine.com/en-US) game engine. There aren't a lot of datasets for super resolution in games, so we hope that the collected dataset will give independent developers more room to get started in this area.
 
 ## Documentation
-Each part described below, and others such as the setup process, has a short overview on the [README](https://github.com/Pe4enIks/SRGB/blob/main/README.md) page, for more information see the [wiki](https://github.com/Pe4enIks/SRGB/wiki) page.
+Each part described below, and others such as the setup process, has a short overview on the [README](https://github.com/epishchik/SRGD/blob/main/README.md) page, for more information see the [wiki](https://github.com/epishchik/SRGD/wiki) page.
 
 ## Dataset
 Dataset was collected using [Unreal Engine](https://www.unrealengine.com/en-US) and consists of 2 independent datasets, each dataset has all images in 4 different resolutions - 270p, 360p, 540p, 1080p:
@@ -41,8 +42,7 @@ Dataset was collected using [Unreal Engine](https://www.unrealengine.com/en-US) 
 \** - the config field specifies the exact version of the model which was used to calculate metric.
 
 ## Kaggle
-A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-games) based on the SRGD dataset has been launched on the Kaggle platform and will run until August 26, 2024. **The SRGD dataset will be publicly available on Huggingface after the competition ends**.
-
+A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-games) based on the SRGD dataset has been launched on the Kaggle platform and will run until August 29, 2024. **The SRGD dataset will be publicly available on Huggingface after the competition ends**.
 
 ## Bibtex
 ```bibtex
@@ -50,6 +50,6 @@ A [competition](https://www.kaggle.com/competitions/super-resolution-in-video-ga
     author = {Evgenii Pishchik},
     title = {Super Resolution Gaming Dataset},
     year = {2023},
-    url = {https://github.com/Pe4enIks/SRGD}
+    url = {https://github.com/epishchik/SRGD}
 }
 ```
