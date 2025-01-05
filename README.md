@@ -6,7 +6,7 @@
 
 <div align="center">
 
-[![HuggingFace](https://huggingface.co/datasets/huggingface/badges/resolve/main/dataset-on-hf-md.svg)](https://huggingface.co/datasets/epishchik/SRGD)
+[![HuggingFace](https://huggingface.co/datasets/huggingface/badges/resolve/main/dataset-on-hf-sm.svg)](https://huggingface.co/datasets/epishchik/SRGD)
 [![download](https://img.shields.io/github/downloads/pe4eniks/SRGB/total.svg)](https://github.com/epishchik/SRGD/releases)
 [![Open issue](https://img.shields.io/github/issues/pe4eniks/SRGB)](https://github.com/epishchik/SRGD/issues)
 [![Closed issue](https://img.shields.io/github/issues-closed/pe4eniks/SRGB)](https://github.com/epishchik/SRGD/issues)
